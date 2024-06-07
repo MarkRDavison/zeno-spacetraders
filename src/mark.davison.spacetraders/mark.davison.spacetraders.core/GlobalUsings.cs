@@ -1,0 +1,12 @@
+﻿global using mark.davison.spacetraders.core.Api;
+global using mark.davison.spacetraders.core.Entities;
+global using mark.davison.spacetraders.core.Game;
+global using mark.davison.spacetraders.core.Game.Enumerations;
+global using mark.davison.spacetraders.core.Game.Orchestration;
+global using mark.davison.spacetraders.core.Persistence;
+global using mark.davison.spacetraders.core.Persistence.Configurations;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;

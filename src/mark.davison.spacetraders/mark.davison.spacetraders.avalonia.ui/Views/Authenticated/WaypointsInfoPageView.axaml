@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.avalonia.ui.ViewModels.Authenticated"
+             xmlns:converters="using:mark.davison.spacetraders.avalonia.ui.CommonCandidates.Converters"
+			 xmlns:s="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.avalonia.ui.WaypointsInfoPageView"
+	         x:DataType="vm:WaypointsInfoPageViewModel">
+
+	<Design.DataContext>
+		<vm:WaypointsInfoPageViewModel/>
+	</Design.DataContext>
+
+	<Grid VerticalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<StackPanel DockPanel.Dock="Bottom" 
+					Orientation="Horizontal" 
+					HorizontalAlignment="Center" 
+					VerticalAlignment="Center"
+					Grid.Row="1">
+			<StackPanel.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="FontSize" Value="16"></Setter>
+					<Setter Property="Margin" Value="4 0 8 0"></Setter>
+				</Style>
+				<Style Selector="Button">
+					<Setter Property="FontSize" Value="16"></Setter>
+					<Setter Property="Margin" Value="4 0 8 0"></Setter>
+				</Style>
+			</StackPanel.Styles>
+			<Button Command="{Binding AdjustPageCommand}" Content="|&lt;-&lt;-">
+				<Button.CommandParameter>
+					<x:Int32>-100000</x:Int32>
+				</Button.CommandParameter>
+			</Button>
+			<Button Command="{Binding AdjustPageCommand}" Content="&lt;-">
+				<Button.CommandParameter>
+					<x:Int32>-1</x:Int32>
+				</Button.CommandParameter>
+			</Button>
+			<TextBlock VerticalAlignment="Center" Text="{Binding PageProgress}"/>
+			<Button Command="{Binding AdjustPageCommand}" Content="-&gt;">
+				<Button.CommandParameter>
+					<x:Int32>+1</x:Int32>
+				</Button.CommandParameter>
+			</Button>
+			<Button Command="{Binding AdjustPageCommand}" Content="-&gt;-&gt;|">
+				<Button.CommandParameter>
+					<x:Int32>+100000</x:Int32>
+				</Button.CommandParameter>
+			</Button>
+		</StackPanel>
+		<DataGrid Margin="20"
+				  ItemsSource="{Binding Waypoints}"
+				  IsReadOnly="True"
+				  GridLinesVisibility="All"
+				  BorderThickness="1"
+				  BorderBrush="Gray"
+				  Grid.Row="0"
+				  VerticalAlignment="Stretch"
+				  MinHeight="700">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Symbol" Binding="{Binding Symbol}" />
+				<DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+				<DataGridTemplateColumn Header="Traits">
+					<DataTemplate>
+						<TextBlock Margin="4"
+								   VerticalAlignment="Center"
+								   TextTrimming="CharacterEllipsis"
+								   Text="{Binding Traits, Converter={converters:CommaValuesConverter}}" />
+					</DataTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn>
+					<DataTemplate>
+						<Button>Edit</Button>
+					</DataTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+	</Grid>
+	
+</UserControl>

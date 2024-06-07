@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.avalonia.ui.ViewModels.Authenticated"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.avalonia.ui.MainAuthenticatedLayoutView"
+			 x:DataType="vm:MainAuthenticatedLayoutViewModel">
+			 
+	<Design.DataContext>
+		<vm:MainAuthenticatedLayoutViewModel/>
+	</Design.DataContext>
+
+	<DockPanel>
+		<ListBox DockPanel.Dock="Left"
+				 ItemsSource="{Binding PageNames}"
+				 SelectedIndex="{Binding SelectedIndex}"
+				 Background="Gray"
+				 MinWidth="120">
+		</ListBox>
+		<ContentControl Content="{Binding ActiveMainAuthPageViewModel}"
+						VerticalAlignment="Top"/>
+	</DockPanel>
+	
+</UserControl>

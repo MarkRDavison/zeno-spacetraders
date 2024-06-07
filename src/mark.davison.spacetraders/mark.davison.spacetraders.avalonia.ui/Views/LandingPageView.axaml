@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.avalonia.ui.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.avalonia.ui.LandingPageView"
+			 x:DataType="vm:LandingPageViewModel">
+
+	<Design.DataContext>
+		<vm:LandingPageViewModel/>
+	</Design.DataContext>
+
+	<DockPanel VerticalAlignment="Top">
+		<StackPanel DockPanel.Dock="Left">
+			<TextBlock Text="Accounts" FontSize="24" />
+			<ListBox ItemsSource="{Binding Accounts}" SelectedItem="{Binding ActiveAccount, Mode=TwoWay}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Identifier}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+
+		<StackPanel HorizontalAlignment="Center">
+			<TextBlock Margin="40"
+					   FontSize="48"
+					   FontWeight="Bold">
+				Spacetraders!
+			</TextBlock>
+		
+			<StackPanel 
+				Orientation="Vertical" 
+				HorizontalAlignment="Center">
+			
+				<StackPanel.Styles>
+					<Style Selector="Button">
+						<Setter Property="Margin" Value="8"></Setter>
+					</Style>
+				</StackPanel.Styles>
+			
+				<StackPanel Orientation="Horizontal">
+					<Button IsVisible="{Binding ShowingChild, Mode=OneWay, Converter={x:Static BoolConverters.Not}}" Command="{Binding SignInCommand}">Sign in</Button>
+					<Button IsVisible="{Binding ShowingChild, Mode=OneWay, Converter={x:Static BoolConverters.Not}}" Command="{Binding RegisterCommand}">Register</Button>
+				</StackPanel>
+
+				<StackPanel IsVisible="{Binding ShowRegister, Mode=OneWay}">
+					<ContentPresenter Content="{Binding Path=RegisterViewModel}" />
+				</StackPanel>
+				<StackPanel IsVisible="{Binding ShowSignIn, Mode=OneWay}">
+					<ContentPresenter Content="{Binding Path=SignInViewModel}" />
+				</StackPanel>
+
+				<DockPanel HorizontalAlignment="Stretch">
+					<Button DockPanel.Dock="Left" IsVisible="{Binding ShowingChild}" Command="{Binding CancelCommand}">Cancel</Button>
+					<Button DockPanel.Dock="Right" IsVisible="{Binding ShowingChild}" Command="{Binding SubmitCommand}">Submit</Button>
+				</DockPanel>
+			
+			</StackPanel>
+		</StackPanel>
+	</DockPanel>
+</UserControl>

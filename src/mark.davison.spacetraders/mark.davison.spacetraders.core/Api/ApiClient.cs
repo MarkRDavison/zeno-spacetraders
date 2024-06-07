@@ -13,12 +13,12 @@
 #pragma warning disable 3016 // Disable "CS3016 Arrays as attribute arguments is not CLS-compliant"
 #pragma warning disable 8603 // Disable "CS8603 Possible null reference return"
 
-namespace mark.davison.spacetraders.core.api
+namespace mark.davison.spacetraders.core.Api
 {
     using gSystem = global::System;
 
     [gSystem.CodeDom.Compiler.GeneratedCode("NSwag", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class SpaceTradersApiClient
+    public partial class SpaceTradersApiClient : ISpaceTradersApiClient
     {
         private string _baseUrl = "https://api.spacetraders.io/v2";
         private gSystem.Net.Http.HttpClient _httpClient;
@@ -156,7 +156,7 @@ namespace mark.davison.spacetraders.core.api
         /// </remarks>
         /// <returns>Succesfully registered.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual gSystem.Threading.Tasks.Task<Response2> RegisterAsync(Body body)
+        public virtual gSystem.Threading.Tasks.Task<Response2> RegisterAsync(RegisterBody body)
         {
             return RegisterAsync(body, gSystem.Threading.CancellationToken.None);
         }
@@ -179,7 +179,7 @@ namespace mark.davison.spacetraders.core.api
         /// </remarks>
         /// <returns>Succesfully registered.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async gSystem.Threading.Tasks.Task<Response2> RegisterAsync(Body body, gSystem.Threading.CancellationToken cancellationToken)
+        public virtual async gSystem.Threading.Tasks.Task<Response2> RegisterAsync(RegisterBody body, gSystem.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new gSystem.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/register");
@@ -6638,7 +6638,7 @@ namespace mark.davison.spacetraders.core.api
         [Newtonsoft.Json.JsonProperty("rotation", Required = Newtonsoft.Json.Required.Always)]
         [gSystem.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ShipCrewRotation Rotation { get; set; } = mark.davison.spacetraders.core.api.ShipCrewRotation.STRICT;
+        public ShipCrewRotation Rotation { get; set; } = mark.davison.spacetraders.core.Api.ShipCrewRotation.STRICT;
 
         /// <summary>
         /// A rough measure of the crew's morale. A higher morale means the crew is happier and more productive. A lower morale means the ship is more prone to accidents.
@@ -8828,7 +8828,7 @@ namespace mark.davison.spacetraders.core.api
     }
 
     [gSystem.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class Body
+    public partial class RegisterBody
     {
         [Newtonsoft.Json.JsonProperty("faction", Required = Newtonsoft.Json.Required.Always)]
         [gSystem.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
