@@ -25,7 +25,9 @@ public static class DependencyInjectionExtensions
         services.AddTransient<ShipsInfoPageViewModel>();
         services.AddTransient<ShipPageViewModel>();
         services.AddTransient<WaypointsInfoPageViewModel>();
+        services.AddTransient<ContractsInfoPageViewModel>();
 
+        services.AddTransient<IContractService, ContractService>();
         services.AddTransient<IWaypointService, WaypointService>();
         services.AddTransient<IShipService, ShipService>();
         services.AddTransient<IRegisterViewModelService, RegisterViewModelService>();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace mark.davison.spacetraders.api.Endpoints;
+namespace mark.davison.spacetraders.api.old.Endpoints;
 
 public static class AgentEndpoints
 {

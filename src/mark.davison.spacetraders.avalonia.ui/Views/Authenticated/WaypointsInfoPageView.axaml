@@ -13,7 +13,7 @@
 		<vm:WaypointsInfoPageViewModel/>
 	</Design.DataContext>
 
-	<Grid VerticalAlignment="Stretch">
+	<Grid VerticalAlignment="Stretch" HorizontalAlignment="Center">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />

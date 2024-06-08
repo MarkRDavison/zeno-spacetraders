@@ -1,6 +1,7 @@
-﻿using mark.davison.spacetraders.core.Ignition;
+﻿using mark.davison.spacetraders.api.old.Endpoints;
+using mark.davison.spacetraders.core.Ignition;
 
-namespace mark.davison.spacetraders.api;
+namespace mark.davison.spacetraders.api.old;
 
 public class Startup
 {

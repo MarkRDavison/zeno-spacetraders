@@ -1,4 +1,4 @@
-namespace mark.davison.spacetraders.api;
+namespace mark.davison.spacetraders.api.old;
 
 public class Program
 {

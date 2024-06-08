@@ -7,10 +7,12 @@ public partial class MainAuthenticatedLayoutViewModel : AsyncViewModel
     {
         Pages.Add(serviceProvider.GetRequiredService<AgentInfoPageViewModel>());
         Pages.Add(serviceProvider.GetRequiredService<ShipsInfoPageViewModel>());
+        Pages.Add(serviceProvider.GetRequiredService<ContractsInfoPageViewModel>());
         Pages.Add(serviceProvider.GetRequiredService<WaypointsInfoPageViewModel>());
 
         PageNames.Add("Agent");
         PageNames.Add("Ships");
+        PageNames.Add("Contracts");
         PageNames.Add("Waypoints");
 
         ActiveMainAuthPageViewModel = Pages[SelectedIndex];

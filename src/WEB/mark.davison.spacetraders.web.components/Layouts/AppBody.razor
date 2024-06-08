@@ -1,0 +1,29 @@
+﻿@using System.Text.Json
+@inject IAuthenticationContext _authContext
+
+@if (_authContext.IsAuthenticated)
+{
+    <MudContainer Class="pa-4">
+        <MudPaper Class="pa-4">
+            @ChildContent
+        </MudPaper>
+    </MudContainer>
+}
+
+@code {
+
+    [Parameter, EditorRequired]
+    public RenderFragment? ChildContent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("AuthState: {0}", JsonSerializer.Serialize(_authContext, new JsonSerializerOptions { WriteIndented = true }));
+
+        if (_authContext.IsAuthenticated)
+        {
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}
