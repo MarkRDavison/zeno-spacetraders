@@ -7,6 +7,7 @@ public static class DependecyInjectionExtensions
         IAuthenticationConfig authConfig)
     {
         services.UseCommonClient(authConfig, typeof(Routes));
+        services.AddWebServices();
         return services;
     }
 }

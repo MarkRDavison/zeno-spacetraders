@@ -9,4 +9,5 @@ public sealed class SpacetradersDbContext(DbContextOptions options) : DbContextB
     }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Account> Accounts => Set<Account>();
 }

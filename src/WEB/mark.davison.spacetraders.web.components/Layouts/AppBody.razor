@@ -1,13 +1,13 @@
-﻿@using System.Text.Json
-@inject IAuthenticationContext _authContext
+﻿@inject IAuthenticationContext _authContext
+@inject IDispatcher _dispatcher
 
 @if (_authContext.IsAuthenticated)
 {
-    <MudContainer Class="pa-4">
-        <MudPaper Class="pa-4">
+    <MudPaper Class="pa-4 ma-4">
+        <MudContainer>
             @ChildContent
-        </MudPaper>
-    </MudContainer>
+        </MudContainer>
+    </MudPaper>
 }
 
 @code {
@@ -17,10 +17,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("AuthState: {0}", JsonSerializer.Serialize(_authContext, new JsonSerializerOptions { WriteIndented = true }));
-
         if (_authContext.IsAuthenticated)
         {
+            _dispatcher.Dispatch(new FetchAccountsAction());
         }
 
         await base.OnInitializedAsync();

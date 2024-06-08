@@ -1,7 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
-@inject IAuthenticationConfig authConfig
-@inject IAuthenticationContext authContext
+@inject IAuthenticationConfig _authConfig
+@inject IAuthenticationContext _authContext
+@inject IAccountContextService _accountContext
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
@@ -9,22 +10,21 @@
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Outlined.QuestionMark" Color="Color.Inherit" />
         <MudText Typo="Typo.h4" Class="app-title">Spacetraders</MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudIconButton Class="ml-4" Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />   
-        <span data-testid="@DataTestIds.Username">@authContext.User?.preferred_username</span>
+        <span data-testid="@DataTestIds.Username">@_authContext.User?.preferred_username</span>
         <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Size="Size.Large">
             <ActivatorContent>
                 <MudIconButton data-testid="@DataTestIds.ManageIcon" Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
             </ActivatorContent>
             <ChildContent>
-                <MudMenuItem Href="@authConfig.LogoutEndpoint">Logout</MudMenuItem>
+                <MudMenuItem Href="@_authConfig.LogoutEndpoint">Logout</MudMenuItem>
             </ChildContent>
         </MudMenu>
     </MudAppBar>
     <MudDrawer Elevation="2" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
-        <NavMenu />
+        <NavMenu Account="@_accountContext.GetActiveAccount()" />
     </MudDrawer>
     <MudMainContent>
         <MudContainer>
@@ -43,6 +43,11 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    protected override void OnInitialized()
+    {
+        _accountContext.ActiveAccountChanged += (s, e) => InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

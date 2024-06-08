@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common.server" Version="8.4.10" />
+    <PackageReference Include="markdavison.common.server" Version="8.4.11" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\API\mark.davison.spacetraders.api.persistence\mark.davison.spacetraders.api.persistence.csproj" />
+    <ProjectReference Include="..\mark.davison.spacetraders.shared.services\mark.davison.spacetraders.shared.services.csproj" />
   </ItemGroup>
 
 </Project>

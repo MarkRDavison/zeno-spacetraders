@@ -8,12 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-    <PackageReference Include="markdavison.common.client.abstractions" Version="8.4.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SHARED\mark.davison.spacetraders.shared.constants\mark.davison.spacetraders.shared.constants.csproj" />
     <ProjectReference Include="..\..\SHARED\mark.davison.spacetraders.shared.models.dtos\mark.davison.spacetraders.shared.models.dtos.csproj" />
+    <ProjectReference Include="..\mark.davison.spacetraders.web.features\mark.davison.spacetraders.web.features.csproj" />
   </ItemGroup>
 
 </Project>

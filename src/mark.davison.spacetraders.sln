@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.api.models.configuration", "API\mark.davison.api.models.configuration\mark.davison.api.models.configuration.csproj", "{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.services", "SHARED\mark.davison.spacetraders.shared.services\mark.davison.spacetraders.shared.services.csproj", "{B5524E02-673A-44E2-AB5C-70B86D20B890}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,6 +193,7 @@ Global
 		{16033AB0-DE25-4A83-B2BF-A1F6CDC8FC63} = {54EAD15D-28EE-41DA-857E-34899F0660E7}
 		{A3851EA8-9638-49F2-A195-BC8F22A4B732} = {54EAD15D-28EE-41DA-857E-34899F0660E7}
 		{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE} = {265E5A7E-C2E9-4FDC-AAB3-FDC91CC5B861}
+		{B5524E02-673A-44E2-AB5C-70B86D20B890} = {DEB8DEB8-2139-4F9A-ABE3-F00AC875747E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6250955A-4E54-4D86-A97D-78443C388119}

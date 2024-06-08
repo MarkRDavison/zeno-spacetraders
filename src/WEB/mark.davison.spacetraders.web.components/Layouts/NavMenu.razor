@@ -1,1 +1,31 @@
-﻿
+﻿@inherits FluxorComponent
+
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All">
+        <MudText>@($"Account: {Account?.Identifier}")</MudText>
+        @if (Summary is not null)
+        {
+            <MudText>@($"Credits: ₡{Summary.Credits.ToString("N0")}")</MudText>
+            <MudText>@($"HQ: {Summary.Headquarters}")</MudText>
+            <MudText>@($"Ships: {Summary.ShipCount.ToString("N0")}")</MudText>
+        }
+    </MudNavLink>
+    @if (Summary is not null)
+    {
+        <MudNavLink Href="@Routes.Ships" Match="NavLinkMatch.Prefix">Ships</MudNavLink>
+        <MudNavLink Href="@Routes.Contracts" Match="NavLinkMatch.Prefix">Contracts</MudNavLink>
+        <MudNavLink Href="@Routes.Waypoints" Match="NavLinkMatch.Prefix">Waypoints</MudNavLink>
+    }
+</MudNavMenu>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public required AccountDto? Account { get; set; }
+
+    [Inject]
+    public required IState<AccountState> AccountState { get; set; }
+
+    private AccountSummaryDto? Summary => AccountState.Value.AccountSummaries.FirstOrDefault(_ => _.AccountId == Account?.Id);
+
+}

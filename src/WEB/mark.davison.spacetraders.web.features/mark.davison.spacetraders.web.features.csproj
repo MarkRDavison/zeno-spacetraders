@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Fluxor" Version="6.0.0" />
+	<PackageReference Include="markdavison.common.client.abstractions" Version="8.4.11" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\mark.davison.spacetraders.web.services\mark.davison.spacetraders.web.services.csproj" />
+    <ProjectReference Include="..\..\SHARED\mark.davison.spacetraders.shared.models.dtos\mark.davison.spacetraders.shared.models.dtos.csproj" />
   </ItemGroup>
 
 </Project>

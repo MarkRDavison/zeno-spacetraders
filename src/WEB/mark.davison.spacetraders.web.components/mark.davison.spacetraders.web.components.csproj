@@ -13,13 +13,13 @@
 
   <ItemGroup>
     <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
-    <PackageReference Include="markdavison.common.client" Version="8.4.10" />
+    <PackageReference Include="markdavison.common.client" Version="8.4.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.6" />
     <PackageReference Include="MudBlazor" Version="6.20.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\mark.davison.spacetraders.web.features\mark.davison.spacetraders.web.features.csproj" />
+    <ProjectReference Include="..\mark.davison.spacetraders.web.services\mark.davison.spacetraders.web.services.csproj" />
   </ItemGroup>
 
 </Project>

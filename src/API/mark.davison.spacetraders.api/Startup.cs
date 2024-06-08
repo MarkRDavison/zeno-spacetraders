@@ -31,7 +31,8 @@ public sealed class Startup(IConfiguration Configuration)
             .AddCQRSServer()
             .AddHttpClient()
             .AddHttpContextAccessor()
-            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE);
+            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE)
+            .AddSharedServices();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

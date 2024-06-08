@@ -1,0 +1,48 @@
+﻿@attribute [Route(Routes.Contracts)]
+@inherits FluxorComponent
+
+<MudStack Class="pa-4">
+    <MudStack Row AlignItems="AlignItems.End">
+        <MudText Typo="Typo.h3">Contracts</MudText>
+        <MudSpacer />
+    </MudStack>
+
+    @if (ContractState.Value.IsLoading)
+    {
+        <MudProgressCircular Indeterminate
+                             Class="ma-auto"
+                             Size="Size.Large" />
+    }
+    else if (ContractState.Value.Contracts.Any())
+    {
+        <MudTable Items="@ContractState.Value.Contracts" Hover>
+            <HeaderContent>
+                <MudTh>Type</MudTh>
+                <MudTh>Accepted</MudTh>
+                <MudTh>Fulfilled</MudTh>
+                <MudTh>Accept by</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Type">
+                    <MudText Typo="Typo.body1">@context.Type</MudText>
+                </MudTd>
+                <MudTd DataLabel="Accepted">
+                    <MudIcon Icon="@(context.Accepted ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
+                </MudTd>
+                <MudTd DataLabel="Fulfilled">
+                    <MudIcon Icon="@(context.Fulfilled ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
+                </MudTd>
+                <MudTd DataLabel="Accept by">
+                    @if (!context.Accepted)
+                    {
+                        <MudText Typo="Typo.body1">@context.DeadlineToAccept.Humanize()</MudText>
+                    }
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1">No contracts</MudText>
+    }
+</MudStack>

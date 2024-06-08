@@ -1,6 +1,53 @@
-﻿@using mark.davison.common.client.abstractions.Repository
-@attribute [Route(Routes.Dashboard)]
+﻿@attribute [Route(Routes.Dashboard)]
+@inherits FluxorComponent
 
-@inject IClientHttpRepository _clientHttpRepository
+<MudStack Class="pa-4">
+    <MudStack Row AlignItems="AlignItems.End">
+        <MudText Typo="Typo.h3">Accounts</MudText>
+        <MudSpacer />
+        @if (!AccountState.Value.IsLoading)
+        {
+            <MudButton ButtonType="ButtonType.Submit"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Variant="Variant.Filled"
+                       Size="Size.Large"
+                       Disabled="false"
+                       IconSize="Size.Large"
+                       OnClick="@OpenAddAccountDialog">Add</MudButton>
+        }
+    </MudStack>
 
-<h1>Dashboard</h1>
+    @if (AccountState.Value.IsLoading)
+    {
+        <MudProgressCircular Indeterminate 
+                             Class="ma-auto" 
+                             Size="Size.Large" />
+    }
+    else if (AccountState.Value.Accounts.Any())
+    {
+        <MudTable Items="@AccountState.Value.Accounts" Hover>
+            <HeaderContent>
+                <MudTh>Identifier</MudTh>
+                <MudTh>Email</MudTh><MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Identifier">
+                    <MudText Typo="Typo.body1">@context.Identifier</MudText>
+                </MudTd>
+                <MudTd DataLabel="Email">
+                    <MudText Typo="Typo.body1">@context.Email</MudText>
+                </MudTd>
+                <MudTd>
+                    <CommandMenu OnCommandMenuItemSelected="@(_ => CommandMenuItemSelected(_, context))"
+                                 Items="@_commandMenuItems" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1">No accounts</MudText>
+    }
+
+</MudStack>

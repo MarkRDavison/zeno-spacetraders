@@ -1,0 +1,51 @@
+﻿@attribute [Route(Routes.Waypoints)]
+@inherits FluxorComponent
+
+<MudStack Class="pa-4">
+    <MudStack Row AlignItems="AlignItems.End">
+        <MudText Typo="Typo.h3">Waypoints</MudText>
+        <MudSpacer />
+    </MudStack>
+
+    @if (WaypointState.Value.IsLoading)
+    {
+        <MudProgressCircular Indeterminate
+                             Class="ma-auto"
+                             Size="Size.Large" />
+    }
+    else if (WaypointState.Value.Waypoints.Any())
+    {
+        <MudTable Items="@WaypointState.Value.Waypoints" Hover>
+            <HeaderContent>
+                <MudTh>Symbol</MudTh>
+            </HeaderContent>
+            <HeaderContent>
+                <MudTh>System symbol</MudTh>
+            </HeaderContent>
+            <HeaderContent>
+                <MudTh>Type</MudTh>
+            </HeaderContent>
+            <HeaderContent>
+                <MudTh>Traits</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Symbol">
+                    <MudText Typo="Typo.body2">@context.Symbol</MudText>
+                </MudTd>
+                <MudTd DataLabel="Symbol">
+                    <MudText Typo="Typo.body2">@context.SystemSymbol</MudText>
+                </MudTd>
+                <MudTd DataLabel="Type">
+                    <MudText Typo="Typo.body2">@context.Type</MudText>
+                </MudTd>
+                <MudTd DataLabel="Type">
+                    <MudText Typo="Typo.body2">@string.Join(", ", context.Traits)</MudText>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1">No ships</MudText>
+    }
+</MudStack>
