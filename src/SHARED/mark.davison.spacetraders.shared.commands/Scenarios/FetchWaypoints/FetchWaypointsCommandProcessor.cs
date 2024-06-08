@@ -1,5 +1,4 @@
-﻿
-namespace mark.davison.spacetraders.shared.commands.Scenarios.FetchWaypoints;
+﻿namespace mark.davison.spacetraders.shared.commands.Scenarios.FetchWaypoints;
 
 public sealed class FetchWaypointsCommandProcessor : ICommandProcessor<FetchWaypointsCommandRequest, FetchWaypointsCommandResponse>
 {
@@ -29,11 +28,18 @@ public sealed class FetchWaypointsCommandProcessor : ICommandProcessor<FetchWayp
 
         var meta = request.Meta ?? new();
 
+        WaypointTraitSymbol? traitToSearch = null;
+
+        if (Enum.TryParse<WaypointTraitSymbol>(request.Trait, out var te))
+        {
+            traitToSearch = te;
+        }
+
         var apiResponse = await _apiClient.GetSystemWaypointsAsync(
             meta.Page,
             meta.Limit,
             null,
-            null,
+            traitToSearch,
             request.SystemSymbol,
             cancellationToken);
 
@@ -53,7 +59,7 @@ public sealed class FetchWaypointsCommandProcessor : ICommandProcessor<FetchWayp
     {
         return new WaypointDto
         {
-            Symbol = waypoint.Symbol,
+            WaypointSymbol = waypoint.Symbol,
             SystemSymbol = waypoint.SystemSymbol,
             Type = waypoint.Type.ToString(),
             Traits = [.. waypoint.Traits.Select(_ => _.Name)]

@@ -8,6 +8,7 @@ global using mark.davison.spacetraders.shared.models.dtos;
 global using mark.davison.spacetraders.shared.models.dtos.Commands.AddAccount;
 global using mark.davison.spacetraders.shared.models.dtos.Commands.FetchContracts;
 global using mark.davison.spacetraders.shared.models.dtos.Commands.FetchShips;
+global using mark.davison.spacetraders.shared.models.dtos.Commands.FetchShipyard;
 global using mark.davison.spacetraders.shared.models.dtos.Commands.FetchWaypoints;
 global using mark.davison.spacetraders.shared.models.dtos.Shared;
 global using mark.davison.spacetraders.shared.models.Entities;

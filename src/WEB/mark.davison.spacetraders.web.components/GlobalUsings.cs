@@ -8,6 +8,7 @@ global using mark.davison.common.client.Components.CommandMenu;
 global using mark.davison.common.client.Form;
 global using mark.davison.common.client.Ignition;
 global using mark.davison.common.CQRS;
+global using mark.davison.spacetraders.shared.constants;
 global using mark.davison.spacetraders.shared.models.dtos.Shared;
 global using mark.davison.spacetraders.web.components.Forms.AddAccount;
 global using mark.davison.spacetraders.web.features.Store.AccountUseCase;

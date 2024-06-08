@@ -5,5 +5,6 @@ public sealed class FetchWaypointsCommandRequest : ICommand<FetchWaypointsComman
 {
     public Guid AccountId { get; set; }
     public string SystemSymbol { get; set; } = string.Empty;
+    public string Trait { get; set; } = string.Empty;
     public MetaInfo? Meta { get; set; }
 }

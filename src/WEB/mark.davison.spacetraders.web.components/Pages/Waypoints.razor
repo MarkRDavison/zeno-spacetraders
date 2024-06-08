@@ -15,22 +15,37 @@
     }
     else if (WaypointState.Value.Waypoints.Any())
     {
+        <MudStack Row>
+            <MudSelect T="string" 
+                       Clearable="true"
+                       @bind-Value="SelectedTrait"
+                       Label="Traits" 
+                       AdornmentIcon="@Icons.Material.Filled.Search">
+                @foreach (var trait in Traits)
+                {
+                    <MudSelectItem T="string" Value="@trait">@trait</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton ButtonType="ButtonType.Submit"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Search"
+                       Variant="Variant.Filled"
+                       Size="Size.Large"
+                       Disabled="false"
+                       IconSize="Size.Large"
+                       OnClick="@Search">Search</MudButton>
+        </MudStack>
+
         <MudTable Items="@WaypointState.Value.Waypoints" Hover>
             <HeaderContent>
                 <MudTh>Symbol</MudTh>
-            </HeaderContent>
-            <HeaderContent>
                 <MudTh>System symbol</MudTh>
-            </HeaderContent>
-            <HeaderContent>
                 <MudTh>Type</MudTh>
-            </HeaderContent>
-            <HeaderContent>
                 <MudTh>Traits</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Symbol">
-                    <MudText Typo="Typo.body2">@context.Symbol</MudText>
+                    <MudLink Href="@RouteHelpers.Waypoint(context.SystemSymbol, context.WaypointSymbol)" Typo="Typo.body2">@context.WaypointSymbol</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Symbol">
                     <MudText Typo="Typo.body2">@context.SystemSymbol</MudText>

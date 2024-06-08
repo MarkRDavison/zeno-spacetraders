@@ -16,12 +16,38 @@ public sealed class WaypointEffects
         {
             AccountId = action.AccountId,
             SystemSymbol = action.SystemSymbol,
+            Trait = action.Trait,
             Meta = action.Meta
         };
 
         var commandResponse = await _repository.Post<FetchWaypointsCommandResponse, FetchWaypointsCommandRequest>(commandRequest, CancellationToken.None);
 
         var actionResponse = new FetchWaypointsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleFetchShipyardActionAsync(FetchShipyardAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new FetchShipyardCommandRequest
+        {
+            AccountId = action.AccountId,
+            SystemSymbol = action.SystemSymbol,
+            WaypointSymbol = action.WaypointSymbol
+        };
+
+        var commandResponse = await _repository.Post<FetchShipyardCommandResponse, FetchShipyardCommandRequest>(commandRequest, CancellationToken.None);
+
+        var actionResponse = new FetchShipyardActionResponse
         {
             ActionId = action.ActionId,
             Errors = [.. commandResponse.Errors],

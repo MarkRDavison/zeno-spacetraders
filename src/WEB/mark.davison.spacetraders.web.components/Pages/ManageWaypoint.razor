@@ -1,0 +1,89 @@
+﻿@attribute [Route(Routes.Waypoint)]
+@inherits FluxorComponent
+
+<MudStack Class="pa-4">
+    <MudStack Row AlignItems="AlignItems.End">
+        <MudText Typo="Typo.h3">@WaypointDto?.WaypointSymbol</MudText>
+        <MudSpacer />
+    </MudStack>
+
+    @if (WaypointState.Value.IsLoading)
+    {
+        <MudProgressCircular Indeterminate
+                             Class="ma-auto"
+                             Size="Size.Large" />
+    }
+    else if (WaypointDto != null)
+    {
+        <MudText Typo="Typo.h6">Traits</MudText>
+        <MudText Typo="Typo.body2">@string.Join(", ", WaypointDto.Traits)</MudText>
+
+        <MudExpansionPanels>
+            @if (IsShipyard)
+            {
+                <MudExpansionPanel Text="Shipyard" IsExpandedChanged="@(_ => IsExpandedChange(_, "Shipyard"))">
+                    @if (ShipyardDto is null)
+                    {
+                        <MudProgressLinear Indeterminate Size="Size.Large" />
+                    }
+                    else 
+                    {
+                        <MudText Typo="Typo.subtitle2">@($"Modification fee: ₡{ShipyardDto.ModificationsFee.ToString("N0")}")</MudText>
+                        <MudText Typo="Typo.subtitle2">@($"Can purchase: {string.Join(", ", ShipyardDto.ShipTypes)}")</MudText>
+                        <MudDivider DividerType="DividerType.FullWidth" />
+
+                        <MudText Typo="Typo.subtitle2">Ships available to purchase</MudText>
+                        <MudTable Items="@ShipyardDto.ShipyardShips">
+                            <HeaderContent>
+                                <MudTh>Type</MudTh>
+                                <MudTh>Name</MudTh>
+                                <MudTh>Supply</MudTh>
+                                <MudTh>Price</MudTh>
+                                <MudTh>Description</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Type">
+                                    <MudText Typo="Typo.body2">@context.Type</MudText>
+                                </MudTd>
+                                <MudTd DataLabel="Name">
+                                    <MudText Typo="Typo.body2">@context.Name</MudText>
+                                </MudTd>
+                                <MudTd DataLabel="Supply">
+                                    <MudText Typo="Typo.body2">@context.Supply</MudText>
+                                </MudTd>
+                                <MudTd DataLabel="Price">
+                                    <MudText Typo="Typo.body2">@($"₡{context.PurchasePrice.ToString("N0")}")</MudText>
+                                </MudTd>
+                                <MudTd DataLabel="Description">
+                                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+
+                        <MudDivider DividerType="DividerType.FullWidth"/>
+
+                        <MudText Typo="Typo.subtitle2">Ships recently purchased</MudText>
+                        <MudTable Items="@ShipyardDto.ShipyardTransactions">
+                            <HeaderContent>
+                                <MudTh>Type</MudTh>
+                                <MudTh>Agent</MudTh>
+                                <MudTh>Price</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Type">
+                                    <MudText Typo="Typo.body2">@context.Type</MudText>
+                                </MudTd>
+                                <MudTd DataLabel="Agent">
+                                    <MudText Typo="Typo.body2">@context.AgentSymbol</MudText>
+                                </MudTd>
+                                <MudTd DataLabel="Price">
+                                    <MudText Typo="Typo.body2">@($"₡{context.Price.ToString("N0")}")</MudText>
+                                </MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    }
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    }
+</MudStack>

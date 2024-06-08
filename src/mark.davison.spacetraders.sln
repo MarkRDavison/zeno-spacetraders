@@ -37,35 +37,35 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.w
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.web.services", "WEB\mark.davison.spacetraders.web.services\mark.davison.spacetraders.web.services.csproj", "{F182D959-9C2F-40BD-A371-69E386C09ACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.commands", "SHARED\mark.davison.spacetraders.shared.commands\mark.davison.spacetraders.shared.commands.csproj", "{50F60E89-D306-4B8C-95EE-61D7401218A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.commands", "SHARED\mark.davison.spacetraders.shared.commands\mark.davison.spacetraders.shared.commands.csproj", "{50F60E89-D306-4B8C-95EE-61D7401218A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.queries", "SHARED\mark.davison.spacetraders.shared.queries\mark.davison.spacetraders.shared.queries.csproj", "{82C97A13-4373-40E4-A924-57145F4B6F1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.queries", "SHARED\mark.davison.spacetraders.shared.queries\mark.davison.spacetraders.shared.queries.csproj", "{82C97A13-4373-40E4-A924-57145F4B6F1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.models", "SHARED\mark.davison.spacetraders.shared.models\mark.davison.spacetraders.shared.models.csproj", "{5E37B963-5021-4353-9D50-0E537BEF5E26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.models", "SHARED\mark.davison.spacetraders.shared.models\mark.davison.spacetraders.shared.models.csproj", "{5E37B963-5021-4353-9D50-0E537BEF5E26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.models.dtos", "SHARED\mark.davison.spacetraders.shared.models.dtos\mark.davison.spacetraders.shared.models.dtos.csproj", "{7A0C7FE4-D7CD-4434-AFBC-0C0B497D833A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.models.dtos", "SHARED\mark.davison.spacetraders.shared.models.dtos\mark.davison.spacetraders.shared.models.dtos.csproj", "{7A0C7FE4-D7CD-4434-AFBC-0C0B497D833A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.constants", "SHARED\mark.davison.spacetraders.shared.constants\mark.davison.spacetraders.shared.constants.csproj", "{345AFDD5-86E4-4C66-8C9F-84DD76A5A657}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.constants", "SHARED\mark.davison.spacetraders.shared.constants\mark.davison.spacetraders.shared.constants.csproj", "{345AFDD5-86E4-4C66-8C9F-84DD76A5A657}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.bff.web", "BFF\mark.davison.spacetraders.bff.web\mark.davison.spacetraders.bff.web.csproj", "{83583D7E-A364-4CD6-B64E-A65AE2C4854F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.bff.web", "BFF\mark.davison.spacetraders.bff.web\mark.davison.spacetraders.bff.web.csproj", "{83583D7E-A364-4CD6-B64E-A65AE2C4854F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.api", "API\mark.davison.spacetraders.api\mark.davison.spacetraders.api.csproj", "{45101633-5C1A-4995-BDB2-C514D264B0EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.api", "API\mark.davison.spacetraders.api\mark.davison.spacetraders.api.csproj", "{45101633-5C1A-4995-BDB2-C514D264B0EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.api.persistence", "API\mark.davison.spacetraders.api.persistence\mark.davison.spacetraders.api.persistence.csproj", "{D95262DE-9C74-41D9-A3C9-218E7A06CEA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.api.persistence", "API\mark.davison.spacetraders.api.persistence\mark.davison.spacetraders.api.persistence.csproj", "{D95262DE-9C74-41D9-A3C9-218E7A06CEA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.api.migrations.sqlite", "API\Migrations\mark.davison.spacetraders.api.migrations.sqlite\mark.davison.spacetraders.api.migrations.sqlite.csproj", "{4399AE7A-94C6-45B5-8FD5-E5D2E22162AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.api.migrations.sqlite", "API\Migrations\mark.davison.spacetraders.api.migrations.sqlite\mark.davison.spacetraders.api.migrations.sqlite.csproj", "{4399AE7A-94C6-45B5-8FD5-E5D2E22162AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.api.migrations.postgres", "API\Migrations\mark.davison.spacetraders.api.migrations.postgres\mark.davison.spacetraders.api.migrations.postgres.csproj", "{85AB2D8F-C1DC-447D-A56D-5EAFA0DAC6E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.api.migrations.postgres", "API\Migrations\mark.davison.spacetraders.api.migrations.postgres\mark.davison.spacetraders.api.migrations.postgres.csproj", "{85AB2D8F-C1DC-447D-A56D-5EAFA0DAC6E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.api.test", "API\Test\mark.davison.spacetraders.api.test\mark.davison.spacetraders.api.test.csproj", "{99A38290-AB85-40FA-A186-1C561BAF71DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.api.test", "API\Test\mark.davison.spacetraders.api.test\mark.davison.spacetraders.api.test.csproj", "{99A38290-AB85-40FA-A186-1C561BAF71DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.commands.test", "SHARED\Test\mark.davison.spacetraders.shared.commands.test\mark.davison.spacetraders.shared.commands.test.csproj", "{16033AB0-DE25-4A83-B2BF-A1F6CDC8FC63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.commands.test", "SHARED\Test\mark.davison.spacetraders.shared.commands.test\mark.davison.spacetraders.shared.commands.test.csproj", "{16033AB0-DE25-4A83-B2BF-A1F6CDC8FC63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.queries.test", "SHARED\Test\mark.davison.spacetraders.shared.queries.test\mark.davison.spacetraders.shared.queries.test.csproj", "{A3851EA8-9638-49F2-A195-BC8F22A4B732}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.queries.test", "SHARED\Test\mark.davison.spacetraders.shared.queries.test\mark.davison.spacetraders.shared.queries.test.csproj", "{A3851EA8-9638-49F2-A195-BC8F22A4B732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.api.models.configuration", "API\mark.davison.api.models.configuration\mark.davison.api.models.configuration.csproj", "{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.api.models.configuration", "API\mark.davison.api.models.configuration\mark.davison.api.models.configuration.csproj", "{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.services", "SHARED\mark.davison.spacetraders.shared.services\mark.davison.spacetraders.shared.services.csproj", "{B5524E02-673A-44E2-AB5C-70B86D20B890}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.services", "SHARED\mark.davison.spacetraders.shared.services\mark.davison.spacetraders.shared.services.csproj", "{B5524E02-673A-44E2-AB5C-70B86D20B890}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

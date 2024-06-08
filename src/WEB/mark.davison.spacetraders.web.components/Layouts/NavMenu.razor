@@ -14,7 +14,7 @@
     {
         <MudNavLink Href="@Routes.Ships" Match="NavLinkMatch.Prefix">Ships</MudNavLink>
         <MudNavLink Href="@Routes.Contracts" Match="NavLinkMatch.Prefix">Contracts</MudNavLink>
-        <MudNavLink Href="@Routes.Waypoints" Match="NavLinkMatch.Prefix">Waypoints</MudNavLink>
+        <MudNavLink Href="@RouteHelpers.Waypoints(WaypointHelpers.GetSystemFromWaypoint(Summary.Headquarters))" Match="NavLinkMatch.Prefix">Waypoints</MudNavLink>
     }
 </MudNavMenu>
 
