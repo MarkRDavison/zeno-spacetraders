@@ -21,7 +21,7 @@
         <MudExpansionPanels>
             @if (IsShipyard)
             {
-                <MudExpansionPanel Text="Shipyard" IsExpandedChanged="@(_ => IsExpandedChange(_, "Shipyard"))">
+                <MudExpansionPanel Text="Shipyard" Class="pa-4" IsExpandedChanged="@(_ => IsExpandedChange(_, "Shipyard"))">
                     @if (ShipyardDto is null)
                     {
                         <MudProgressLinear Indeterminate Size="Size.Large" />
@@ -30,7 +30,7 @@
                     {
                         <MudText Typo="Typo.subtitle2">@($"Modification fee: ₡{ShipyardDto.ModificationsFee.ToString("N0")}")</MudText>
                         <MudText Typo="Typo.subtitle2">@($"Can purchase: {string.Join(", ", ShipyardDto.ShipTypes)}")</MudText>
-                        <MudDivider DividerType="DividerType.FullWidth" />
+                        <MudDivider Class="my-4" DividerType="DividerType.FullWidth" />
 
                         <MudText Typo="Typo.subtitle2">Ships available to purchase</MudText>
                         <MudTable Items="@ShipyardDto.ShipyardShips">
@@ -60,7 +60,7 @@
                             </RowTemplate>
                         </MudTable>
 
-                        <MudDivider DividerType="DividerType.FullWidth"/>
+                        <MudDivider Class="my-4" DividerType="DividerType.FullWidth"/>
 
                         <MudText Typo="Typo.subtitle2">Ships recently purchased</MudText>
                         <MudTable Items="@ShipyardDto.ShipyardTransactions">
