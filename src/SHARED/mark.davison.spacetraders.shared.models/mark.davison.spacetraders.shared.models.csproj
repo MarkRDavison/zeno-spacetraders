@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\mark.davison.spacetraders.core\mark.davison.spacetraders.core.csproj" />
     <ProjectReference Include="..\mark.davison.spacetraders.shared.models.dtos\mark.davison.spacetraders.shared.models.dtos.csproj" />
   </ItemGroup>
 

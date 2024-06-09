@@ -32,7 +32,7 @@ public sealed class FetchShipsCommandProcessor : ICommandProcessor<FetchShipsCom
 
         return new FetchShipsCommandResponse
         {
-            Value = [.. apiResponse.Data.Select(FromShip)],
+            Value = [.. apiResponse.Data.Select(ShipHelpers.ToShipDto)],
             Meta = new MetaInfo
             {
                 Limit = apiResponse.Meta.Limit,
@@ -42,16 +42,4 @@ public sealed class FetchShipsCommandProcessor : ICommandProcessor<FetchShipsCom
         };
     }
 
-    private ShipDto FromShip(Ship ship)
-    {
-        return new ShipDto
-        {
-            Symbol = ship.Symbol,
-            Role = ship.Registration.Role.ToString(),
-            SystemSymbol = ship.Nav.SystemSymbol,
-            WaypointSymbol = ship.Nav.WaypointSymbol,
-            ShipNavFlightMode = ship.Nav.FlightMode.ToString(),
-            ShipNavStatus = ship.Nav.Status.ToString()
-        };
-    }
 }

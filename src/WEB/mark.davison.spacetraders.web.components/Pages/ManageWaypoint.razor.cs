@@ -4,6 +4,7 @@ public partial class ManageWaypoint
 {
     [Parameter]
     public required string WaypointSymbol { get; set; }
+
     [Parameter]
     public required string SystemSymbol { get; set; }
 
@@ -27,10 +28,16 @@ public partial class ManageWaypoint
 
     protected override async Task OnParametersSetAsync()
     {
-        if (WaypointDto == null && !string.IsNullOrEmpty(SystemSymbol) && !string.IsNullOrEmpty(WaypointSymbol))
+        if (WaypointDto == null &&
+            !string.IsNullOrEmpty(SystemSymbol) &&
+            !string.IsNullOrEmpty(WaypointSymbol) &&
+            AccountContextService.GetActiveAccount() is { } account)
         {
-            // TODO: Load symbol
-            await Task.CompletedTask;
+            await StoreHelper.DispatchAndWaitForResponse<FetchWaypointAction, FetchWaypointActionResponse>(new FetchWaypointAction
+            {
+                AccountId = account.Id,
+                WaypointSymbol = WaypointSymbol
+            });
         }
     }
 

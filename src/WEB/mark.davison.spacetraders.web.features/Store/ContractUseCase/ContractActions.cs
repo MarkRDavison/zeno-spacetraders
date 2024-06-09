@@ -11,3 +11,13 @@ public sealed class FetchContractsActionResponse : BaseActionResponse<List<Contr
 
 }
 
+public sealed class AcceptContractAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ContractId { get; set; } = string.Empty;
+}
+
+public sealed class AcceptContractActionResponse : BaseActionResponse<ContractDto>
+{
+
+}

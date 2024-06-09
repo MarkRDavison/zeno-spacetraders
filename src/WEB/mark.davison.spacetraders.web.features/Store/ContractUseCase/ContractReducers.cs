@@ -24,4 +24,19 @@ public static class ContractReducers
 
         return new ContractState(false, state.Contracts);
     }
+
+    [ReducerMethod]
+    public static ContractState AcceptContractActionResponse(ContractState state, AcceptContractActionResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+            return new ContractState(false,
+                [
+                    .. state.Contracts.Where(_ => _.Id != response.Value.Id),
+                    response.Value
+                ]);
+        }
+
+        return new ContractState(false, state.Contracts);
+    }
 }

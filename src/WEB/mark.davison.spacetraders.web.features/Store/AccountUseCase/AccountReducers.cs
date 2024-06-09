@@ -46,4 +46,20 @@ public static class AccountReducers
 
         return state;
     }
+
+    [ReducerMethod]
+    public static AccountState PurchaseShipActionResponse(AccountState state, UpdateCreditsAction action)
+    {
+        if (state.AccountSummaries.FirstOrDefault(_ => _.AccountId != action.AccountId) is { } summary)
+        {
+            summary.Credits = action.Credits;
+
+            return new AccountState(
+                state.IsLoading,
+                state.Accounts,
+                [.. state.AccountSummaries.Where(_ => _.AccountId != action.AccountId), summary]);
+        }
+
+        return state;
+    }
 }

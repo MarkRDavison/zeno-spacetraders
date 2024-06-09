@@ -13,6 +13,17 @@ public sealed class FetchWaypointsActionResponse : BaseActionResponse<List<Waypo
 
 }
 
+public sealed class FetchWaypointAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string WaypointSymbol { get; set; } = string.Empty;
+}
+
+public sealed class FetchWaypointActionResponse : BaseActionResponse<WaypointDto>
+{
+
+}
+
 public sealed class FetchShipyardAction : BaseAction
 {
     public Guid AccountId { get; set; }

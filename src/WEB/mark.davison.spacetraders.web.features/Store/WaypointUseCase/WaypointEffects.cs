@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.web.features.Store.WaypointUseCase;
+﻿using mark.davison.spacetraders.shared.models.dtos.Commands.FetchWaypoint;
+
+namespace mark.davison.spacetraders.web.features.Store.WaypointUseCase;
 
 public sealed class WaypointEffects
 {
@@ -23,6 +25,30 @@ public sealed class WaypointEffects
         var commandResponse = await _repository.Post<FetchWaypointsCommandResponse, FetchWaypointsCommandRequest>(commandRequest, CancellationToken.None);
 
         var actionResponse = new FetchWaypointsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleFetchWaypointActionAsync(FetchWaypointAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new FetchWaypointCommandRequest
+        {
+            AccountId = action.AccountId,
+            WaypointSymbol = action.WaypointSymbol
+        };
+
+        var commandResponse = await _repository.Post<FetchWaypointCommandResponse, FetchWaypointCommandRequest>(commandRequest, CancellationToken.None);
+
+        var actionResponse = new FetchWaypointActionResponse
         {
             ActionId = action.ActionId,
             Errors = [.. commandResponse.Errors],

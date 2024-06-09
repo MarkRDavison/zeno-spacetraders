@@ -90,7 +90,7 @@ public partial class WaypointsInfoPageViewModel : AsyncViewModel
     {
         var agent = await _agentInfoPageViewModelService.GetAgentAsync(CancellationToken.None);
 
-        var systemWaypoint = WaypointHelpers.GetSystemFromWaypoint(agent.Headquarters);
+        var systemWaypoint = WaypointsHelpers.GetSystemFromWaypoint(agent.Headquarters);
 
         var response = await _waypointService.GetSystemWaypointsAsync(
             PageIndex,

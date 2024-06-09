@@ -18,7 +18,7 @@
         <MudText Typo="Typo.h6">Traits</MudText>
         <MudText Typo="Typo.body2">@string.Join(", ", WaypointDto.Traits)</MudText>
 
-        <MudExpansionPanels>
+        <MudExpansionPanels MultiExpansion="false">
             @if (IsShipyard)
             {
                 <MudExpansionPanel Text="Shipyard" Class="pa-4" IsExpandedChanged="@(_ => IsExpandedChange(_, "Shipyard"))">

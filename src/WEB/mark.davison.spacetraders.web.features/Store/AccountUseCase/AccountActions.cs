@@ -30,3 +30,9 @@ public sealed class FetchAccountSummaryActionResponse : BaseActionResponse<Accou
 {
 
 }
+
+public sealed class UpdateCreditsAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public long Credits { get; set; }
+}

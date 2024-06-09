@@ -21,11 +21,31 @@ public static class WaypointReducers
                     .. state.Waypoints.Where(_ => !newIds.Contains(_.WaypointSymbol)),
                     .. response.Value
                 ],
-                []);
+                state.Shipyards);
         }
 
         return new WaypointState(false, state.Waypoints, state.Shipyards);
     }
+
+    [ReducerMethod]
+    public static WaypointState FetchWaypointActionResponse(WaypointState state, FetchWaypointActionResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+
+            return new WaypointState(
+                false,
+                [
+                    .. state.Waypoints.Where(_ => _.WaypointSymbol != response.Value.WaypointSymbol),
+                    response.Value
+                ],
+                state.Shipyards);
+        }
+
+        return new WaypointState(false, state.Waypoints, state.Shipyards);
+    }
+
+
 
     [ReducerMethod]
     public static WaypointState FetchShipyardAction(WaypointState state, FetchShipyardAction action)

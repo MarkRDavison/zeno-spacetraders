@@ -32,33 +32,12 @@ public sealed class FetchContractsCommandProcessor : ICommandProcessor<FetchCont
 
         return new FetchContractsCommandResponse
         {
-            Value = [.. apiResponse.Data.Select(FromContract)],
+            Value = [.. apiResponse.Data.Select(ContractHelpers.ToContractDto)],
             Meta = new MetaInfo
             {
                 Limit = apiResponse.Meta.Limit,
                 Page = apiResponse.Meta.Page,
                 Total = apiResponse.Meta.Total
-            }
-        };
-    }
-
-    private ContractDto FromContract(Contract contract)
-    {
-        return new ContractDto
-        {
-            Id = contract.Id,
-            Accepted = contract.Accepted,
-            DeadlineToAccept = contract.DeadlineToAccept,
-            FactionSymbol = contract.FactionSymbol,
-            Fulfilled = contract.Fulfilled,
-            Type = contract.Type.ToString(),
-            Terms = new ContractTermsDto
-            {
-                Payment = new ContractPaymentDto
-                {
-                    AcceptedCredits = contract.Terms.Payment.OnAccepted,
-                    FulfilledCredits = contract.Terms.Payment.OnFulfilled
-                }
             }
         };
     }

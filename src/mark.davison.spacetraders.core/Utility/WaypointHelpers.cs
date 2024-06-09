@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.spacetraders.core.Utility;
 
-public static class WaypointHelpers
+public static class WaypointsHelpers
 {
     public static string GetSystemFromWaypoint(this string waypoint)
     {

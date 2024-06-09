@@ -26,7 +26,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Symbol">
-                    <MudText Typo="Typo.body1">@context.Symbol</MudText>
+                    <MudLink Href="@RouteHelpers.Ship(context.Symbol)" Typo="Typo.body1">@context.Symbol</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Role">
                     <MudText Typo="Typo.body1">@context.Role</MudText>
@@ -35,7 +35,7 @@
                     <MudText Typo="Typo.body1">@context.SystemSymbol</MudText>
                 </MudTd>
                 <MudTd DataLabel="Waypoint">
-                    <MudText Typo="Typo.body1">@context.WaypointSymbol</MudText>
+                    <MudLink Href="@RouteHelpers.Waypoint(WaypointsHelpers.GetSystemFromWaypoint(context.WaypointSymbol), context.WaypointSymbol)" Typo="Typo.body1">@context.WaypointSymbol</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Nav status">
                     <MudText Typo="Typo.body1">@context.ShipNavStatus</MudText>

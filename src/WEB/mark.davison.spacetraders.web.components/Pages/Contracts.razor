@@ -21,10 +21,12 @@
                 <MudTh>Accepted</MudTh>
                 <MudTh>Fulfilled</MudTh>
                 <MudTh>Accept by</MudTh>
+                <MudTh>Deadline</MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Type">
-                    <MudText Typo="Typo.body1">@context.Type</MudText>
+                    <MudLink Href="@RouteHelpers.Contract(context.Id)" Typo="Typo.body1">@context.Type</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Accepted">
                     <MudIcon Icon="@(context.Accepted ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
@@ -37,6 +39,16 @@
                     {
                         <MudText Typo="Typo.body1">@context.DeadlineToAccept.Humanize()</MudText>
                     }
+                </MudTd>
+                <MudTd DataLabel="Deadline">
+                    @if (context.Accepted)
+                    {
+                        <MudText Typo="Typo.body1">@context.Terms.Deadline.Humanize()</MudText>
+                    }
+                </MudTd>
+                <MudTd>
+                    <CommandMenu OnCommandMenuItemSelected="@(_ => CommandMenuItemSelected(_, context))"
+                                 Items="@_commandMenuItems" />
                 </MudTd>
             </RowTemplate>
         </MudTable>

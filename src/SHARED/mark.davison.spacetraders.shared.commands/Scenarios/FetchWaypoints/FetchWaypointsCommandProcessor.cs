@@ -45,7 +45,7 @@ public sealed class FetchWaypointsCommandProcessor : ICommandProcessor<FetchWayp
 
         return new FetchWaypointsCommandResponse
         {
-            Value = [.. apiResponse.Data.Select(FromWaypoint)],
+            Value = [.. apiResponse.Data.Select(WaypointHelpers.FromWaypoint)],
             Meta = new MetaInfo
             {
                 Limit = apiResponse.Meta.Limit,
@@ -55,14 +55,4 @@ public sealed class FetchWaypointsCommandProcessor : ICommandProcessor<FetchWayp
         };
     }
 
-    private WaypointDto FromWaypoint(Waypoint waypoint)
-    {
-        return new WaypointDto
-        {
-            WaypointSymbol = waypoint.Symbol,
-            SystemSymbol = waypoint.SystemSymbol,
-            Type = waypoint.Type.ToString(),
-            Traits = [.. waypoint.Traits.Select(_ => _.Name)]
-        };
-    }
 }

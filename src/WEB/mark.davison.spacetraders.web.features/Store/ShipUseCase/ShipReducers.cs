@@ -24,4 +24,26 @@ public static class ShipReducers
 
         return new ShipState(false, state.Ships);
     }
+
+    [ReducerMethod]
+    public static ShipState PurchaseShipActionResponse(ShipState state, PurchaseShipActionResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+            return new ShipState(state.IsLoading, [.. state.Ships, response.Value]);
+        }
+
+        return state;
+    }
+
+    [ReducerMethod]
+    public static ShipState FetchShipActionResponse(ShipState state, FetchShipActionResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+            return new ShipState(state.IsLoading, [.. state.Ships.Where(_ => _.Symbol != response.Value.Symbol), response.Value]);
+        }
+
+        return state;
+    }
 }
