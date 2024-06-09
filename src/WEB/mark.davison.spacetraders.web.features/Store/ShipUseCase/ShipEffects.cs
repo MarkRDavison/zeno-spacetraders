@@ -99,7 +99,32 @@ public sealed class ShipEffects
 
         var commandResponse = await _repository.Post<OrbitShipCommandResponse, OrbitShipCommandRequest>(commandRequest, CancellationToken.None);
 
-        var actionResponse = new OrbitShipActionResponse
+        var actionResponse = new UpdateShipNavResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value,
+            ShipSymbol = commandResponse.ShipSymbol
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleDockShipActionAsync(DockShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new DockShipCommandRequest
+        {
+            AccountId = action.AccountId,
+            ShipSymbol = action.ShipSymbol
+        };
+
+        var commandResponse = await _repository.Post<DockShipCommandResponse, DockShipCommandRequest>(commandRequest, CancellationToken.None);
+
+        var actionResponse = new UpdateShipNavResponse
         {
             ActionId = action.ActionId,
             Errors = [.. commandResponse.Errors],

@@ -48,7 +48,7 @@ public static class ShipReducers
     }
 
     [ReducerMethod]
-    public static ShipState OrbitShipActionResponse(ShipState state, OrbitShipActionResponse response)
+    public static ShipState UpdateShipNavResponse(ShipState state, UpdateShipNavResponse response)
     {
         if (response.SuccessWithValue)
         {

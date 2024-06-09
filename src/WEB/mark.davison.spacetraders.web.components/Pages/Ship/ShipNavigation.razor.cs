@@ -15,7 +15,18 @@ public partial class ShipNavigation
     {
         if (AccountContextService.GetActiveAccount() is { } account)
         {
-            await StoreHelper.DispatchAndWaitForResponse<OrbitShipAction, OrbitShipActionResponse>(new OrbitShipAction
+            await StoreHelper.DispatchAndWaitForResponse<OrbitShipAction, UpdateShipNavResponse>(new()
+            {
+                AccountId = account.Id,
+                ShipSymbol = ShipDto.Symbol
+            });
+        }
+    }
+    private async Task DockShip()
+    {
+        if (AccountContextService.GetActiveAccount() is { } account)
+        {
+            await StoreHelper.DispatchAndWaitForResponse<DockShipAction, UpdateShipNavResponse>(new()
             {
                 AccountId = account.Id,
                 ShipSymbol = ShipDto.Symbol

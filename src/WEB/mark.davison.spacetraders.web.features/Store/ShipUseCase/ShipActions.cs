@@ -40,7 +40,13 @@ public sealed class OrbitShipAction : BaseAction
     public string ShipSymbol { get; set; } = string.Empty;
 }
 
-public sealed class OrbitShipActionResponse : BaseActionResponse<ShipNavDto>
+public sealed class DockShipAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+}
+
+public sealed class UpdateShipNavResponse : BaseActionResponse<ShipNavDto>
 {
     public string ShipSymbol { get; set; } = string.Empty;
 }
