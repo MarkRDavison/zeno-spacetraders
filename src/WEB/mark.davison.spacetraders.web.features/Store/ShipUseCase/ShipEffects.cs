@@ -1,8 +1,4 @@
-﻿using mark.davison.spacetraders.shared.models.dtos.Commands.FetchShip;
-using mark.davison.spacetraders.shared.models.dtos.Commands.PurchaseShip;
-using mark.davison.spacetraders.web.features.Store.AccountUseCase;
-
-namespace mark.davison.spacetraders.web.features.Store.ShipUseCase;
+﻿namespace mark.davison.spacetraders.web.features.Store.ShipUseCase;
 
 public sealed class ShipEffects
 {
@@ -85,6 +81,31 @@ public sealed class ShipEffects
             Errors = [.. commandResponse.Errors],
             Warnings = [.. commandResponse.Warnings],
             Value = commandResponse.Value
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleOrbitShipActionAsync(OrbitShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new OrbitShipCommandRequest
+        {
+            AccountId = action.AccountId,
+            ShipSymbol = action.ShipSymbol
+        };
+
+        var commandResponse = await _repository.Post<OrbitShipCommandResponse, OrbitShipCommandRequest>(commandRequest, CancellationToken.None);
+
+        var actionResponse = new OrbitShipActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value,
+            ShipSymbol = commandResponse.ShipSymbol
         };
 
         // TODO: Framework to dispatch general ***something went wrong***

@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.web.features.Store.AccountUseCase;
+﻿using mark.davison.spacetraders.shared.models.dtos.Commands.DeleteAccount;
+
+namespace mark.davison.spacetraders.web.features.Store.AccountUseCase;
 
 public sealed class AccountEffects
 {
@@ -73,6 +75,31 @@ public sealed class AccountEffects
             Warnings = [.. queryResponse.Warnings],
             Value = queryResponse.Value
         };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleDeleteAccountActionAsync(DeleteAccountAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new DeleteAccountCommandRequest
+        {
+            AccountId = action.AccountId
+        };
+
+
+        var commandResponse = await _repository.Post<DeleteAccountCommandResponse, DeleteAccountCommandRequest>(commandRequest, CancellationToken.None);
+
+        var actionResponse = new DeleteAccountActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            AccountId = action.AccountId
+        };
+
         // TODO: Framework to dispatch general ***something went wrong***
 
         dispatcher.Dispatch(actionResponse);

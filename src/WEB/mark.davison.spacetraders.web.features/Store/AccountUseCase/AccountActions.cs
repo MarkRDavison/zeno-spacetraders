@@ -36,3 +36,13 @@ public sealed class UpdateCreditsAction : BaseAction
     public Guid AccountId { get; set; }
     public long Credits { get; set; }
 }
+
+public sealed class DeleteAccountAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+}
+
+public sealed class DeleteAccountActionResponse : BaseActionResponse
+{
+    public Guid AccountId { get; set; }
+}

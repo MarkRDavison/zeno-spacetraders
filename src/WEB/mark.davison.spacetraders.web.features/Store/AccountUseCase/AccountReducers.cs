@@ -62,4 +62,15 @@ public static class AccountReducers
 
         return state;
     }
+
+    [ReducerMethod]
+    public static AccountState DeleteAccountActionResponse(AccountState state, DeleteAccountActionResponse response)
+    {
+        if (response.Success)
+        {
+            return new AccountState(state.IsLoading, [.. state.Accounts.Where(_ => _.Id != response.AccountId)], state.AccountSummaries);
+        }
+
+        return state;
+    }
 }

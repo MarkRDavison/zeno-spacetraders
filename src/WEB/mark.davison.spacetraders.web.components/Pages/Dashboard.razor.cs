@@ -11,12 +11,20 @@ public partial class Dashboard
     [Inject]
     public required IAccountContextService AccountContextService { get; set; }
 
+    [Inject]
+    public required IStoreHelper StoreHelper { get; set; }
+
     private List<CommandMenuItem> _commandMenuItems { get; } =
         [
             new CommandMenuItem
             {
                 Id = "ACTIVATE",
                 Text = "Activate"
+            },
+            new CommandMenuItem
+            {
+                Id = "DELETE",
+                Text = "Delete"
             }
         ];
 
@@ -25,6 +33,20 @@ public partial class Dashboard
         if (item.Id == "ACTIVATE")
         {
             await AccountContextService.ActivateAccountAsync(account, CancellationToken.None);
+        }
+        else if (item.Id == "DELETE")
+        {
+            await StoreHelper.DispatchAndWaitForResponse<DeleteAccountAction, DeleteAccountActionResponse>(new DeleteAccountAction
+            {
+                AccountId = account.Id
+            });
+
+            var activeAccount = AccountContextService.GetActiveAccount();
+
+            if (account.Id == activeAccount?.Id)
+            {
+                AccountContextService.DeactivateAccount();
+            }
         }
     }
 

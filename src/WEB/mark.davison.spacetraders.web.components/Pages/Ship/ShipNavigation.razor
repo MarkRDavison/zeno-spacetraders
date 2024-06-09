@@ -1,0 +1,10 @@
+﻿<MudStack Row>
+    <MudButton ButtonType="ButtonType.Submit"
+               Color="Color.Primary"
+               StartIcon="@Icons.Material.Filled.Outbound"
+               Variant="Variant.Filled"
+               Size="Size.Large"
+                Disabled="@(ShipDto.Nav.Status == "IN_ORBIT")"
+               IconSize="Size.Large"
+               OnClick="@MoveShipToOrbit">Orbit</MudButton>
+</MudStack>

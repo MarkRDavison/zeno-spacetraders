@@ -33,3 +33,14 @@ public sealed class FetchShipActionResponse : BaseActionResponse<ShipDto>
 {
 
 }
+
+public sealed class OrbitShipAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+}
+
+public sealed class OrbitShipActionResponse : BaseActionResponse<ShipNavDto>
+{
+    public string ShipSymbol { get; set; } = string.Empty;
+}

@@ -20,7 +20,13 @@ public sealed class AccountContextService : IAccountContextService
         ActiveAccountChanged?.Invoke(this, account);
     }
 
+    public void DeactivateAccount()
+    {
+        _activeAccount = null;
+        ActiveAccountChanged?.Invoke(this, null);
+    }
+
     public AccountDto? GetActiveAccount() => _activeAccount;
 
-    public event EventHandler<AccountDto> ActiveAccountChanged = default!;
+    public event EventHandler<AccountDto?> ActiveAccountChanged = default!;
 }

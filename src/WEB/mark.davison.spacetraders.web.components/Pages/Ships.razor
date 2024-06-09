@@ -32,16 +32,16 @@
                     <MudText Typo="Typo.body1">@context.Role</MudText>
                 </MudTd>
                 <MudTd DataLabel="System">
-                    <MudText Typo="Typo.body1">@context.SystemSymbol</MudText>
+                    <MudText Typo="Typo.body1">@context.Nav.SystemSymbol</MudText>
                 </MudTd>
                 <MudTd DataLabel="Waypoint">
-                    <MudLink Href="@RouteHelpers.Waypoint(WaypointsHelpers.GetSystemFromWaypoint(context.WaypointSymbol), context.WaypointSymbol)" Typo="Typo.body1">@context.WaypointSymbol</MudLink>
+                    <MudLink Href="@RouteHelpers.Waypoint(WaypointsHelpers.GetSystemFromWaypoint(context.Nav.WaypointSymbol), context.Nav.WaypointSymbol)" Typo="Typo.body1">@context.Nav.WaypointSymbol</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Nav status">
-                    <MudText Typo="Typo.body1">@context.ShipNavStatus</MudText>
+                    <MudText Typo="Typo.body1">@context.Nav.Status</MudText>
                 </MudTd>
                 <MudTd DataLabel="Flight mode">
-                    <MudText Typo="Typo.body1">@context.ShipNavFlightMode</MudText>
+                    <MudText Typo="Typo.body1">@context.Nav.FlightMode</MudText>
                 </MudTd>
             </RowTemplate>
         </MudTable>

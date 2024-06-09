@@ -16,9 +16,15 @@
     else if (ShipDto != null)
     {
         <MudText Typo="Typo.h6">@($"Role: {ShipDto.Role}")</MudText>
-        <MudText Typo="Typo.h6">@($"System: {ShipDto.SystemSymbol}")</MudText>
-        <MudText Typo="Typo.h6">@($"Waypoint: {ShipDto.WaypointSymbol}")</MudText>
-        <MudText Typo="Typo.h6">@($"Status: {ShipDto.ShipNavStatus}")</MudText>
-        <MudText Typo="Typo.h6">@($"Flight: {ShipDto.ShipNavFlightMode}")</MudText>
+        <MudText Typo="Typo.h6">@($"System: {ShipDto.Nav.SystemSymbol}")</MudText>
+        <MudText Typo="Typo.h6">@($"Waypoint: {ShipDto.Nav.WaypointSymbol}")</MudText>
+        <MudText Typo="Typo.h6">@($"Status: {ShipDto.Nav.Status}")</MudText>
+        <MudText Typo="Typo.h6">@($"Flight: {ShipDto.Nav.FlightMode}")</MudText>
+
+        <MudExpansionPanels MultiExpansion="false">
+            <MudExpansionPanel Text="Navigation" Class="pa-4">
+                <ShipNavigation ShipDto="@ShipDto" />
+            </MudExpansionPanel>
+        </MudExpansionPanels>
     }
 </MudStack>

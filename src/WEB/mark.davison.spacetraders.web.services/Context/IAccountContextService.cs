@@ -3,6 +3,7 @@
 public interface IAccountContextService
 {
     Task ActivateAccountAsync(AccountDto account, CancellationToken cancellationToken);
+    void DeactivateAccount();
     AccountDto? GetActiveAccount();
-    event EventHandler<AccountDto> ActiveAccountChanged;
+    event EventHandler<AccountDto?> ActiveAccountChanged;
 }

@@ -46,4 +46,24 @@ public static class ShipReducers
 
         return state;
     }
+
+    [ReducerMethod]
+    public static ShipState OrbitShipActionResponse(ShipState state, OrbitShipActionResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+            var existingShip = state.Ships.FirstOrDefault(_ => _.Symbol == response.ShipSymbol);
+
+            if (existingShip != null)
+            {
+                existingShip.Nav = response.Value;
+
+                return new ShipState(
+                    state.IsLoading,
+                    [.. state.Ships.Where(_ => _.Symbol != existingShip.Symbol), existingShip]);
+            }
+        }
+
+        return state;
+    }
 }

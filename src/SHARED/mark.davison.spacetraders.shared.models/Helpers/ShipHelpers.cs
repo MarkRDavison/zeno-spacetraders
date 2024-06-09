@@ -8,10 +8,18 @@ public static class ShipHelpers
         {
             Symbol = ship.Symbol,
             Role = ship.Registration.Role.ToString(),
-            SystemSymbol = ship.Nav.SystemSymbol,
-            WaypointSymbol = ship.Nav.WaypointSymbol,
-            ShipNavFlightMode = ship.Nav.FlightMode.ToString(),
-            ShipNavStatus = ship.Nav.Status.ToString()
+            Nav = ToShipNavDto(ship.Nav)
+        };
+    }
+
+    public static ShipNavDto ToShipNavDto(ShipNav shipNav)
+    {
+        return new ShipNavDto
+        {
+            SystemSymbol = shipNav.SystemSymbol,
+            WaypointSymbol = shipNav.WaypointSymbol,
+            FlightMode = shipNav.FlightMode.ToString(),
+            Status = shipNav.Status.ToString()
         };
     }
 }
