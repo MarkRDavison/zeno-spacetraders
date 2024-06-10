@@ -4,7 +4,38 @@
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
         <MudText Typo="Typo.h3">@ShipSymbol</MudText>
+        @if (ShipDto?.Cooldown.RemainingSeconds > 0)
+        {
+            <MudText Typo="Typo.subtitle1">@($"Cooldown ends: {ShipDto.Cooldown.Expiration.Humanize()}")</MudText>
+        }
         <MudSpacer />
+        
+        @if (ShipDto?.Role.ToUpperInvariant() == "EXCAVATOR" &&
+            (WaypointDto?.Traits.Any(_ => _.ToUpperInvariant().Contains("DEPOSITS")) ?? false) &&
+            ShipDto?.Cooldown.RemainingSeconds <= 0 &&
+        ShipDto.Nav.Status == "IN_ORBIT")
+        @*TODO: Also check if waypoint supports this*@
+        {
+        <MudIconButton ButtonType="ButtonType.Submit"
+                       Color="Color.Primary"
+                       Icon="@Icons.Material.Filled.Landslide"
+                       Variant="Variant.Filled"
+                       OnClick="@Extract" />
+        }
+        @if (WaypointDto?.Traits.Contains("Marketplace") ?? false)
+        {
+        <MudIconButton ButtonType="ButtonType.Submit"
+                       Color="Color.Primary"
+                       Icon="@Icons.Material.Filled.BatteryChargingFull"
+                       Variant="Variant.Filled"
+                       Disabled=@(ShipDto?.Fuel.Current == ShipDto?.Fuel.Capacity)
+                       OnClick="@Refuel" />
+        }
+        <MudIconButton ButtonType="ButtonType.Submit"
+                       Color="Color.Primary"
+                       Icon="@Icons.Material.Filled.Refresh"
+                       Variant="Variant.Filled"
+                       OnClick="@Refresh" />
     </MudStack>
 
     @if (ShipState.Value.IsLoading)
@@ -18,12 +49,21 @@
         <MudText Typo="Typo.h6">@($"Role: {ShipDto.Role}")</MudText>
         <MudText Typo="Typo.h6">@($"System: {ShipDto.Nav.SystemSymbol}")</MudText>
         <MudText Typo="Typo.h6">@($"Waypoint: {ShipDto.Nav.WaypointSymbol}")</MudText>
+        @if (WaypointDto != null)
+        {
+            <MudText Typo="Typo.h6">@($"Waypoint traits: {string.Join(", ", WaypointDto.Traits)}")</MudText>
+        }
         <MudText Typo="Typo.h6">@($"Status: {ShipDto.Nav.Status}")</MudText>
         <MudText Typo="Typo.h6">@($"Flight: {ShipDto.Nav.FlightMode}")</MudText>
+        <MudText Typo="Typo.h6">@($"Fuel: {ShipDto.Fuel.Current}/{ShipDto.Fuel.Capacity}")</MudText>
 
         <MudExpansionPanels MultiExpansion="false">
             <MudExpansionPanel Text="Navigation" Class="pa-4">
+                @*TODO: orbit/dock should be in action panel???*@
                 <ShipNavigation ShipDto="@ShipDto" />
+            </MudExpansionPanel>
+            <MudExpansionPanel Text="Cargo" Class="pa-4">
+                <ShipCargo ShipDto="@ShipDto" />
             </MudExpansionPanel>
         </MudExpansionPanels>
     }

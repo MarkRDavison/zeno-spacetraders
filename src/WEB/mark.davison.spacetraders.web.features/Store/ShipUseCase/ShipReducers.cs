@@ -5,7 +5,7 @@ public static class ShipReducers
     [ReducerMethod]
     public static ShipState FetchShipsAction(ShipState state, FetchShipsAction action)
     {
-        return new ShipState(true, []);
+        return new ShipState(true, [], []);
     }
 
     [ReducerMethod]
@@ -15,14 +15,15 @@ public static class ShipReducers
         {
             var newIds = response.Value.Select(_ => _.Symbol).ToHashSet();
 
-            return new ShipState(false,
+            return new ShipState(
+                false,
                 [
                     .. state.Ships.Where(_ => !newIds.Contains(_.Symbol)),
                     .. response.Value
-                ]);
+                ], state.Cargo);
         }
 
-        return new ShipState(false, state.Ships);
+        return new ShipState(false, state.Ships, state.Cargo);
     }
 
     [ReducerMethod]
@@ -30,7 +31,7 @@ public static class ShipReducers
     {
         if (response.SuccessWithValue)
         {
-            return new ShipState(state.IsLoading, [.. state.Ships, response.Value]);
+            return new ShipState(state.IsLoading, [.. state.Ships, response.Value], state.Cargo);
         }
 
         return state;
@@ -41,7 +42,7 @@ public static class ShipReducers
     {
         if (response.SuccessWithValue)
         {
-            return new ShipState(state.IsLoading, [.. state.Ships.Where(_ => _.Symbol != response.Value.Symbol), response.Value]);
+            return new ShipState(state.IsLoading, [.. state.Ships.Where(_ => _.Symbol != response.Value.Symbol), response.Value], state.Cargo);
         }
 
         return state;
@@ -60,8 +61,44 @@ public static class ShipReducers
 
                 return new ShipState(
                     state.IsLoading,
-                    [.. state.Ships.Where(_ => _.Symbol != existingShip.Symbol), existingShip]);
+                    [.. state.Ships.Where(_ => _.Symbol != existingShip.Symbol), existingShip],
+                    state.Cargo);
             }
+        }
+
+        return state;
+    }
+
+    [ReducerMethod]
+    public static ShipState UpdateShipFuelResponse(ShipState state, UpdateShipFuelResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+            var existingShip = state.Ships.FirstOrDefault(_ => _.Symbol == response.ShipSymbol);
+
+            if (existingShip != null)
+            {
+                existingShip.Fuel = response.Value;
+
+                return new ShipState(
+                    state.IsLoading,
+                    [.. state.Ships.Where(_ => _.Symbol != existingShip.Symbol), existingShip],
+                    state.Cargo);
+            }
+        }
+
+        return state;
+    }
+
+    [ReducerMethod]
+    public static ShipState FetchShipCargoActionResponse(ShipState state, FetchShipCargoActionResponse response)
+    {
+        if (response.SuccessWithValue)
+        {
+            return new ShipState(
+                state.IsLoading,
+                state.Ships,
+                [.. state.Cargo.Where(_ => _.ShipSymbol != response.Value.ShipSymbol), response.Value]);
         }
 
         return state;

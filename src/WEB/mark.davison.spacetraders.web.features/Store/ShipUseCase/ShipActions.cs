@@ -50,3 +50,40 @@ public sealed class UpdateShipNavResponse : BaseActionResponse<ShipNavDto>
 {
     public string ShipSymbol { get; set; } = string.Empty;
 }
+
+public sealed class UpdateShipFuelResponse : BaseActionResponse<ShipFuelDto>
+{
+    public string ShipSymbol { get; set; } = string.Empty;
+}
+
+public sealed class NavigateShipAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+    public string DestinationWaypoint { get; set; } = string.Empty;
+}
+
+public sealed class RefuelShipAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+    public bool FromCargo { get; set; }
+    public int Units { get; set; }
+}
+
+public sealed class FetchShipCargoAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+}
+
+public sealed class FetchShipCargoActionResponse : BaseActionResponse<ShipCargoDto>
+{
+
+}
+
+public sealed class ExtractResourceShipAction : BaseAction
+{
+    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+}

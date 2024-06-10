@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.web.features.Store.ShipUseCase;
+﻿using mark.davison.spacetraders.shared.models.dtos.Commands.ExtractResources;
+
+namespace mark.davison.spacetraders.web.features.Store.ShipUseCase;
 
 public sealed class ShipEffects
 {
@@ -136,5 +138,113 @@ public sealed class ShipEffects
         // TODO: Framework to dispatch general ***something went wrong***
 
         dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleNavigateShipActionAsync(NavigateShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new NavigateShipCommandRequest
+        {
+            AccountId = action.AccountId,
+            ShipSymbol = action.ShipSymbol,
+            DestinationWaypoint = action.DestinationWaypoint
+        };
+
+        var commandResponse = await _repository.Post<NavigateShipCommandResponse, NavigateShipCommandRequest>(commandRequest, CancellationToken.None);
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(new UpdateShipNavResponse
+        {
+            ActionId = action.AccountId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value.Item1,
+            ShipSymbol = action.ShipSymbol
+        });
+        dispatcher.Dispatch(new UpdateShipFuelResponse
+        {
+            ActionId = action.AccountId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value.Item2,
+            ShipSymbol = action.ShipSymbol
+        });
+    }
+
+    [EffectMethod]
+    public async Task HandleRefuelShipActionAsync(RefuelShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new RefuelShipCommandRequest
+        {
+            AccountId = action.AccountId,
+            ShipSymbol = action.ShipSymbol,
+            FromCargo = action.FromCargo,
+            Units = action.Units
+        };
+
+        var commandResponse = await _repository.Post<RefuelShipCommandResponse, RefuelShipCommandRequest>(commandRequest, CancellationToken.None);
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(new UpdateShipFuelResponse // TODO: Should this just be an action???
+        {
+            ActionId = action.AccountId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value,
+            ShipSymbol = action.ShipSymbol
+        });
+        dispatcher.Dispatch(new UpdateCreditsAction
+        {
+            ActionId = action.AccountId,
+            Credits = commandResponse.Credits
+        });
+    }
+
+    [EffectMethod]
+    public async Task HandleFetchShipCargoActionAsync(FetchShipCargoAction action, IDispatcher dispatcher)
+    {
+        var queryRequest = new FetchShipCargoQueryRequest
+        {
+            AccountId = action.AccountId,
+            ShipSymbol = action.ShipSymbol
+        };
+
+        var queryResponse = await _repository.Get<FetchShipCargoQueryResponse, FetchShipCargoQueryRequest>(queryRequest, CancellationToken.None);
+
+        var actionResponse = new FetchShipCargoActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleExtractResourceShipActionAsync(ExtractResourceShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new ExtractResourcesCommandRequest
+        {
+            AccountId = action.AccountId,
+            ShipSymbol = action.ShipSymbol
+        };
+
+        var commandResponse = await _repository.Post<ExtractResourcesCommandResponse, ExtractResourcesCommandRequest>(commandRequest, CancellationToken.None);
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(new FetchShipCargoActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value
+        });
     }
 }

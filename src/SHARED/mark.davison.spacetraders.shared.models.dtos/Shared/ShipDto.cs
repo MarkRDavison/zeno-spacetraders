@@ -5,4 +5,6 @@ public sealed class ShipDto
     public string Symbol { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public ShipNavDto Nav { get; set; } = new();
+    public ShipFuelDto Fuel { get; set; } = new();
+    public CooldownDto Cooldown { get; set; } = new();
 }
