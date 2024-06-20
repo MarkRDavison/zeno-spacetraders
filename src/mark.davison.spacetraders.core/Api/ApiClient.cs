@@ -6695,7 +6695,7 @@ namespace mark.davison.spacetraders.core.Api
 
         [Newtonsoft.Json.JsonProperty("condition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [gSystem.ComponentModel.DataAnnotations.Range(0, 100)]
-        public int Condition { get; set; }
+        public decimal Condition { get; set; }
 
         /// <summary>
         /// The speed stat of this engine. The higher the speed, the faster a ship can travel from one point to another. Reduces the time of arrival when navigating the ship.
@@ -6749,7 +6749,7 @@ namespace mark.davison.spacetraders.core.Api
 
         [Newtonsoft.Json.JsonProperty("condition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [gSystem.ComponentModel.DataAnnotations.Range(0, 100)]
-        public int Condition { get; set; }
+        public decimal Condition { get; set; }
 
         /// <summary>
         /// The amount of slots that can be dedicated to modules installed in the ship. Each installed module take up a number of slots, and once there are no more slots, no new modules can be installed.
@@ -7183,7 +7183,7 @@ namespace mark.davison.spacetraders.core.Api
 
         [Newtonsoft.Json.JsonProperty("condition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [gSystem.ComponentModel.DataAnnotations.Range(0, 100)]
-        public int Condition { get; set; }
+        public decimal Condition { get; set; }
 
         /// <summary>
         /// The amount of power provided by this reactor. The more power a reactor provides to the ship, the lower the cooldown it gets when using a module or mount that taxes the ship's power.

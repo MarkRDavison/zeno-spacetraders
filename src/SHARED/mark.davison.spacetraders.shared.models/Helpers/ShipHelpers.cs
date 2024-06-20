@@ -2,53 +2,55 @@
 
 public static class ShipHelpers
 {
+    public static ShipResponse ToShipResponse(Ship ship)
+    {
+        return new ShipResponse
+        {
+            Ship = ToShipDto(ship),
+            ShipNav = ToShipNavDto(ship.Symbol, ship.Nav),
+            ShipNavRoute = ToShipNavRouteDto(ship.Symbol, ship.Nav.Route),
+            ShipCargo = ToShipCargoDto(ship.Symbol, ship.Cargo),
+            Cooldown = ToCooldownDto(ship.Symbol, ship.Cooldown),
+            Fuel = ToFuelDto(ship.Symbol, ship.Fuel)
+        };
+    }
+
+    public static ShipFuelDto ToFuelDto(string symbol, ShipFuel fuel)
+    {
+        return new ShipFuelDto
+        {
+            ShipSymbol = symbol,
+            Capacity = fuel.Capacity,
+            Current = fuel.Current
+        };
+    }
+
     public static ShipDto ToShipDto(Ship ship)
     {
         return new ShipDto
         {
-            Symbol = ship.Symbol,
-            Role = ship.Registration.Role.ToString(),
-            Nav = ToShipNavDto(ship.Nav),
-            Fuel = ToShipFuelDto(ship.Fuel),
-            Cooldown = ToCooldown(ship.Cooldown)
+            ShipSymbol = ship.Symbol,
+            Role = ship.Registration.Role.ToString()
         };
     }
 
-    private static CooldownDto ToCooldown(Cooldown cooldown)
-    {
-        return new CooldownDto
-        {
-            TotalSeconds = cooldown.TotalSeconds,
-            RemainingSeconds = cooldown.RemainingSeconds,
-            Expiration = cooldown.Expiration
-        };
-    }
-
-    public static ShipNavDto ToShipNavDto(ShipNav shipNav)
+    public static ShipNavDto ToShipNavDto(string shipSymbol, ShipNav shipNav)
     {
         return new ShipNavDto
         {
-            SystemSymbol = shipNav.SystemSymbol,
-            WaypointSymbol = shipNav.WaypointSymbol,
+            ShipSymbol = shipSymbol,
             FlightMode = shipNav.FlightMode.ToString(),
             Status = shipNav.Status.ToString(),
-            Route = ToShipNavRouteDto(shipNav.Route)
+            SystemSymbol = shipNav.SystemSymbol,
+            WaypointSymbol = shipNav.WaypointSymbol
         };
     }
 
-    public static ShipFuelDto ToShipFuelDto(ShipFuel shipFuel)
-    {
-        return new ShipFuelDto
-        {
-            Capacity = shipFuel.Capacity,
-            Current = shipFuel.Current
-        };
-    }
-
-    public static ShipNavRouteDto ToShipNavRouteDto(ShipNavRoute shipNavRoute)
+    public static ShipNavRouteDto ToShipNavRouteDto(string shipSymbol, ShipNavRoute shipNavRoute)
     {
         return new ShipNavRouteDto
         {
+            ShipSymbol = shipSymbol,
             Arrival = shipNavRoute.Arrival,
             Departure = shipNavRoute.DepartureTime,
             Destination = shipNavRoute.Destination.Symbol,
@@ -58,13 +60,25 @@ public static class ShipHelpers
         };
     }
 
-    public static ShipCargoDto ToShipCargoDto(ShipCargo shipCargo)
+    public static ShipCargoDto ToShipCargoDto(string shipSymbol, ShipCargo shipCargo)
     {
         return new ShipCargoDto
         {
+            ShipSymbol = shipSymbol,
             Capacity = shipCargo.Capacity,
             Units = shipCargo.Units,
             Inventory = [.. shipCargo.Inventory.Select(ToShipCargoItemDto)]
+        };
+    }
+
+    public static CooldownDto ToCooldownDto(string shipSymbol, Cooldown cooldown)
+    {
+        return new CooldownDto
+        {
+            ShipSymbol = shipSymbol,
+            TotalSeconds = cooldown.TotalSeconds,
+            RemainingSeconds = cooldown.RemainingSeconds,
+            Expiration = cooldown.Expiration
         };
     }
 

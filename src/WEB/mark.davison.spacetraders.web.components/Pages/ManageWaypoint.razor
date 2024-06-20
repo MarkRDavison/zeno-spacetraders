@@ -3,26 +3,32 @@
 
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
-        <MudText Typo="Typo.h3">@WaypointDto?.WaypointSymbol</MudText>
+        <MudText Typo="Typo.h3">@WaypointSymbol</MudText>
         <MudSpacer />
     </MudStack>
 
-    @if (WaypointState.Value.IsLoading)
+    @if (WaypointState.Value.IsLoading || WaypointState.Value.GetWaypoint(WaypointSymbol) is null)
     {
         <MudProgressCircular Indeterminate
                              Class="ma-auto"
                              Size="Size.Large" />
     }
-    else if (WaypointDto != null)
+    else if (WaypointState.Value.GetWaypoint(WaypointSymbol) is { } waypoint)
     {
         <MudText Typo="Typo.h6">Traits</MudText>
-        <MudText Typo="Typo.body2">@string.Join(", ", WaypointDto.Traits)</MudText>
+        <MudText Typo="Typo.body2">@string.Join(", ", waypoint.Traits)</MudText>
 
         <MudExpansionPanels MultiExpansion="false">
-            @if (IsShipyard)
+            @if (waypoint.Traits.Any(_ => string.Equals(_, "SHIPYARD", StringComparison.InvariantCultureIgnoreCase)))
             {
-                <MudExpansionPanel Text="Shipyard" Class="pa-4" IsExpandedChanged="@(_ => IsExpandedChange(_, "Shipyard"))">
-                    <Shipyard ShipyardDto="@ShipyardDto" />
+                <MudExpansionPanel Text="Shipyard" IsExpandedChanged="@(async _ => await OnExpandedChanged(_, "SHIPYARD"))">
+                    <Shipyard Identifier="@Identifier" ShipyardDto="@WaypointState.Value.GetShipyard(WaypointSymbol)" />
+                </MudExpansionPanel>
+            }
+            @if (waypoint.Traits.Any(_ => string.Equals(_, "MARKETPLACE", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                <MudExpansionPanel Text="Marketplace" IsExpandedChanged="@(async _ => await OnExpandedChanged(_, "MARKETPLACE"))">
+                    <Marketplace Identifier="@Identifier" MarketplaceDto="@WaypointState.Value.GetMarketplace(WaypointSymbol)" />
                 </MudExpansionPanel>
             }
         </MudExpansionPanels>

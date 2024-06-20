@@ -1,32 +1,15 @@
 ﻿namespace mark.davison.spacetraders.shared.commands.Scenarios.RefuelShip;
 
-public sealed class RefuelShipCommandProcessor : ICommandProcessor<RefuelShipCommandRequest, RefuelShipCommandResponse>
+public sealed class RefuelShipCommandProcessor(
+    ISpacetradersDbContext dbContext,
+    ISpaceTradersApiClient apiClient
+) : IdentifiedCommandProcessor<RefuelShipCommandRequest, RefuelShipCommandResponse>(
+    dbContext,
+    apiClient)
 {
-    private readonly ISpacetradersDbContext _dbContext;
-    private readonly ISpaceTradersApiClient _apiClient;
-
-    public RefuelShipCommandProcessor(
-        ISpacetradersDbContext dbContext,
-        ISpaceTradersApiClient apiClient)
+    protected override async Task<RefuelShipCommandResponse> ProcessAsyncIdentified(RefuelShipCommandRequest request, ISpaceTradersApiClient apiClient, Guid userId, CancellationToken cancellationToken)
     {
-        _dbContext = dbContext;
-        _apiClient = apiClient;
-    }
-
-    public async Task<RefuelShipCommandResponse> ProcessAsync(RefuelShipCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
-    {
-        var account = await _dbContext.GetByIdAsync<Account>(request.AccountId, cancellationToken);
-
-        if (account == null)
-        {
-            return ValidationMessages.CreateErrorResponse<RefuelShipCommandResponse>(
-                ValidationMessages.INVALID_PROPERTY,
-                nameof(RefuelShipCommandRequest.AccountId));
-        }
-
-        _apiClient.Token = account.Token;
-
-        var apiResponse = await _apiClient.RefuelShipAsync(
+        var apiResponse = await apiClient.RefuelShipAsync(
             new()
             {
                 FromCargo = request.FromCargo,
@@ -37,8 +20,19 @@ public sealed class RefuelShipCommandProcessor : ICommandProcessor<RefuelShipCom
 
         return new RefuelShipCommandResponse
         {
-            Value = ShipHelpers.ToShipFuelDto(apiResponse.Data.Fuel),
-            Credits = apiResponse.Data.Agent.Credits
+            Value = new MultiResponse
+            {
+                AgentDto = AgentHelpers.ToAgentDto(apiResponse.Data.Agent),
+                ShipResponse = new ShipResponse
+                {
+                    Fuel = ShipHelpers.ToFuelDto(request.ShipSymbol, apiResponse.Data.Fuel),
+                    Cooldown = null,
+                    Ship = null,
+                    ShipCargo = null, // TODO: Cargo if fueled from cargo may have changed
+                    ShipNav = null,
+                    ShipNavRoute = null
+                }
+            }
         };
     }
 }

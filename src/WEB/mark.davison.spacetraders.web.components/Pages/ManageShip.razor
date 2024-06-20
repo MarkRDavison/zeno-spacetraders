@@ -3,68 +3,110 @@
 
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
-        <MudText Typo="Typo.h3">@ShipSymbol</MudText>
-        @if (ShipDto?.Cooldown.RemainingSeconds > 0)
+        <MudText Typo="Typo.h3">@($"Ship {ShipSymbol}")</MudText>
+        @if (ShipState.Value.GetShipCooldown(ShipSymbol) is {} cooldown && cooldown.RemainingSeconds > 0)
         {
-            <MudText Typo="Typo.subtitle1">@($"Cooldown ends: {ShipDto.Cooldown.Expiration.Humanize()}")</MudText>
+            <MudText class="ms-4" Typo="Typo.subtitle1">@($"On cooldown until {cooldown.Expiration.Humanize()}")</MudText>
         }
         <MudSpacer />
-        
-        @if (ShipDto?.Role.ToUpperInvariant() == "EXCAVATOR" &&
-            (WaypointDto?.Traits.Any(_ => _.ToUpperInvariant().Contains("DEPOSITS")) ?? false) &&
-            ShipDto?.Cooldown.RemainingSeconds <= 0 &&
-        ShipDto.Nav.Status == "IN_ORBIT")
-        @*TODO: Also check if waypoint supports this*@
-        {
-        <MudIconButton ButtonType="ButtonType.Submit"
-                       Color="Color.Primary"
-                       Icon="@Icons.Material.Filled.Landslide"
-                       Variant="Variant.Filled"
-                       OnClick="@Extract" />
-        }
-        @if (WaypointDto?.Traits.Contains("Marketplace") ?? false)
-        {
-        <MudIconButton ButtonType="ButtonType.Submit"
-                       Color="Color.Primary"
-                       Icon="@Icons.Material.Filled.BatteryChargingFull"
-                       Variant="Variant.Filled"
-                       Disabled=@(ShipDto?.Fuel.Current == ShipDto?.Fuel.Capacity)
-                       OnClick="@Refuel" />
-        }
-        <MudIconButton ButtonType="ButtonType.Submit"
-                       Color="Color.Primary"
-                       Icon="@Icons.Material.Filled.Refresh"
-                       Variant="Variant.Filled"
+        <MudIconButton Icon="@Icons.Material.Filled.Refresh"
+                       Color="Color.Inherit"
                        OnClick="@Refresh" />
     </MudStack>
 
-    @if (ShipState.Value.IsLoading)
+    @if (ShipState.Value.GetShip(ShipSymbol) is { } ship && 
+         ShipState.Value.GetShipNav(ShipSymbol) is { } shipNav &&
+         ShipState.Value.GetShipFuel(ShipSymbol) is {} shipFuel &&
+         WaypointState.Value.GetWaypoint(shipNav.WaypointSymbol) is { } waypoint)
+    {
+        <MudText Typo="Typo.h6">@($"Role: {ship.Role}")</MudText>
+        <MudText Typo="Typo.h6">@($"System: {shipNav.SystemSymbol}")</MudText>
+        <MudText Typo="Typo.h6">@($"Waypoint: {shipNav.WaypointSymbol}")</MudText>
+        <MudText Typo="Typo.h6">@($"Status: {shipNav.Status}")</MudText>
+        <MudText Typo="Typo.h6">@($"Flight: {shipNav.FlightMode}")</MudText>
+        <MudText Typo="Typo.h6">@($"Fuel: {shipFuel.Current}/{shipFuel.Capacity}")</MudText>
+                
+        <MudExpansionPanels>
+            @if (ShipState.Value.GetShip(ShipSymbol) is {} ship && 
+                 ShipState.Value.GetShipNav(ShipSymbol) is { } nav && 
+                 ShipState.Value.GetShipNavRoute(ShipSymbol) is { } route)
+            {
+                <MudExpansionPanel Text="Navigation" Class="pa-4">
+                    <ShipNavigation Identifier="@Identifier" 
+                                    Ship="@ship" 
+                                    ShipNav="@nav" 
+                                    ShipNavRoute="@route"
+                                    CurrentWaypoint="@waypoint" />
+                </MudExpansionPanel>
+            }
+            @*TODO: component wid nav/cargo properties???*@
+            @if (ShipState.Value.GetShipNav(ShipSymbol) is { } snav && 
+                 snav.Status != "IN_TRANSIT")
+            {
+                <MudExpansionPanel Text="Actions" Class="pa-4">
+                    <MudStack Row>
+                        @if (snav.Status == "IN_ORBIT")
+                        {
+                            <MudButton ButtonType="ButtonType.Submit"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Landslide"
+                                       Variant="Variant.Filled"
+                                       Size="Size.Large"
+                                       Disabled="@(_inProgress)"
+                                       IconSize="Size.Large"
+                                       OnClick="@ExtractResources">Extract</MudButton>
+                        }
+                        @if (waypoint.Traits.Contains("Marketplace"))
+                        {
+                            <MudButton ButtonType="ButtonType.Submit"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.BatteryFull"
+                                       Variant="Variant.Filled"
+                                       Size="Size.Large"
+                                       Disabled="@(_inProgress || snav.Status != "DOCKED" || shipFuel.Capacity == shipFuel.Current)"
+                                       IconSize="Size.Large"
+                                       OnClick="@Refuel">Refuel</MudButton>
+                        }
+                    </MudStack>
+                    @*To refuel - have to be docked*@
+                    @*To sell - have to be docked*@
+                </MudExpansionPanel>
+            }
+            @if (ShipState.Value.GetShipCargo(ShipSymbol) is { } cargo)
+            {
+                <MudExpansionPanel Text="Cargo" Class="pa-4">
+                    <MudText>@($"Capacity: {cargo.Capacity}")</MudText>
+                    <MudText>@($"Used: {cargo.Units}")</MudText>
+
+                    <MudTable Items="@cargo.Inventory">
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Amount</MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Name">
+                                <MudText Typo="Typo.body1">@context.Name</MudText>
+                            </MudTd>
+                            <MudTd DataLabel="HeaderContent">
+                                <MudText Typo="Typo.body1">@context.Units</MudText>
+                            </MudTd>
+                            <MudTd>
+                                <CommandMenu OnCommandMenuItemSelected="@(_ => CargoCommandMenuItemSelected(_, context))"
+                                             Items="@CargoCommandMenuItems(context)" />
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+
+    }
+    else
     {
         <MudProgressCircular Indeterminate
                              Class="ma-auto"
                              Size="Size.Large" />
     }
-    else if (ShipDto != null)
-    {
-        <MudText Typo="Typo.h6">@($"Role: {ShipDto.Role}")</MudText>
-        <MudText Typo="Typo.h6">@($"System: {ShipDto.Nav.SystemSymbol}")</MudText>
-        <MudText Typo="Typo.h6">@($"Waypoint: {ShipDto.Nav.WaypointSymbol}")</MudText>
-        @if (WaypointDto != null)
-        {
-            <MudText Typo="Typo.h6">@($"Waypoint traits: {string.Join(", ", WaypointDto.Traits)}")</MudText>
-        }
-        <MudText Typo="Typo.h6">@($"Status: {ShipDto.Nav.Status}")</MudText>
-        <MudText Typo="Typo.h6">@($"Flight: {ShipDto.Nav.FlightMode}")</MudText>
-        <MudText Typo="Typo.h6">@($"Fuel: {ShipDto.Fuel.Current}/{ShipDto.Fuel.Capacity}")</MudText>
 
-        <MudExpansionPanels MultiExpansion="false">
-            <MudExpansionPanel Text="Navigation" Class="pa-4">
-                @*TODO: orbit/dock should be in action panel???*@
-                <ShipNavigation ShipDto="@ShipDto" />
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Cargo" Class="pa-4">
-                <ShipCargo ShipDto="@ShipDto" />
-            </MudExpansionPanel>
-        </MudExpansionPanels>
-    }
 </MudStack>

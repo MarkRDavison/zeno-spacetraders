@@ -1,4 +1,5 @@
-﻿using mark.davison.spacetraders.shared.models.dtos.Commands.ExtractResources;
+﻿using mark.davison.spacetraders.shared.models.dtos.Commands.DeliverCargoContract;
+using mark.davison.spacetraders.shared.models.dtos.Commands.RefuelShip;
 
 namespace mark.davison.spacetraders.web.features.Store.ShipUseCase;
 
@@ -12,27 +13,86 @@ public sealed class ShipEffects
     }
 
     [EffectMethod]
-    public async Task HandleFetchShipsActionAsync(FetchShipsAction action, IDispatcher dispatcher)
+    public async Task HandleFetchShipActionAsync(FetchShipAction action, IDispatcher dispatcher)
     {
-        var commandRequest = new FetchShipsCommandRequest
+        var queryRequest = new FetchShipQueryRequest
         {
-            AccountId = action.AccountId,
-            Meta = action.Meta
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol
         };
 
-        var commandResponse = await _repository.Post<FetchShipsCommandResponse, FetchShipsCommandRequest>(commandRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<FetchShipQueryResponse, FetchShipQueryRequest>(queryRequest, CancellationToken.None);
 
-        var actionResponse = new FetchShipsActionResponse
+        dispatcher.Dispatch(new UpdateShipsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value is null ? null : [queryResponse.Value]
+        });
+    }
+
+    [EffectMethod]
+    public async Task HandleFetchShipsActionAsync(FetchShipsAction action, IDispatcher dispatcher)
+    {
+        var queryRequest = new FetchShipsQueryRequest
+        {
+            Identifier = action.Identifier,
+            Page = action.Page,
+            Limit = action.Limit
+        };
+
+        var queryResponse = await _repository.Get<FetchShipsQueryResponse, FetchShipsQueryRequest>(queryRequest, CancellationToken.None);
+
+        dispatcher.Dispatch(new UpdateShipsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value
+        });
+    }
+
+    [EffectMethod]
+    public async Task HandleOrbitShipActionAsync(OrbitShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new ModifyOrbitCommandRequest
+        {
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol,
+            Dock = false
+        };
+
+        var commandResponse = await _repository.Post<ModifyOrbitCommandResponse, ModifyOrbitCommandRequest>(commandRequest, CancellationToken.None);
+
+        dispatcher.Dispatch(new UpdateShipsActionResponse
         {
             ActionId = action.ActionId,
             Errors = [.. commandResponse.Errors],
             Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value
+            Value = commandResponse.Value is null ? null : [commandResponse.Value]
+        });
+    }
+
+    [EffectMethod]
+    public async Task HandleDockShipActionAsync(DockShipAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new ModifyOrbitCommandRequest
+        {
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol,
+            Dock = true
         };
 
-        // TODO: Framework to dispatch general ***something went wrong***
+        var commandResponse = await _repository.Post<ModifyOrbitCommandResponse, ModifyOrbitCommandRequest>(commandRequest, CancellationToken.None);
 
-        dispatcher.Dispatch(actionResponse);
+        dispatcher.Dispatch(new UpdateShipsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value is null ? null : [commandResponse.Value]
+        });
     }
 
     [EffectMethod]
@@ -40,104 +100,107 @@ public sealed class ShipEffects
     {
         var commandRequest = new PurchaseShipCommandRequest
         {
-            AccountId = action.AccountId,
-            ShipType = action.ShipType,
-            WaypointSymbol = action.WaypointSymbol
+            Identifier = action.Identifier,
+            WaypointSymbol = action.WaypointSymbol,
+            ShipType = action.ShipType
         };
 
         var commandResponse = await _repository.Post<PurchaseShipCommandResponse, PurchaseShipCommandRequest>(commandRequest, CancellationToken.None);
 
-        var actionResponse = new PurchaseShipActionResponse
+        if (commandResponse.SuccessWithValue)
+        {
+            dispatcher.Dispatch(new UpdateShipsActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.ShipResponse is null ? null : [commandResponse.Value.ShipResponse]
+            });
+            dispatcher.Dispatch(new UpdateAgentActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.AgentDto
+            });
+        }
+    }
+
+    [EffectMethod]
+    public async Task HandleExtractResourcesActionAsync(ExtractResourcesAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new ExtractResourcesCommandRequest
+        {
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol
+        };
+
+        var commandResponse = await _repository.Post<ExtractResourcesCommandResponse, ExtractResourcesCommandRequest>(commandRequest, CancellationToken.None);
+
+        dispatcher.Dispatch(new UpdateShipsActionResponse
         {
             ActionId = action.ActionId,
             Errors = [.. commandResponse.Errors],
             Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value
-        };
-
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(actionResponse);
-        dispatcher.Dispatch(new UpdateCreditsAction
-        {
-            ActionId = action.ActionId,
-            AccountId = action.AccountId,
-            Credits = commandResponse.Credits
+            Value = commandResponse.Value is null ? null : [commandResponse.Value]
         });
     }
 
     [EffectMethod]
-    public async Task HandleFetchShipActionAsync(FetchShipAction action, IDispatcher dispatcher)
+    public async Task HandleSellCargoActionAsync(SellCargoAction action, IDispatcher dispatcher)
     {
-        var commandRequest = new FetchShipCommandRequest
+        var commandRequest = new SellCargoCommandRequest
         {
-            AccountId = action.AccountId,
-            ShipSymbol = action.ShipSymbol
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol,
+            TradeSymbol = action.TradeSymbol,
+            Units = action.Units
         };
 
-        var commandResponse = await _repository.Post<FetchShipCommandResponse, FetchShipCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<SellCargoCommandResponse, SellCargoCommandRequest>(commandRequest, CancellationToken.None);
 
-        var actionResponse = new FetchShipActionResponse
+        if (commandResponse.SuccessWithValue)
         {
-            ActionId = action.ActionId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value
-        };
-
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(actionResponse);
+            dispatcher.Dispatch(new UpdateShipsActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.ShipResponse is null ? null : [commandResponse.Value.ShipResponse]
+            });
+            dispatcher.Dispatch(new UpdateAgentActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.AgentDto
+            });
+        }
     }
 
     [EffectMethod]
-    public async Task HandleOrbitShipActionAsync(OrbitShipAction action, IDispatcher dispatcher)
+    public async Task HandleJettisonCargoActionAsync(JettisonCargoAction action, IDispatcher dispatcher)
     {
-        var commandRequest = new OrbitShipCommandRequest
+        var commandRequest = new JettisonCargoCommandRequest
         {
-            AccountId = action.AccountId,
-            ShipSymbol = action.ShipSymbol
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol,
+            TradeSymbol = action.TradeSymbol,
+            Units = action.Units
         };
 
-        var commandResponse = await _repository.Post<OrbitShipCommandResponse, OrbitShipCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<JettisonCargoCommandResponse, JettisonCargoCommandRequest>(commandRequest, CancellationToken.None);
 
-        var actionResponse = new UpdateShipNavResponse
+        if (commandResponse.SuccessWithValue)
         {
-            ActionId = action.ActionId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value,
-            ShipSymbol = commandResponse.ShipSymbol
-        };
-
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(actionResponse);
-    }
-
-    [EffectMethod]
-    public async Task HandleDockShipActionAsync(DockShipAction action, IDispatcher dispatcher)
-    {
-        var commandRequest = new DockShipCommandRequest
-        {
-            AccountId = action.AccountId,
-            ShipSymbol = action.ShipSymbol
-        };
-
-        var commandResponse = await _repository.Post<DockShipCommandResponse, DockShipCommandRequest>(commandRequest, CancellationToken.None);
-
-        var actionResponse = new UpdateShipNavResponse
-        {
-            ActionId = action.ActionId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value,
-            ShipSymbol = commandResponse.ShipSymbol
-        };
-
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(actionResponse);
+            dispatcher.Dispatch(new UpdateShipsActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value is null ? null : [commandResponse.Value]
+            });
+        }
     }
 
     [EffectMethod]
@@ -145,31 +208,56 @@ public sealed class ShipEffects
     {
         var commandRequest = new NavigateShipCommandRequest
         {
-            AccountId = action.AccountId,
+            Identifier = action.Identifier,
             ShipSymbol = action.ShipSymbol,
             DestinationWaypoint = action.DestinationWaypoint
         };
 
         var commandResponse = await _repository.Post<NavigateShipCommandResponse, NavigateShipCommandRequest>(commandRequest, CancellationToken.None);
 
-        // TODO: Framework to dispatch general ***something went wrong***
+        if (commandResponse.SuccessWithValue)
+        {
+            dispatcher.Dispatch(new UpdateShipsActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value is null ? null : [commandResponse.Value]
+            });
+        }
+    }
 
-        dispatcher.Dispatch(new UpdateShipNavResponse
+    [EffectMethod]
+    public async Task HandleDeliverContractCargoActionAsync(DeliverContractCargoAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new DeliverContractCargoCommandRequest
         {
-            ActionId = action.AccountId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value.Item1,
-            ShipSymbol = action.ShipSymbol
-        });
-        dispatcher.Dispatch(new UpdateShipFuelResponse
+            Identifier = action.Identifier,
+            ContractId = action.ContractId,
+            ShipSymbol = action.ShipSymbol,
+            TradeSymbol = action.TradeSymbol,
+            Units = action.Units
+        };
+
+        var commandResponse = await _repository.Post<DeliverContractCargoCommandResponse, DeliverContractCargoCommandRequest>(commandRequest, CancellationToken.None);
+
+        if (commandResponse.SuccessWithValue)
         {
-            ActionId = action.AccountId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value.Item2,
-            ShipSymbol = action.ShipSymbol
-        });
+            dispatcher.Dispatch(new UpdateShipsActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.ShipResponse is null ? null : [commandResponse.Value.ShipResponse]
+            });
+            dispatcher.Dispatch(new UpdateAgentActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.AgentDto
+            });
+        }
     }
 
     [EffectMethod]
@@ -177,74 +265,30 @@ public sealed class ShipEffects
     {
         var commandRequest = new RefuelShipCommandRequest
         {
-            AccountId = action.AccountId,
+            Identifier = action.Identifier,
             ShipSymbol = action.ShipSymbol,
-            FromCargo = action.FromCargo,
-            Units = action.Units
+            Units = action.Units,
+            FromCargo = action.FromCargo
         };
 
         var commandResponse = await _repository.Post<RefuelShipCommandResponse, RefuelShipCommandRequest>(commandRequest, CancellationToken.None);
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(new UpdateShipFuelResponse // TODO: Should this just be an action???
+        if (commandResponse.SuccessWithValue)
         {
-            ActionId = action.AccountId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value,
-            ShipSymbol = action.ShipSymbol
-        });
-        dispatcher.Dispatch(new UpdateCreditsAction
-        {
-            ActionId = action.AccountId,
-            Credits = commandResponse.Credits
-        });
-    }
-
-    [EffectMethod]
-    public async Task HandleFetchShipCargoActionAsync(FetchShipCargoAction action, IDispatcher dispatcher)
-    {
-        var queryRequest = new FetchShipCargoQueryRequest
-        {
-            AccountId = action.AccountId,
-            ShipSymbol = action.ShipSymbol
-        };
-
-        var queryResponse = await _repository.Get<FetchShipCargoQueryResponse, FetchShipCargoQueryRequest>(queryRequest, CancellationToken.None);
-
-        var actionResponse = new FetchShipCargoActionResponse
-        {
-            ActionId = action.ActionId,
-            Errors = [.. queryResponse.Errors],
-            Warnings = [.. queryResponse.Warnings],
-            Value = queryResponse.Value
-        };
-
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(actionResponse);
-    }
-
-    [EffectMethod]
-    public async Task HandleExtractResourceShipActionAsync(ExtractResourceShipAction action, IDispatcher dispatcher)
-    {
-        var commandRequest = new ExtractResourcesCommandRequest
-        {
-            AccountId = action.AccountId,
-            ShipSymbol = action.ShipSymbol
-        };
-
-        var commandResponse = await _repository.Post<ExtractResourcesCommandResponse, ExtractResourcesCommandRequest>(commandRequest, CancellationToken.None);
-
-        // TODO: Framework to dispatch general ***something went wrong***
-
-        dispatcher.Dispatch(new FetchShipCargoActionResponse
-        {
-            ActionId = action.ActionId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value
-        });
+            dispatcher.Dispatch(new UpdateShipsActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.ShipResponse is null ? null : [commandResponse.Value.ShipResponse]
+            });
+            dispatcher.Dispatch(new UpdateAgentActionResponse
+            {
+                ActionId = action.ActionId,
+                Errors = [.. commandResponse.Errors],
+                Warnings = [.. commandResponse.Warnings],
+                Value = commandResponse.Value?.AgentDto
+            });
+        }
     }
 }

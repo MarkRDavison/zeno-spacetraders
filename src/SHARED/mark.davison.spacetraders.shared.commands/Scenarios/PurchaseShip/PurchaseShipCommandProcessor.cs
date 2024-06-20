@@ -1,44 +1,27 @@
 ﻿namespace mark.davison.spacetraders.shared.commands.Scenarios.PurchaseShip;
 
-public sealed class PurchaseShipCommandProcessor : ICommandProcessor<PurchaseShipCommandRequest, PurchaseShipCommandResponse>
+public sealed class PurchaseShipCommandProcessor(
+    ISpacetradersDbContext dbContext,
+    ISpaceTradersApiClient apiClient
+) : IdentifiedCommandProcessor<PurchaseShipCommandRequest, PurchaseShipCommandResponse>(
+    dbContext,
+    apiClient)
 {
-    private readonly ISpacetradersDbContext _dbContext;
-    private readonly ISpaceTradersApiClient _apiClient;
-
-    public PurchaseShipCommandProcessor(
-        ISpacetradersDbContext dbContext,
-        ISpaceTradersApiClient apiClient)
+    protected override async Task<PurchaseShipCommandResponse> ProcessAsyncIdentified(PurchaseShipCommandRequest request, ISpaceTradersApiClient apiClient, Guid userId, CancellationToken cancellationToken)
     {
-        _dbContext = dbContext;
-        _apiClient = apiClient;
-    }
-
-    public async Task<PurchaseShipCommandResponse> ProcessAsync(PurchaseShipCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
-    {
-        var account = await _dbContext.GetByIdAsync<Account>(request.AccountId, cancellationToken);
-
-        if (account == null)
+        var apiResponse = await apiClient.PurchaseShipAsync(new()
         {
-            return ValidationMessages.CreateErrorResponse<PurchaseShipCommandResponse>(
-                ValidationMessages.INVALID_PROPERTY,
-                nameof(PurchaseShipCommandRequest.AccountId));
-        }
-
-        var shipType = Enum.Parse<ShipType>(request.ShipType);
-
-        _apiClient.Token = account.Token;
-
-        // TODO: Validation to make sure you can afford it?
-        var apiResponse = await _apiClient.PurchaseShipAsync(new Body4
-        {
-            ShipType = shipType,
-            WaypointSymbol = request.WaypointSymbol
+            WaypointSymbol = request.WaypointSymbol,
+            ShipType = Enum.Parse<ShipType>(request.ShipType, true)
         }, cancellationToken);
 
         return new PurchaseShipCommandResponse
         {
-            Value = ShipHelpers.ToShipDto(apiResponse.Data.Ship),
-            Credits = apiResponse.Data.Agent.Credits
+            Value = new()
+            {
+                AgentDto = AgentHelpers.ToAgentDto(apiResponse.Data.Agent),
+                ShipResponse = ShipHelpers.ToShipResponse(apiResponse.Data.Ship)
+            }
         };
     }
 }

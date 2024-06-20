@@ -8,7 +8,6 @@ public sealed class ShipCargoDto
     public List<ShipCargoItemDto> Inventory { get; set; } = [];
 }
 
-
 public sealed class ShipCargoItemDto
 {
     public string Symbol { get; set; } = string.Empty;

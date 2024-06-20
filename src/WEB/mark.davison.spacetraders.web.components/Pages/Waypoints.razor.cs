@@ -3,6 +3,9 @@
 public partial class Waypoints
 {
     [Parameter]
+    public required string Identifier { get; set; }
+
+    [Parameter]
     public required string SystemSymbol { get; set; }
 
     [Inject]
@@ -45,19 +48,12 @@ public partial class Waypoints
 
     private async Task LoadState()
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        await StoreHelper.DispatchAndWaitForResponse<FetchWaypointsAction, UpdateWaypointsActionResponse>(new()
         {
-            await StoreHelper.DispatchAndWaitForResponse<FetchWaypointsAction, FetchWaypointsActionResponse>(
-                new FetchWaypointsAction
-                {
-                    AccountId = account.Id,
-                    SystemSymbol = SystemSymbol,
-                    Trait = SelectedTrait ?? string.Empty,
-                    Meta = new MetaInfo
-                    {
-                        Limit = 20
-                    }
-                });
-        }
+            Identifier = Identifier,
+            SystemSymbol = SystemSymbol,
+            Limit = 20,
+            WaypointTrait = SelectedTrait
+        });
     }
 }

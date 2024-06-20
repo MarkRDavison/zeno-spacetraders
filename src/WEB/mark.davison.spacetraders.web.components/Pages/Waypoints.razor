@@ -45,7 +45,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Symbol">
-                    <MudLink Href="@RouteHelpers.Waypoint(context.SystemSymbol, context.WaypointSymbol)" Typo="Typo.body2">@context.WaypointSymbol</MudLink>
+                    <MudLink Href="@RouteHelpers.Waypoint(Identifier, context.SystemSymbol, context.WaypointSymbol)" Typo="Typo.body2">@context.WaypointSymbol</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Symbol">
                     <MudText Typo="Typo.body2">@context.SystemSymbol</MudText>
@@ -61,6 +61,6 @@
     }
     else
     {
-        <MudText Typo="Typo.body1">No ships</MudText>
+        <MudText Typo="Typo.body1">No waypoints</MudText>
     }
 </MudStack>

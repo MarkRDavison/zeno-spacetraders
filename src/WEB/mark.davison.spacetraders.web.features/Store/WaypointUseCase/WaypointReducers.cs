@@ -5,68 +5,34 @@ public static class WaypointReducers
     [ReducerMethod]
     public static WaypointState FetchWaypointsAction(WaypointState state, FetchWaypointsAction action)
     {
-        return new WaypointState(true, [], []);
+        return new WaypointState(true, [], [], []);
     }
 
     [ReducerMethod]
-    public static WaypointState FetchWaypointsActionResponse(WaypointState state, FetchWaypointsActionResponse response)
+    public static WaypointState UpdateWaypointsActionResponse(WaypointState state, UpdateWaypointsActionResponse response)
     {
         if (response.SuccessWithValue)
         {
-            var newIds = response.Value.Select(_ => _.WaypointSymbol).ToHashSet();
+            var updatedWaypointSymbols = response.Value.Where(_ => _.Waypoint is not null).Select(_ => _.Waypoint!.WaypointSymbol);
+            var updatedShipyardSymbols = response.Value.Where(_ => _.Shipyard is not null).Select(_ => _.Shipyard!.WaypointSymbol);
+            var updatedMarketplaceSymbols = response.Value.Where(_ => _.Marketplace is not null).Select(_ => _.Marketplace!.WaypointSymbol);
 
             return new WaypointState(
                 false,
                 [
-                    .. state.Waypoints.Where(_ => !newIds.Contains(_.WaypointSymbol)),
-                    .. response.Value
+                    .. state.Waypoints.Where(_ => !updatedWaypointSymbols.Contains(_.WaypointSymbol)),
+                    .. response.Value.Select(_ => _.Waypoint).Where(_ => _ is not null)
                 ],
-                state.Shipyards);
-        }
-
-        return new WaypointState(false, state.Waypoints, state.Shipyards);
-    }
-
-    [ReducerMethod]
-    public static WaypointState FetchWaypointActionResponse(WaypointState state, FetchWaypointActionResponse response)
-    {
-        if (response.SuccessWithValue)
-        {
-
-            return new WaypointState(
-                false,
                 [
-                    .. state.Waypoints.Where(_ => _.WaypointSymbol != response.Value.WaypointSymbol),
-                    response.Value
+                    ..state.Shipyards.Where(_ => !updatedShipyardSymbols.Contains(_.WaypointSymbol)),
+                    ..response.Value.Select(_ => _.Shipyard).Where(_ => _ is not null)
                 ],
-                state.Shipyards);
+                [
+                    ..state.Marketplaces.Where(_ => !updatedMarketplaceSymbols.Contains(_.WaypointSymbol)),
+                    ..response.Value.Select(_ => _.Marketplace).Where(_ => _ is not null)
+                ]);
         }
 
-        return new WaypointState(false, state.Waypoints, state.Shipyards);
-    }
-
-
-
-    [ReducerMethod]
-    public static WaypointState FetchShipyardAction(WaypointState state, FetchShipyardAction action)
-    {
-        return new WaypointState(
-            state.IsLoading,
-            state.Waypoints,
-            state.Shipyards.Where(_ => _.Symbol != action.WaypointSymbol));
-    }
-
-    [ReducerMethod]
-    public static WaypointState FetchShipyardActionResponse(WaypointState state, FetchShipyardActionResponse response)
-    {
-        if (response.SuccessWithValue)
-        {
-            return new WaypointState(
-                state.IsLoading,
-                state.Waypoints,
-                [.. state.Shipyards.Where(_ => _.Symbol != response.Value.Symbol), response.Value]);
-        }
-
-        return state;
+        return new(false, state.Waypoints, state.Shipyards, state.Marketplaces);
     }
 }

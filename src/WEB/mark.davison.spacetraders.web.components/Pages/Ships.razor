@@ -3,10 +3,10 @@
 
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
-        <MudText Typo="Typo.h3">Ships</MudText>
+        <MudText Typo="Typo.h3">@($"Ships for {Identifier}")</MudText>
         <MudSpacer />
-    </MudStack>
 
+    </MudStack>
     @if (ShipState.Value.IsLoading)
     {
         <MudProgressCircular Indeterminate
@@ -15,7 +15,7 @@
     }
     else if (ShipState.Value.Ships.Any())
     {
-        <MudTable Items="@ShipState.Value.Ships" Hover>
+        <MudTable Items="@ShipState.Value.Ships.OrderBy(_ => _.ShipSymbol)" Hover>
             <HeaderContent>
                 <MudTh>Symbol</MudTh>
                 <MudTh>Role</MudTh>
@@ -26,22 +26,25 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Symbol">
-                    <MudLink Href="@RouteHelpers.Ship(context.Symbol)" Typo="Typo.body1">@context.Symbol</MudLink>
+                    <MudLink Href="@RouteHelpers.Ship(Identifier, context.ShipSymbol)" Typo="Typo.body1">@context.ShipSymbol</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Role">
                     <MudText Typo="Typo.body1">@context.Role</MudText>
                 </MudTd>
-                <MudTd DataLabel="System">
-                    <MudText Typo="Typo.body1">@context.Nav.SystemSymbol</MudText>
+                 <MudTd DataLabel="System">
+                    <MudText Typo="Typo.body1">@ShipState.Value.GetShipNav(context.ShipSymbol)?.SystemSymbol</MudText>
                 </MudTd>
                 <MudTd DataLabel="Waypoint">
-                    <MudLink Href="@RouteHelpers.Waypoint(WaypointsHelpers.GetSystemFromWaypoint(context.Nav.WaypointSymbol), context.Nav.WaypointSymbol)" Typo="Typo.body1">@context.Nav.WaypointSymbol</MudLink>
+                    @if (ShipState.Value.GetShipNav(context.ShipSymbol) is { } shipNav)
+                    {
+                        <MudLink Href="@RouteHelpers.Waypoint(Identifier, WaypointsHelpers.GetSystemFromWaypoint(shipNav.WaypointSymbol), shipNav.WaypointSymbol)" Typo="Typo.body1">@shipNav.WaypointSymbol</MudLink>
+                    }
                 </MudTd>
                 <MudTd DataLabel="Nav status">
-                    <MudText Typo="Typo.body1">@context.Nav.Status</MudText>
+                    <MudText Typo="Typo.body1">@ShipState.Value.GetShipNav(context.ShipSymbol)?.Status</MudText>
                 </MudTd>
                 <MudTd DataLabel="Flight mode">
-                    <MudText Typo="Typo.body1">@context.Nav.FlightMode</MudText>
+                    <MudText Typo="Typo.body1">@ShipState.Value.GetShipNav(context.ShipSymbol)?.FlightMode</MudText>
                 </MudTd>
             </RowTemplate>
         </MudTable>

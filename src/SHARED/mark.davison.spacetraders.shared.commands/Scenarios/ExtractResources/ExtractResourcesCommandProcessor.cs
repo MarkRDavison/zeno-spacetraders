@@ -1,40 +1,27 @@
 ﻿namespace mark.davison.spacetraders.shared.commands.Scenarios.ExtractResources;
 
-public sealed class ExtractResourcesCommandProcessor : ICommandProcessor<ExtractResourcesCommandRequest, ExtractResourcesCommandResponse>
+public sealed class ExtractResourcesCommandProcessor(
+    ISpacetradersDbContext dbContext,
+    ISpaceTradersApiClient apiClient
+) : IdentifiedCommandProcessor<ExtractResourcesCommandRequest, ExtractResourcesCommandResponse>(
+    dbContext,
+    apiClient)
 {
-    private readonly ISpacetradersDbContext _dbContext;
-    private readonly ISpaceTradersApiClient _apiClient;
-
-    public ExtractResourcesCommandProcessor(
-        ISpacetradersDbContext dbContext,
-        ISpaceTradersApiClient apiClient)
+    protected override async Task<ExtractResourcesCommandResponse> ProcessAsyncIdentified(ExtractResourcesCommandRequest request, ISpaceTradersApiClient apiClient, Guid userId, CancellationToken cancellationToken)
     {
-        _dbContext = dbContext;
-        _apiClient = apiClient;
-    }
-
-    public async Task<ExtractResourcesCommandResponse> ProcessAsync(ExtractResourcesCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
-    {
-        var account = await _dbContext.GetByIdAsync<Account>(request.AccountId, cancellationToken);
-
-        if (account == null)
-        {
-            return ValidationMessages.CreateErrorResponse<ExtractResourcesCommandResponse>(
-                ValidationMessages.INVALID_PROPERTY,
-                nameof(ExtractResourcesCommandRequest.AccountId));
-        }
-
-        _apiClient.Token = account.Token;
-
-        var apiResult = await _apiClient.ExtractResourcesAsync(
-            new(),
-            request.ShipSymbol,
-            cancellationToken);
+        var apiResponse = await apiClient.ExtractResourcesAsync(new(), request.ShipSymbol, cancellationToken);
 
         return new ExtractResourcesCommandResponse
         {
-            // TODO: Update cooldown as well
-            Value = ShipHelpers.ToShipCargoDto(apiResult.Data.Cargo)
+            Value = new ShipResponse
+            {
+                Cooldown = ShipHelpers.ToCooldownDto(request.ShipSymbol, apiResponse.Data.Cooldown),
+                ShipCargo = ShipHelpers.ToShipCargoDto(request.ShipSymbol, apiResponse.Data.Cargo),
+                Ship = null,
+                ShipNav = null,
+                ShipNavRoute = null,
+                Fuel = null
+            }
         };
     }
 }

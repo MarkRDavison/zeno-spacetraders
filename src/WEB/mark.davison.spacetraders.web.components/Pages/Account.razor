@@ -1,0 +1,23 @@
+﻿@attribute [Route(Routes.Account)]
+@inherits FluxorComponent
+
+<MudStack Class="pa-4">
+    <MudStack Row AlignItems="AlignItems.End">
+        <MudText Typo="Typo.h3">@Identifier</MudText>
+        <MudSpacer />
+    </MudStack>
+    <MudPaper>
+        @if (Agent == null)
+        {
+            <MudProgressCircular Indeterminate
+                                 Class="ma-auto"
+                                 Size="Size.Large" />
+        }
+        else
+        {
+            <MudText Typo="Typo.body2">@($"Headquaters: {Agent.Headquarters}")</MudText>
+            <MudText Typo="Typo.body2">@($"Credits: ₡{Agent.Credits.ToString("N0")}")</MudText>
+            <MudText Typo="Typo.body2">@($"Ships: {Agent.ShipCount}")</MudText>
+        }
+    </MudPaper>
+</MudStack>

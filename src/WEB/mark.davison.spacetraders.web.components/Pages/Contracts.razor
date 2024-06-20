@@ -3,58 +3,40 @@
 
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
-        <MudText Typo="Typo.h3">Contracts</MudText>
+        <MudText Typo="Typo.h3">@($"Contracts for {Identifier}")</MudText>
         <MudSpacer />
     </MudStack>
 
-    @if (ContractState.Value.IsLoading)
-    {
-        <MudProgressCircular Indeterminate
-                             Class="ma-auto"
-                             Size="Size.Large" />
-    }
-    else if (ContractState.Value.Contracts.Any())
-    {
-        <MudTable Items="@ContractState.Value.Contracts" Hover>
-            <HeaderContent>
-                <MudTh>Type</MudTh>
-                <MudTh>Accepted</MudTh>
-                <MudTh>Fulfilled</MudTh>
-                <MudTh>Accept by</MudTh>
-                <MudTh>Deadline</MudTh>
-                <MudTh></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="Type">
-                    <MudLink Href="@RouteHelpers.Contract(context.Id)" Typo="Typo.body1">@context.Type</MudLink>
-                </MudTd>
-                <MudTd DataLabel="Accepted">
-                    <MudIcon Icon="@(context.Accepted ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
-                </MudTd>
-                <MudTd DataLabel="Fulfilled">
-                    <MudIcon Icon="@(context.Fulfilled ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
-                </MudTd>
-                <MudTd DataLabel="Accept by">
-                    @if (!context.Accepted)
-                    {
-                        <MudText Typo="Typo.body1">@context.DeadlineToAccept.Humanize()</MudText>
-                    }
-                </MudTd>
-                <MudTd DataLabel="Deadline">
-                    @if (context.Accepted)
-                    {
-                        <MudText Typo="Typo.body1">@context.Terms.Deadline.Humanize()</MudText>
-                    }
-                </MudTd>
-                <MudTd>
-                    <CommandMenu OnCommandMenuItemSelected="@(_ => CommandMenuItemSelected(_, context))"
-                                 Items="@_commandMenuItems" />
-                </MudTd>
-            </RowTemplate>
-        </MudTable>
-    }
-    else
-    {
-        <MudText Typo="Typo.body1">No contracts</MudText>
-    }
+    <MudTable Items="@ContractState.Value.Contracts" Hover>
+        <HeaderContent>
+            <MudTh>Type</MudTh>
+            <MudTh>Accepted</MudTh>
+            <MudTh>Fulfilled</MudTh>
+            <MudTh>Accept by</MudTh>
+            <MudTh>Deadline</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Type">
+                <MudLink Href="@RouteHelpers.Contract(Identifier, context.Id)" Typo="Typo.body1">@context.Type</MudLink>
+            </MudTd>
+            <MudTd DataLabel="Accepted">
+                <MudIcon Icon="@(context.Accepted ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
+            </MudTd>
+            <MudTd DataLabel="Fulfilled">
+                <MudIcon Icon="@(context.Fulfilled ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.Cancel)" />
+            </MudTd>
+            <MudTd DataLabel="Accept by">
+                @if (!context.Accepted)
+                {
+                    <MudText Typo="Typo.body1">@context.DeadlineToAccept.Humanize()</MudText>
+                }
+            </MudTd>
+            <MudTd DataLabel="Deadline">
+                @if (context.Accepted)
+                {
+                    <MudText Typo="Typo.body1">@context.Terms.Deadline.Humanize()</MudText>
+                }
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 </MudStack>

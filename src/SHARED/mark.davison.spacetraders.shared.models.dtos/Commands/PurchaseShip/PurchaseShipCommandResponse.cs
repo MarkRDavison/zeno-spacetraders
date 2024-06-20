@@ -1,6 +1,5 @@
 ﻿namespace mark.davison.spacetraders.shared.models.dtos.Commands.PurchaseShip;
 
-public sealed class PurchaseShipCommandResponse : Response<ShipDto>
+public sealed class PurchaseShipCommandResponse : Response<MultiResponse>
 {
-    public long Credits { get; set; }
 }

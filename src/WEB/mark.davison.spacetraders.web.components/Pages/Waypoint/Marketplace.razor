@@ -1,0 +1,83 @@
+﻿@if (MarketplaceDto is null)
+{
+    <MudProgressLinear Indeterminate Size="Size.Large" />
+}
+else
+{
+    @if (MarketplaceDto.TradeGoods.Any())
+    {
+        <MudText Typo="Typo.subtitle2">Trade Goods</MudText>
+        <MudTable Items="@MarketplaceDto.TradeGoods" Hover>
+            <HeaderContent>
+                <MudTh>Symbol</MudTh>
+                <MudTh>Type</MudTh>
+                <MudTh>Prices (sell/buy)</MudTh>
+                <MudTh>Supply</MudTh>
+                <MudTh>Trade Volume</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Symbol">
+                    <MudText Typo="Typo.body1">@context.TradeSymbol</MudText>
+                </MudTd>
+                <MudTd DataLabel="Type">
+                    <MudText Typo="Typo.body1">@context.Type</MudText>
+                </MudTd>
+                <MudTd DataLabel="Prices (sell/buy)">
+                    <MudText Typo="Typo.body1">@($"{context.SellPrice}/{context.PurchasePrice}")</MudText>
+                </MudTd>
+                <MudTd DataLabel="Supply">
+                    <MudText Typo="Typo.body1">@context.Supply</MudText>
+                </MudTd>
+                <MudTd DataLabel="Trade Volume">
+                    <MudText Typo="Typo.body1">@context.TradeVolume</MudText>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+
+    @if (MarketplaceDto.Imports.Any())
+    {
+        <MudText Typo="Typo.subtitle2">Imports</MudText>
+        <MudTable Items="@MarketplaceDto.Imports" Hover>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">
+                    <MudText Typo="Typo.body1">@context.Name</MudText>
+                </MudTd>
+                <MudTd DataLabel="Description">
+                    <MudText Typo="Typo.body1">@context.Description</MudText>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.subtitle2">No Imports</MudText>
+    }
+
+    @if (MarketplaceDto.Exports.Any())
+    {
+        <MudText Typo="Typo.subtitle2">Exports</MudText>
+        <MudTable Items="@MarketplaceDto.Exports" Hover>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">
+                    <MudText Typo="Typo.body1">@context.Name</MudText>
+                </MudTd>
+                <MudTd DataLabel="Description">
+                    <MudText Typo="Typo.body1">@context.Description</MudText>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Typo="Typo.subtitle2">No Exports</MudText>
+    }
+}

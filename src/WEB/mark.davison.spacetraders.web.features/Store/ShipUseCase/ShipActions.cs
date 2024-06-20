@@ -1,89 +1,66 @@
 ﻿namespace mark.davison.spacetraders.web.features.Store.ShipUseCase;
 
-public sealed class FetchShipsAction : BaseAction
+public sealed class FetchShipsAction : PaginatedIdentifiedAction;
+
+public sealed class FetchShipAction : IdentifiedAction
 {
-    public Guid AccountId { get; set; }
-    public MetaInfo Meta { get; set; } = new();
+    public string ShipSymbol { get; set; } = string.Empty;
 }
 
-public sealed class FetchShipsActionResponse : BaseActionResponse<List<ShipDto>>
+public sealed class OrbitShipAction : IdentifiedAction
 {
-
+    public string ShipSymbol { get; set; } = string.Empty;
 }
 
-public sealed class PurchaseShipAction : BaseAction
+public sealed class DockShipAction : IdentifiedAction
 {
-    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+}
+
+public sealed class PurchaseShipAction : IdentifiedAction
+{
     public string WaypointSymbol { get; set; } = string.Empty;
     public string ShipType { get; set; } = string.Empty;
 }
 
-public sealed class PurchaseShipActionResponse : BaseActionResponse<ShipDto>
-{
-
-}
-
-public sealed class FetchShipAction : BaseAction
-{
-    public Guid AccountId { get; set; }
-    public string ShipSymbol { get; set; } = string.Empty;
-}
-
-public sealed class FetchShipActionResponse : BaseActionResponse<ShipDto>
-{
-
-}
-
-public sealed class OrbitShipAction : BaseAction
-{
-    public Guid AccountId { get; set; }
-    public string ShipSymbol { get; set; } = string.Empty;
-}
-
-public sealed class DockShipAction : BaseAction
-{
-    public Guid AccountId { get; set; }
-    public string ShipSymbol { get; set; } = string.Empty;
-}
-
-public sealed class UpdateShipNavResponse : BaseActionResponse<ShipNavDto>
+public sealed class ExtractResourcesAction : IdentifiedAction
 {
     public string ShipSymbol { get; set; } = string.Empty;
 }
 
-public sealed class UpdateShipFuelResponse : BaseActionResponse<ShipFuelDto>
+public sealed class SellCargoAction : IdentifiedAction
 {
     public string ShipSymbol { get; set; } = string.Empty;
+    public string TradeSymbol { get; set; } = string.Empty;
+    public int Units { get; set; }
 }
 
-public sealed class NavigateShipAction : BaseAction
+public sealed class JettisonCargoAction : IdentifiedAction
 {
-    public Guid AccountId { get; set; }
+    public string ShipSymbol { get; set; } = string.Empty;
+    public string TradeSymbol { get; set; } = string.Empty;
+    public int Units { get; set; }
+}
+
+public sealed class NavigateShipAction : IdentifiedAction
+{
     public string ShipSymbol { get; set; } = string.Empty;
     public string DestinationWaypoint { get; set; } = string.Empty;
 }
 
-public sealed class RefuelShipAction : BaseAction
+public sealed class DeliverContractCargoAction : IdentifiedAction
 {
-    public Guid AccountId { get; set; }
+    public string ContractId { get; set; } = string.Empty;
     public string ShipSymbol { get; set; } = string.Empty;
-    public bool FromCargo { get; set; }
+    public string TradeSymbol { get; set; } = string.Empty;
     public int Units { get; set; }
 }
 
-public sealed class FetchShipCargoAction : BaseAction
+public sealed class RefuelShipAction : IdentifiedAction
 {
-    public Guid AccountId { get; set; }
     public string ShipSymbol { get; set; } = string.Empty;
+    public int Units { get; set; }
+    public bool FromCargo { get; set; }
 }
 
-public sealed class FetchShipCargoActionResponse : BaseActionResponse<ShipCargoDto>
-{
-
-}
-
-public sealed class ExtractResourceShipAction : BaseAction
-{
-    public Guid AccountId { get; set; }
-    public string ShipSymbol { get; set; } = string.Empty;
-}
+public sealed class UpdateShipsActionResponse : BaseActionResponse<List<ShipResponse>>;

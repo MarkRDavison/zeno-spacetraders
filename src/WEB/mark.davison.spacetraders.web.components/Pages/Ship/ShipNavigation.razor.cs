@@ -5,7 +5,20 @@ public partial class ShipNavigation
     private bool _inProgress;
 
     [Parameter, EditorRequired]
-    public required ShipDto ShipDto { get; set; }
+    public required string Identifier { get; set; }
+
+    [Parameter, EditorRequired]
+    public required ShipDto Ship { get; set; }
+
+    [Parameter, EditorRequired]
+
+    public required ShipNavDto ShipNav { get; set; }
+
+    [Parameter, EditorRequired]
+    public required ShipNavRouteDto ShipNavRoute { get; set; }
+
+    [Parameter, EditorRequired]
+    public required WaypointDto CurrentWaypoint { get; set; }
 
     [Inject]
     public required IState<WaypointState> WaypointState { get; set; }
@@ -14,78 +27,83 @@ public partial class ShipNavigation
     public required IState<ShipState> ShipState { get; set; }
 
     [Inject]
-    public required IAccountContextService AccountContextService { get; set; }
-
-    [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     private string NavigationSystemText = string.Empty;
 
     private WaypointDto? NavigationDestination { get; set; }
 
+
     private async Task MoveShipToOrbit()
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        _inProgress = true; // TODO: Process monitor/activity monitor
+        await StoreHelper.DispatchAndWaitForResponse<OrbitShipAction, UpdateShipsActionResponse>(new()
         {
-            _inProgress = true; // TODO: IDisposable that wraps in progress?
-            await StoreHelper.DispatchAndWaitForResponse<OrbitShipAction, UpdateShipNavResponse>(new()
-            {
-                AccountId = account.Id,
-                ShipSymbol = ShipDto.Symbol
-            });
-            _inProgress = false;
-        }
+            Identifier = Identifier,
+            ShipSymbol = Ship.ShipSymbol
+        });
+        _inProgress = false;
     }
 
     private async Task DockShip()
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        _inProgress = true; // TODO: Process monitor/activity monitor
+        await StoreHelper.DispatchAndWaitForResponse<DockShipAction, UpdateShipsActionResponse>(new()
         {
-            _inProgress = true;// TODO: IDisposable that wraps in progress?
-            await StoreHelper.DispatchAndWaitForResponse<DockShipAction, UpdateShipNavResponse>(new()
-            {
-                AccountId = account.Id,
-                ShipSymbol = ShipDto.Symbol
-            });
-            _inProgress = false;
-        }
+            Identifier = Identifier,
+            ShipSymbol = Ship.ShipSymbol
+        });
+        _inProgress = false;
     }
 
     private async Task SearchDestination(string destination)
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        NavigationDestination = WaypointState.Value.Waypoints.FirstOrDefault(_ => _.WaypointSymbol == destination);
+
+        if (NavigationDestination == null)
         {
-            NavigationDestination = WaypointState.Value.Waypoints.FirstOrDefault(_ => _.WaypointSymbol == destination);
-
-            if (NavigationDestination == null)
+            await StoreHelper.DispatchAndWaitForResponse<FetchWaypointAction, UpdateWaypointsActionResponse>(new()
             {
-                await StoreHelper.DispatchAndWaitForResponse<FetchWaypointAction, FetchWaypointActionResponse>(new()
-                {
-                    AccountId = account.Id,
-                    WaypointSymbol = destination
-                });
+                Identifier = Identifier,
+                SystemSymbol = WaypointsHelpers.GetSystemFromWaypoint(destination),
+                WaypointSymbol = destination
+            });
 
-                NavigationDestination = WaypointState.Value.Waypoints.FirstOrDefault(_ => _.WaypointSymbol == destination);
-            }
+            NavigationDestination = WaypointState.Value.Waypoints.FirstOrDefault(_ => _.WaypointSymbol == destination);
         }
+    }
+
+    private double? Distance()
+    {
+        if (NavigationDestination is not null)
+        {
+            var sourceX = (double)CurrentWaypoint.X;
+            var sourceY = (double)CurrentWaypoint.Y;
+            var destX = (double)NavigationDestination.X;
+            var destY = (double)NavigationDestination.Y;
+
+            var distSquared = Math.Pow(Math.Abs(sourceX - destX), 2.0) + Math.Pow(Math.Abs(sourceY - destY), 2.0);
+
+            return Math.Sqrt(distSquared);
+        }
+
+        return null;
     }
 
     private async Task GoToDestination(WaypointDto destination)
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        _inProgress = true;// TODO: IDisposable that wraps in progress?
+
+        await StoreHelper.DispatchAndWaitForResponse<NavigateShipAction, UpdateShipsActionResponse>(new NavigateShipAction
         {
-            _inProgress = true;// TODO: IDisposable that wraps in progress?
+            Identifier = Identifier,
+            ShipSymbol = Ship.ShipSymbol,
+            DestinationWaypoint = destination.WaypointSymbol
+        });
 
-            await StoreHelper.DispatchAndWaitForResponse<NavigateShipAction, UpdateShipNavResponse>(new NavigateShipAction
-            {
-                AccountId = account.Id,
-                ShipSymbol = ShipDto.Symbol,
-                DestinationWaypoint = destination.WaypointSymbol
-            });
+        NavigationSystemText = string.Empty;
+        NavigationDestination = null;
 
-            NavigationSystemText = string.Empty;
-            NavigationDestination = null;
-            _inProgress = false;
-        }
+        _inProgress = false;
     }
 }

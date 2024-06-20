@@ -1,6 +1,4 @@
-﻿using mark.davison.spacetraders.shared.models.dtos.Commands.FetchWaypoint;
-
-namespace mark.davison.spacetraders.web.features.Store.WaypointUseCase;
+﻿namespace mark.davison.spacetraders.web.features.Store.WaypointUseCase;
 
 public sealed class WaypointEffects
 {
@@ -14,17 +12,19 @@ public sealed class WaypointEffects
     [EffectMethod]
     public async Task HandleFetchWaypointsActionAsync(FetchWaypointsAction action, IDispatcher dispatcher)
     {
-        var commandRequest = new FetchWaypointsCommandRequest
+        var queryRequest = new FetchWaypointsQueryRequest
         {
-            AccountId = action.AccountId,
+            Identifier = action.Identifier,
+            Page = action.Page,
+            Limit = action.Limit,
             SystemSymbol = action.SystemSymbol,
-            Trait = action.Trait,
-            Meta = action.Meta
+            WaypointTrait = action.WaypointTrait,
+            WaypointType = action.WaypointType
         };
 
-        var commandResponse = await _repository.Post<FetchWaypointsCommandResponse, FetchWaypointsCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Get<FetchWaypointsQueryResponse, FetchWaypointsQueryRequest>(queryRequest, CancellationToken.None);
 
-        var actionResponse = new FetchWaypointsActionResponse
+        var actionResponse = new UpdateWaypointsActionResponse
         {
             ActionId = action.ActionId,
             Errors = [.. commandResponse.Errors],
@@ -40,20 +40,21 @@ public sealed class WaypointEffects
     [EffectMethod]
     public async Task HandleFetchWaypointActionAsync(FetchWaypointAction action, IDispatcher dispatcher)
     {
-        var commandRequest = new FetchWaypointCommandRequest
+        var queryRequest = new FetchWaypointQueryRequest
         {
-            AccountId = action.AccountId,
+            Identifier = action.Identifier,
+            SystemSymbol = action.SystemSymbol,
             WaypointSymbol = action.WaypointSymbol
         };
 
-        var commandResponse = await _repository.Post<FetchWaypointCommandResponse, FetchWaypointCommandRequest>(commandRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<FetchWaypointQueryResponse, FetchWaypointQueryRequest>(queryRequest, CancellationToken.None);
 
-        var actionResponse = new FetchWaypointActionResponse
+        var actionResponse = new UpdateWaypointsActionResponse
         {
             ActionId = action.ActionId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value is null ? null : [queryResponse.Value]
         };
 
         // TODO: Framework to dispatch general ***something went wrong***
@@ -64,21 +65,46 @@ public sealed class WaypointEffects
     [EffectMethod]
     public async Task HandleFetchShipyardActionAsync(FetchShipyardAction action, IDispatcher dispatcher)
     {
-        var commandRequest = new FetchShipyardCommandRequest
+        var queryRequest = new FetchShipyardQueryRequest
         {
-            AccountId = action.AccountId,
+            Identifier = action.Identifier,
             SystemSymbol = action.SystemSymbol,
             WaypointSymbol = action.WaypointSymbol
         };
 
-        var commandResponse = await _repository.Post<FetchShipyardCommandResponse, FetchShipyardCommandRequest>(commandRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<FetchShipyardQueryResponse, FetchShipyardQueryRequest>(queryRequest, CancellationToken.None);
 
-        var actionResponse = new FetchShipyardActionResponse
+        var actionResponse = new UpdateWaypointsActionResponse
         {
             ActionId = action.ActionId,
-            Errors = [.. commandResponse.Errors],
-            Warnings = [.. commandResponse.Warnings],
-            Value = commandResponse.Value
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value is null ? null : [queryResponse.Value]
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public async Task HandleFetchMarketplaceActionAsync(FetchMarketplaceAction action, IDispatcher dispatcher)
+    {
+        var queryRequest = new FetchMarketplaceQueryRequest
+        {
+            Identifier = action.Identifier,
+            SystemSymbol = action.SystemSymbol,
+            WaypointSymbol = action.WaypointSymbol
+        };
+
+        var queryResponse = await _repository.Get<FetchMarketplaceQueryResponse, FetchMarketplaceQueryRequest>(queryRequest, CancellationToken.None);
+
+        var actionResponse = new UpdateWaypointsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value is null ? null : [queryResponse.Value]
         };
 
         // TODO: Framework to dispatch general ***something went wrong***

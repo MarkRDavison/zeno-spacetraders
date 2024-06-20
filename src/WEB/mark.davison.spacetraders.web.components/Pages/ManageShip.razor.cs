@@ -2,6 +2,11 @@
 
 public partial class ManageShip
 {
+    private bool _inProgress;
+
+    [Parameter]
+    public required string Identifier { get; set; }
+
     [Parameter]
     public required string ShipSymbol { get; set; }
 
@@ -12,87 +17,168 @@ public partial class ManageShip
     public required IState<WaypointState> WaypointState { get; set; }
 
     [Inject]
-    public required IStoreHelper StoreHelper { get; set; }
+    public required IState<ContractState> ContractState { get; set; }
 
     [Inject]
-    public required IAccountContextService AccountContextService { get; set; }
+    public required IStoreHelper StoreHelper { get; set; }
 
-    private ShipDto? ShipDto => ShipState.Value.Ships.FirstOrDefault(_ => _.Symbol == ShipSymbol);
-
-    private WaypointDto? WaypointDto => WaypointState.Value.Waypoints.FirstOrDefault(_ => _.WaypointSymbol == ShipDto?.Nav.WaypointSymbol);
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Identifier))
+        {
+            await StoreHelper.DispatchAndWaitForResponse<FetchContractsAction, UpdateContractsActionResponse>(new()
+            {
+                Identifier = Identifier
+            });
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        if (!string.IsNullOrEmpty(Identifier) &&
+            !string.IsNullOrEmpty(ShipSymbol))
         {
-            bool fetchedShip = false;
-            if (ShipDto == null && !string.IsNullOrEmpty(ShipSymbol))
+            var ship = ShipState.Value.GetShip(ShipSymbol);
+            var shipNav = ShipState.Value.GetShipNav(ShipSymbol);
+
+            if (ship == null || shipNav == null || WaypointState.Value.GetWaypoint(shipNav.WaypointSymbol) is null)
             {
-                await StoreHelper.DispatchAndWaitForResponse<FetchShipAction, FetchShipActionResponse>(new()
-                {
-                    AccountId = account.Id,
-                    ShipSymbol = ShipSymbol
-                });
-                fetchedShip = true;
+                await Refresh();
+            }
+        }
+    }
+
+    private List<CommandMenuItem> CargoCommandMenuItems(ShipCargoItemDto item)
+    {
+        var nav = ShipState.Value.GetShipNav(ShipSymbol);
+        var contract = ContractState.Value.Contracts
+            .FirstOrDefault(_ => _.Terms.ContractDeliverGoods.Any(__ => __.DestinationSymbol == nav?.WaypointSymbol));
+
+        if (contract is not null)
+        {
+            Console.WriteLine($"Found a contract ({contract.Id}) that {item.Name} can be delivered to");
+        }
+
+        var items = new List<CommandMenuItem>
+        {
+            new CommandMenuItem
+            {
+                Id = "SELL_ALL",
+                Text = "Sell all",
+                Disabled = ShipState.Value.GetShipNav(ShipSymbol)?.Status != "DOCKED"
+            },
+            new CommandMenuItem
+            {
+                Id = "JETTISON_ALL",
+                Text = "Jettison all"
+            },
+        };
+
+        if (contract != null)
+        {
+            items.Add(new CommandMenuItem
+            {
+                Id = "DELIVER_ALL",
+                Text = "Deliver all",
+                Disabled = ShipState.Value.GetShipNav(ShipSymbol)?.Status != "DOCKED"
+            });
+        }
+
+        return items;
+    }
+
+    private async Task CargoCommandMenuItemSelected(CommandMenuItem item, ShipCargoItemDto cargoItem)
+    {
+        if (item.Id == "SELL_ALL")
+        {
+            await StoreHelper.DispatchAndWaitForResponse<SellCargoAction, UpdateShipsActionResponse>(new()
+            {
+                Identifier = Identifier,
+                ShipSymbol = ShipSymbol,
+                TradeSymbol = cargoItem.Symbol,
+                Units = cargoItem.Units
+            });
+        }
+        else if (item.Id == "JETTISON_ALL")
+        {
+            await StoreHelper.DispatchAndWaitForResponse<JettisonCargoAction, UpdateShipsActionResponse>(new()
+            {
+                Identifier = Identifier,
+                ShipSymbol = ShipSymbol,
+                TradeSymbol = cargoItem.Symbol,
+                Units = cargoItem.Units
+            });
+        }
+        else if (item.Id == "DELIVER_ALL")
+        {
+            var nav = ShipState.Value.GetShipNav(ShipSymbol);
+            var contract = ContractState.Value.Contracts
+                .FirstOrDefault(_ => _.Terms.ContractDeliverGoods.Any(__ => __.DestinationSymbol == nav?.WaypointSymbol));
+
+            if (contract is null)
+            {
+                Console.WriteLine("FAILED TO DELIVER ALL :(");
+                throw new InvalidOperationException("FAILED TO DELIVER ALL");
             }
 
-            if (WaypointDto == null && ShipDto != null)
+            await StoreHelper.DispatchAndWaitForResponse<DeliverContractCargoAction, UpdateShipsActionResponse>(new()
             {
-                if (fetchedShip)
-                {
-                    await Task.Delay(TimeSpan.FromMilliseconds(500)); // TODO: Better throttling in the api
-                }
-                await StoreHelper.DispatchAndWaitForResponse<FetchWaypointAction, FetchWaypointActionResponse>(new()
-                {
-                    AccountId = account.Id,
-                    WaypointSymbol = ShipDto.Nav.WaypointSymbol
-                });
-            }
+                Identifier = Identifier,
+                ContractId = contract.Id,
+                ShipSymbol = ShipSymbol,
+                TradeSymbol = cargoItem.Symbol,
+                Units = cargoItem.Units
+            });
+
         }
     }
 
     private async Task Refresh()
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        _inProgress = true; // TODO: Process monitor/activity monitor
+
+        await StoreHelper.DispatchAndWaitForResponse<FetchShipAction, UpdateShipsActionResponse>(new()
         {
-            await StoreHelper.DispatchAndWaitForResponse<FetchShipAction, FetchShipActionResponse>(new()
-            {
-                AccountId = account.Id,
-                ShipSymbol = ShipSymbol
-            });
+            Identifier = Identifier,
+            ShipSymbol = ShipSymbol
+        });
 
-            await Task.Delay(TimeSpan.FromMilliseconds(500));
-
-            await StoreHelper.DispatchAndWaitForResponse<FetchShipCargoAction, FetchShipCargoActionResponse>(new()
+        var nav = ShipState.Value.GetShipNav(ShipSymbol);
+        if (nav is not null && WaypointState.Value.GetWaypoint(nav.WaypointSymbol) is null)
+        {
+            await StoreHelper.DispatchAndWaitForResponse<FetchWaypointAction, UpdateWaypointsActionResponse>(new()
             {
-                AccountId = account.Id,
-                ShipSymbol = ShipSymbol
+                Identifier = Identifier,
+                SystemSymbol = nav.SystemSymbol,
+                WaypointSymbol = nav.WaypointSymbol
             });
         }
+        _inProgress = false;
     }
-    private async Task Extract()
-    {
 
-        if (AccountContextService.GetActiveAccount() is { } account)
+    private async Task ExtractResources()
+    {
+        _inProgress = true; // TODO: Process monitor/activity monitor
+        await StoreHelper.DispatchAndWaitForResponse<ExtractResourcesAction, UpdateShipsActionResponse>(new()
         {
-            await StoreHelper.DispatchAndWaitForResponse<ExtractResourceShipAction, FetchShipCargoActionResponse>(new()
-            {
-                AccountId = account.Id,
-                ShipSymbol = ShipSymbol
-            });
-        }
+            Identifier = Identifier,
+            ShipSymbol = ShipSymbol
+        });
+        _inProgress = false;
     }
 
     private async Task Refuel()
     {
-        if (ShipDto != null && AccountContextService.GetActiveAccount() is { } account)
+        var fuel = ShipState.Value.GetShipFuel(ShipSymbol);
+
+        _inProgress = true; // TODO: Process monitor/activity monitor
+        await StoreHelper.DispatchAndWaitForResponse<RefuelShipAction, UpdateShipsActionResponse>(new()
         {
-            await StoreHelper.DispatchAndWaitForResponse<RefuelShipAction, UpdateShipFuelResponse>(new()
-            {
-                AccountId = account.Id,
-                ShipSymbol = ShipSymbol,
-                Units = ShipDto.Fuel.Capacity - ShipDto.Fuel.Current
-            });
-        }
+            Identifier = Identifier,
+            ShipSymbol = ShipSymbol,
+            FromCargo = false,
+            Units = fuel is null ? 9999 : fuel.Capacity - fuel.Current
+        });
+        _inProgress = false;
     }
 }

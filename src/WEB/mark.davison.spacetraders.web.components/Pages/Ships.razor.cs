@@ -2,36 +2,24 @@
 
 public partial class Ships
 {
-    [Inject]
-    public required IState<ShipState> ShipState { get; set; }
-
-    [Inject]
-    public required IState<AccountState> AccountState { get; set; }
+    [Parameter]
+    public required string Identifier { get; set; }
 
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     [Inject]
-    public required IAccountContextService AccountContextService { get; set; }
+    public required IState<ShipState> ShipState { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        await LoadState();
-    }
-
-    private async Task LoadState()
-    {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        if (!ShipState.Value.IsLoading && !ShipState.Value.Ships.Any())
         {
-            await StoreHelper.DispatchAndWaitForResponse<FetchShipsAction, FetchShipsActionResponse>(
-                new FetchShipsAction
-                {
-                    AccountId = account.Id,
-                    Meta = new MetaInfo
-                    {
-                        Limit = 20
-                    }
-                });
+            await StoreHelper.DispatchAndWaitForResponse<FetchShipsAction, UpdateShipsActionResponse>(new()
+            {
+                Identifier = Identifier,
+                Limit = 20
+            });
         }
     }
 }

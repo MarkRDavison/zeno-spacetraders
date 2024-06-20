@@ -2,7 +2,7 @@
 
 public sealed class ShipyardDto
 {
-    public string Symbol { get; set; } = string.Empty;
+    public string WaypointSymbol { get; set; } = string.Empty;
     public int ModificationsFee { get; set; }
     public List<string> ShipTypes { get; set; } = [];
     public List<ShipyardShipDto> ShipyardShips { get; set; } = [];

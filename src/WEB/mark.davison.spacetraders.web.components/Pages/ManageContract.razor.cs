@@ -3,6 +3,9 @@
 public partial class ManageContract
 {
     [Parameter]
+    public required string Identifier { get; set; }
+
+    [Parameter]
     public required string ContractId { get; set; }
 
     [Inject]
@@ -11,39 +14,43 @@ public partial class ManageContract
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
-    [Inject]
-    public required IAccountContextService AccountContextService { get; set; }
+    private ContractDto? ActiveContract => ContractState.Value.GetContract(ContractId);
 
-    private ContractDto? ContractDto => ContractState.Value.Contracts.FirstOrDefault(_ => _.Id == ContractId);
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadState();
+    }
 
-    // TODO: Consolidate command menu and actions
-    private List<CommandMenuItem> _commandMenuItems { get; } =
+    private async Task LoadState()
+    {
+        if (!string.IsNullOrEmpty(Identifier))
+        {
+            await StoreHelper.DispatchAndWaitForResponse<FetchContractAction, UpdateContractsActionResponse>(new()
+            {
+                Identifier = Identifier,
+                ContractId = ContractId
+            });
+        }
+    }
+
+    private List<CommandMenuItem> _commandMenuItems =>
         [
             new CommandMenuItem
             {
                 Id = "ACCEPT",
-                Text = "Accept"
+                Text = "Accept",
+                Disabled = ActiveContract!.Accepted
             }
         ];
 
-    private async Task CommandMenuItemSelected(CommandMenuItem item, ContractDto contract)
+    private async Task CommandMenuItemSelected(CommandMenuItem item)
     {
-        if (AccountContextService.GetActiveAccount() is { } account)
+        if (ActiveContract is null) { return; }
+
+        await Task.CompletedTask;
+        if (item.Id == "ACCEPT" && !ActiveContract.Accepted)
         {
-            if (item.Id == "ACCEPT" && !contract.Accepted)
-            {
-                await AcceptContract(contract, account.Id);
-            }
+
         }
     }
-
-    private async Task AcceptContract(ContractDto contract, Guid accountId)
-    {
-        await StoreHelper.DispatchAndWaitForResponse<AcceptContractAction, AcceptContractActionResponse>(new AcceptContractAction
-        {
-            AccountId = accountId,
-            ContractId = contract.Id
-        });
-    }
-
 }

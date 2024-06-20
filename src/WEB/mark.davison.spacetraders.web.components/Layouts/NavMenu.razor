@@ -1,31 +1,77 @@
 ﻿@inherits FluxorComponent
 
+@inject NavigationManager _navigationManager;
+
 <MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">
-        <MudText>@($"Account: {Account?.Identifier}")</MudText>
-        @if (Summary is not null)
-        {
-            <MudText>@($"Credits: ₡{Summary.Credits.ToString("N0")}")</MudText>
-            <MudText>@($"HQ: {Summary.Headquarters}")</MudText>
-            <MudText>@($"Ships: {Summary.ShipCount.ToString("N0")}")</MudText>
-        }
-    </MudNavLink>
-    @if (Summary is not null)
+    <MudNavLink Href="@Routes.Accounts" Match="NavLinkMatch.Prefix">Account</MudNavLink>
+    @if (identifier is string id)
     {
-        <MudNavLink Href="@Routes.Ships" Match="NavLinkMatch.Prefix">Ships</MudNavLink>
-        <MudNavLink Href="@Routes.Contracts" Match="NavLinkMatch.Prefix">Contracts</MudNavLink>
-        <MudNavLink Href="@RouteHelpers.Waypoints(WaypointsHelpers.GetSystemFromWaypoint(Summary.Headquarters))" Match="NavLinkMatch.Prefix">Waypoints</MudNavLink>
+        <MudNavLink Href="@RouteHelpers.Contracts(id)" 
+                    Match="NavLinkMatch.Prefix">Contracts</MudNavLink>
+        <MudNavLink Href="@RouteHelpers.Ships(id)" 
+                    Match="NavLinkMatch.Prefix">Ships</MudNavLink>
+        <MudNavLink Href="@RouteHelpers.Waypoints(id, GetHeadquartersSystem(id))" 
+                    Match="NavLinkMatch.Prefix">Waypoints</MudNavLink>
     }
 </MudNavMenu>
 
 @code {
 
-    [Parameter, EditorRequired]
-    public required AccountDto? Account { get; set; }
+    private string GetHeadquartersSystem(string identifier)
+    {
+        if (AgentState.Value.GetAgent(identifier)?.Headquarters is string hq)
+        {
+            return WaypointsHelpers.GetSystemFromWaypoint(hq);
+        }
+
+        return string.Empty;
+    }
 
     [Inject]
-    public required IState<AccountState> AccountState { get; set; }
+    public required IState<AgentState> AgentState { get; set; }
 
-    private AccountSummaryDto? Summary => AccountState.Value.AccountSummaries.FirstOrDefault(_ => _.AccountId == Account?.Id);
+    [Inject]
+    public required IStoreHelper StoreHelper { get; set; }
+
+    protected override void OnInitialized()
+    {
+        AgentState.StateChanged += async (s, e) => await InvokeAsync(StateHasChanged);
+        _navigationManager.LocationChanged += async (s, e) => await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(identifier) && string.IsNullOrEmpty(GetHeadquartersSystem(identifier)))
+        {
+            await StoreHelper.DispatchAndWaitForResponse<FetchAgentAction, UpdateAgentActionResponse>(new()
+            {
+                Identifier = identifier
+            });
+        }
+    }
+
+    private string? identifier
+    {
+        get
+        {
+            var url = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+
+            var portions = url.Split('/').ToList();
+
+            var accountsIndex = portions.IndexOf("accounts");
+
+            if (accountsIndex == -1)
+            {
+                return null;
+            }
+
+            if (accountsIndex + 1 >= portions.Count)
+            {
+                return null;
+            }
+
+            return portions[accountsIndex + 1];
+        }
+    }
 
 }

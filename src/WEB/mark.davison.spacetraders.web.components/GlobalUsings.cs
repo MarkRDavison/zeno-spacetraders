@@ -12,6 +12,7 @@ global using mark.davison.spacetraders.shared.constants;
 global using mark.davison.spacetraders.shared.models.dtos.Shared;
 global using mark.davison.spacetraders.web.components.Forms.AddAccount;
 global using mark.davison.spacetraders.web.features.Store.AccountUseCase;
+global using mark.davison.spacetraders.web.features.Store.AgentUseCase;
 global using mark.davison.spacetraders.web.features.Store.ContractUseCase;
 global using mark.davison.spacetraders.web.features.Store.ShipUseCase;
 global using mark.davison.spacetraders.web.features.Store.WaypointUseCase;

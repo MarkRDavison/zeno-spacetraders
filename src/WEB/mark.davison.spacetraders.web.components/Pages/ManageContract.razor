@@ -3,33 +3,27 @@
 
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
-        <MudText Typo="Typo.h3">@($"{ContractDto?.Type} contract")</MudText>
+        <MudText Typo="Typo.h3">@($"{ActiveContract?.Type ?? "Unknown"} contract")</MudText>
         <MudSpacer />
-        @if (ContractDto != null)
+        @if (ActiveContract is not null)
         {
-            <CommandMenu OnCommandMenuItemSelected="@(_ => CommandMenuItemSelected(_, ContractDto))"
+            <CommandMenu OnCommandMenuItemSelected="@CommandMenuItemSelected"
                          Items="@_commandMenuItems" />
         }
     </MudStack>
-
-    @if (ContractState.Value.IsLoading)
+    @if (ActiveContract is not null)
     {
-        <MudProgressCircular Indeterminate
-                             Class="ma-auto"
-        Size="Size.Large" />
-    }
-    else if (ContractDto != null)
-    {
-        <MudText Typo="Typo.h6">@(ContractDto.Accepted ? "Accepted" : "Not acccepted")</MudText>
 
-        @if (!ContractDto.Accepted)
+        <MudText Typo="Typo.h6">@(ActiveContract.Accepted ? "Accepted" : "Not acccepted")</MudText>
+
+        @if (!ActiveContract.Accepted)
         {
-            <MudText Typo="Typo.h6">@($"On accepted: ₡{ContractDto.Terms.Payment.AcceptedCredits}")</MudText>
+            <MudText Typo="Typo.h6">@($"On accepted: ₡{ActiveContract.Terms.Payment.AcceptedCredits}")</MudText>
         }
-        <MudText Typo="Typo.h6">@($"On fulfilled: ₡{ContractDto.Terms.Payment.FulfilledCredits}")</MudText>
+        <MudText Typo="Typo.h6">@($"On fulfilled: ₡{ActiveContract.Terms.Payment.FulfilledCredits}")</MudText>
 
         <MudText Typo="Typo.subtitle2">Goods to deliver</MudText>
-        <MudTable Items="@ContractDto.Terms.ContractDeliverGoods">
+        <MudTable Items="@ActiveContract.Terms.ContractDeliverGoods">
             <HeaderContent>
                 <MudTh>Name</MudTh>
                 <MudTh>Destination</MudTh>
@@ -40,7 +34,7 @@
                     <MudText Typo="Typo.body2">@context.TradeSymbol</MudText>
                 </MudTd>
                 <MudTd DataLabel="Destination">
-                    <MudLink Href="@RouteHelpers.Waypoint(WaypointsHelpers.GetSystemFromWaypoint(context.DestinationSymbol), context.DestinationSymbol)" Typo="Typo.body2">@context.DestinationSymbol</MudLink>
+                    <MudText Typo="Typo.body2">@context.DestinationSymbol</MudText>
                 </MudTd>
                 <MudTd DataLabel="Progress">
                     <MudText Typo="Typo.body2">@($"{context.UnitsFulfilled}/{context.UnitsRequired}")</MudText>

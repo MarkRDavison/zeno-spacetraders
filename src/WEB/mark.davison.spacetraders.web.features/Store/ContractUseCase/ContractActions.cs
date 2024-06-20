@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.spacetraders.web.features.Store.ContractUseCase;
 
-public sealed class FetchContractsAction : BaseAction
+public sealed class OldFetchContractsAction : BaseAction
 {
     public Guid AccountId { get; set; }
     public MetaInfo Meta { get; set; } = new();
@@ -21,3 +21,12 @@ public sealed class AcceptContractActionResponse : BaseActionResponse<ContractDt
 {
 
 }
+
+public sealed class FetchContractsAction : PaginatedIdentifiedAction;
+
+public sealed class FetchContractAction : IdentifiedAction
+{
+    public string ContractId { get; set; } = string.Empty;
+}
+
+public sealed class UpdateContractsActionResponse : BaseActionResponse<List<ContractDto>>;

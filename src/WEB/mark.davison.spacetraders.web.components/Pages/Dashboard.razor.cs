@@ -14,6 +14,19 @@ public partial class Dashboard
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
+    [Inject]
+    public required NavigationManager NavigationManager { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+
+        if (string.IsNullOrEmpty(url) || url == "/")
+        {
+            NavigationManager.NavigateTo(Routes.Accounts);
+        }
+    }
+
     private List<CommandMenuItem> _commandMenuItems { get; } =
         [
             new CommandMenuItem

@@ -28,7 +28,7 @@ public sealed class FetchShipCargoQueryProcessor : IQueryProcessor<FetchShipCarg
 
         var apiResponse = await _apiClient.GetMyShipCargoAsync(request.ShipSymbol, cancellationToken);
 
-        var cargo = ShipHelpers.ToShipCargoDto(apiResponse.Data);
+        var cargo = ShipHelpers.ToShipCargoDto(request.ShipSymbol, apiResponse.Data);
         cargo.ShipSymbol = request.ShipSymbol;
         return new FetchShipCargoQueryResponse
         {

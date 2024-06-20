@@ -2,7 +2,6 @@
 
 @inject IAuthenticationConfig _authConfig
 @inject IAuthenticationContext _authContext
-@inject IAccountContextService _accountContext
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
@@ -24,7 +23,7 @@
         </MudMenu>
     </MudAppBar>
     <MudDrawer Elevation="2" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
-        <NavMenu Account="@_accountContext.GetActiveAccount()" />
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
         <MudContainer>
@@ -43,11 +42,6 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
-    }
-
-    protected override void OnInitialized()
-    {
-        _accountContext.ActiveAccountChanged += (s, e) => InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

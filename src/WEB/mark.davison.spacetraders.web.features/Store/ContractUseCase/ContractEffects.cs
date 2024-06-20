@@ -1,7 +1,4 @@
-﻿using mark.davison.spacetraders.shared.models.dtos.Commands.AcceptContract;
-using mark.davison.spacetraders.web.features.Store.AccountUseCase;
-
-namespace mark.davison.spacetraders.web.features.Store.ContractUseCase;
+﻿namespace mark.davison.spacetraders.web.features.Store.ContractUseCase;
 
 public sealed class ContractEffects
 {
@@ -13,7 +10,7 @@ public sealed class ContractEffects
     }
 
     [EffectMethod]
-    public async Task HandleFetchContractsActionAsync(FetchContractsAction action, IDispatcher dispatcher)
+    public async Task HandleFetchContractsActionAsync(OldFetchContractsAction action, IDispatcher dispatcher)
     {
         var commandRequest = new FetchContractsCommandRequest
         {
@@ -64,5 +61,53 @@ public sealed class ContractEffects
             AccountId = action.AccountId,
             Credits = commandResponse.Credits
         });
+    }
+
+    [EffectMethod]
+    public async Task HandleFetchContractActionAsync(FetchContractAction action, IDispatcher dispatcher)
+    {
+        var queryRequest = new FetchContractQueryRequest
+        {
+            Identifier = action.Identifier,
+            ContractId = action.ContractId
+        };
+
+        var queryResponse = await _repository.Get<FetchContractQueryResponse, FetchContractQueryRequest>(queryRequest, CancellationToken.None);
+
+        var actionResponse = new UpdateContractsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value == null ? null : [queryResponse.Value]
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+
+    [EffectMethod]
+    public async Task HandleFetchContractsActionAsync(FetchContractsAction action, IDispatcher dispatcher)
+    {
+        var queryRequest = new FetchContractsQueryRequest
+        {
+            Identifier = action.Identifier
+        };
+
+        var queryResponse = await _repository.Get<FetchContractsQueryResponse, FetchContractsQueryRequest>(queryRequest, CancellationToken.None);
+
+        var actionResponse = new UpdateContractsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. queryResponse.Errors],
+            Warnings = [.. queryResponse.Warnings],
+            Value = queryResponse.Value
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
     }
 }

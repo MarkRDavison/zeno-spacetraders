@@ -1,33 +1,15 @@
-﻿
-namespace mark.davison.spacetraders.shared.commands.Scenarios.NavigateShip;
+﻿namespace mark.davison.spacetraders.shared.commands.Scenarios.NavigateShip;
 
-public sealed class NavigateShipCommandProcessor : ICommandProcessor<NavigateShipCommandRequest, NavigateShipCommandResponse>
+public sealed class NavigateShipCommandProcessor(
+    ISpacetradersDbContext dbContext,
+    ISpaceTradersApiClient apiClient
+) : IdentifiedCommandProcessor<NavigateShipCommandRequest, NavigateShipCommandResponse>(
+    dbContext,
+    apiClient)
 {
-    private readonly ISpacetradersDbContext _dbContext;
-    private readonly ISpaceTradersApiClient _apiClient;
-
-    public NavigateShipCommandProcessor(
-        ISpacetradersDbContext dbContext,
-        ISpaceTradersApiClient apiClient)
+    protected override async Task<NavigateShipCommandResponse> ProcessAsyncIdentified(NavigateShipCommandRequest request, ISpaceTradersApiClient apiClient, Guid userId, CancellationToken cancellationToken)
     {
-        _dbContext = dbContext;
-        _apiClient = apiClient;
-    }
-
-    public async Task<NavigateShipCommandResponse> ProcessAsync(NavigateShipCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
-    {
-        var account = await _dbContext.GetByIdAsync<Account>(request.AccountId, cancellationToken);
-
-        if (account == null)
-        {
-            return ValidationMessages.CreateErrorResponse<NavigateShipCommandResponse>(
-                ValidationMessages.INVALID_PROPERTY,
-                nameof(NavigateShipCommandRequest.AccountId));
-        }
-
-        _apiClient.Token = account.Token;
-
-        var apiResponse = await _apiClient.NavigateShipAsync(
+        var apiResponse = await apiClient.NavigateShipAsync(
             new()
             {
                 WaypointSymbol = request.DestinationWaypoint
@@ -37,7 +19,12 @@ public sealed class NavigateShipCommandProcessor : ICommandProcessor<NavigateShi
 
         return new NavigateShipCommandResponse
         {
-            Value = (ShipHelpers.ToShipNavDto(apiResponse.Data.Nav), ShipHelpers.ToShipFuelDto(apiResponse.Data.Fuel))
+            Value = ShipHelpers.ToShipResponse(new Ship
+            {
+                Symbol = request.ShipSymbol,
+                Nav = apiResponse.Data.Nav,
+                Fuel = apiResponse.Data.Fuel
+            })
         };
     }
 }

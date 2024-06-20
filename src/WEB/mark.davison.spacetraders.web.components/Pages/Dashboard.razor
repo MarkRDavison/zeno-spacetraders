@@ -1,4 +1,5 @@
 ﻿@attribute [Route(Routes.Dashboard)]
+@attribute [Route(Routes.Accounts)]
 @inherits FluxorComponent
 
 <MudStack Class="pa-4">
@@ -34,7 +35,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Identifier">
-                    <MudText Typo="Typo.body1">@context.Identifier</MudText>
+                    <MudLink Href="@RouteHelpers.Account(context.Identifier)" Typo="Typo.body1">@context.Identifier</MudLink>
                 </MudTd>
                 <MudTd DataLabel="Email">
                     <MudText Typo="Typo.body1">@context.Email</MudText>

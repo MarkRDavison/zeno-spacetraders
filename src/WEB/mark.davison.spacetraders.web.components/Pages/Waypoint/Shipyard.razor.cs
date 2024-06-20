@@ -1,25 +1,20 @@
 ﻿namespace mark.davison.spacetraders.web.components.Pages.Waypoint;
+
 public partial class Shipyard
 {
     [Parameter, EditorRequired]
-    public ShipyardDto? ShipyardDto { get; set; }
+    public required string Identifier { get; set; }
 
-    [Inject]
-    public required IState<AccountState> AccountState { get; set; }
+    [Parameter, EditorRequired]
+    public required ShipyardDto? ShipyardDto { get; set; }
 
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     [Inject]
-    public required IAccountContextService AccountContextService { get; set; }
-
-    [Inject]
     public required IClientNavigationManager ClientNavigationManager { get; set; }
 
-    [Inject]
-    public required ISnackbar Snackbar { get; set; }
-
-    private List<CommandMenuItem> _commandMenuItems { get; } =
+    private List<CommandMenuItem> _commandMenuItems =>
         [
             new CommandMenuItem
             {
@@ -30,35 +25,28 @@ public partial class Shipyard
 
     private async Task CommandMenuItemSelected(CommandMenuItem item, ShipyardShipDto shipyardShip)
     {
-        if (AccountContextService.GetActiveAccount() is { } account && ShipyardDto is not null) // TODO: Better way of getting account id
+        if (item.Id == "PURCHASE")
         {
-            if (item.Id == "PURCHASE")
-            {
-                await PurchaseShip(shipyardShip, account.Id);
-            }
+            await PurchaseShip(shipyardShip);
         }
     }
 
-    private async Task PurchaseShip(ShipyardShipDto shipyardShip, Guid accountId)
+    private async Task PurchaseShip(ShipyardShipDto shipyardShip)
     {
         var action = new PurchaseShipAction
         {
-            AccountId = accountId,
+            Identifier = Identifier,
             ShipType = shipyardShip.Type,
-            WaypointSymbol = ShipyardDto!.Symbol
+            WaypointSymbol = ShipyardDto!.WaypointSymbol
         };
 
-        var response = await StoreHelper.DispatchAndWaitForResponse<PurchaseShipAction, PurchaseShipActionResponse>(action);
+        var response = await StoreHelper.DispatchAndWaitForResponse<PurchaseShipAction, UpdateShipsActionResponse>(action);
 
         if (response.SuccessWithValue)
         {
-            ClientNavigationManager.NavigateTo(RouteHelpers.Ship(response.Value.Symbol));
-        }
-        else
-        {
-            foreach (var s in response.Errors)
+            if (response.Value.Select(_ => _.Ship?.ShipSymbol).FirstOrDefault() is string newShipSymbol)
             {
-                Snackbar.Add(s, Severity.Error);
+                ClientNavigationManager.NavigateTo(RouteHelpers.Ship(Identifier, newShipSymbol));
             }
         }
     }
