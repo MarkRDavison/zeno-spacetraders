@@ -1,0 +1,33 @@
+name: build
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: [ main, dev, 'dev/*', 'feature/*', 'rel/*' ]
+    paths-ignore:
+      - readme.md
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_NOLOGO: true
+  CI_BUILD: true
+
+jobs:
+  build-dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with: 
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: build
+        working-directory: ./src
+        run: dotnet build ./mark.davison.spacetraders.sln
+
+      - name: test
+        working-directory: ./src
+        run: dotnet test ./mark.davison.spacetraders.sln --filter "TestCategory!=UI"
+    
