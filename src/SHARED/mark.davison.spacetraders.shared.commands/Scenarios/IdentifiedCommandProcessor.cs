@@ -7,11 +7,11 @@ public abstract class IdentifiedCommandProcessor<TRequest, TResponse> : ICommand
     where TResponse : Response, new()
 {
     private readonly ISpacetradersDbContext _dbContext;
-    private readonly ISpaceTradersApiClient _apiClient;
+    private readonly ISpacetradersApiClient _apiClient;
 
     public IdentifiedCommandProcessor(
         ISpacetradersDbContext dbContext,
-        ISpaceTradersApiClient apiClient)
+        ISpacetradersApiClient apiClient)
     {
         _dbContext = dbContext;
         _apiClient = apiClient;
@@ -37,12 +37,12 @@ public abstract class IdentifiedCommandProcessor<TRequest, TResponse> : ICommand
         {
             return await ProcessAsyncIdentified(request, _apiClient, currentUserContext.CurrentUser.Id, cancellationToken);
         }
-        catch (ApiException apiException)
+        catch (SpacetradersApiException apiException)
         {
             // TODO: Deserialize apiException.Response 
             throw;
         }
     }
 
-    protected abstract Task<TResponse> ProcessAsyncIdentified(TRequest request, ISpaceTradersApiClient apiClient, Guid userId, CancellationToken cancellationToken);
+    protected abstract Task<TResponse> ProcessAsyncIdentified(TRequest request, ISpacetradersApiClient apiClient, Guid userId, CancellationToken cancellationToken);
 }

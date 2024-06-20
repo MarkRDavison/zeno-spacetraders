@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common.server" Version="8.4.13" />
-    <PackageReference Include="markdavison.common.source.generators" Version="8.4.13" />
+    <PackageReference Include="markdavison.common.server" Version="8.4.14" />
+    <PackageReference Include="markdavison.common.source.generators" Version="8.4.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>

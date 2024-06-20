@@ -19,7 +19,6 @@
     {
         if (_authContext.IsAuthenticated)
         {
-            _dispatcher.Dispatch(new FetchAccountsAction());
         }
 
         await base.OnInitializedAsync();

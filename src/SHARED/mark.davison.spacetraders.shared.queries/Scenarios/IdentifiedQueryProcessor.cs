@@ -7,11 +7,11 @@ public abstract class IdentifiedQueryProcessor<TRequest, TResponse> : IQueryProc
     where TResponse : Response, new()
 {
     private readonly ISpacetradersDbContext _dbContext;
-    private readonly ISpaceTradersApiClient _apiClient;
+    private readonly ISpacetradersApiClient _apiClient;
 
     public IdentifiedQueryProcessor(
         ISpacetradersDbContext dbContext,
-        ISpaceTradersApiClient apiClient)
+        ISpacetradersApiClient apiClient)
     {
         _dbContext = dbContext;
         _apiClient = apiClient;
@@ -36,5 +36,5 @@ public abstract class IdentifiedQueryProcessor<TRequest, TResponse> : IQueryProc
         return await ProcessAsyncIdentified(request, _apiClient, currentUserContext.CurrentUser.Id, cancellationToken);
     }
 
-    protected abstract Task<TResponse> ProcessAsyncIdentified(TRequest request, ISpaceTradersApiClient apiClient, Guid userId, CancellationToken cancellationToken);
+    protected abstract Task<TResponse> ProcessAsyncIdentified(TRequest request, ISpacetradersApiClient apiClient, Guid userId, CancellationToken cancellationToken);
 }

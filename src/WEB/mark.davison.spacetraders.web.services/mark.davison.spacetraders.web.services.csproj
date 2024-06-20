@@ -16,4 +16,8 @@
     <ProjectReference Include="..\mark.davison.spacetraders.web.features\mark.davison.spacetraders.web.features.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Context\" />
+  </ItemGroup>
+
 </Project>

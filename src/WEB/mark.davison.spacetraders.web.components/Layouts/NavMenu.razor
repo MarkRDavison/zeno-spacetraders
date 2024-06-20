@@ -19,35 +19,31 @@
 
     private string GetHeadquartersSystem(string identifier)
     {
-        if (AgentState.Value.GetAgent(identifier)?.Headquarters is string hq)
-        {
-            return WaypointsHelpers.GetSystemFromWaypoint(hq);
-        }
+        // if (AgentState.Value.GetAgent(identifier)?.Headquarters is string hq)
+        // {
+        //     return WaypointsHelpers.GetSystemFromWaypoint(hq);
+        // }
 
         return string.Empty;
     }
-
-    [Inject]
-    public required IState<AgentState> AgentState { get; set; }
 
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     protected override void OnInitialized()
     {
-        AgentState.StateChanged += async (s, e) => await InvokeAsync(StateHasChanged);
         _navigationManager.LocationChanged += async (s, e) => await InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!string.IsNullOrEmpty(identifier) && string.IsNullOrEmpty(GetHeadquartersSystem(identifier)))
-        {
-            await StoreHelper.DispatchAndWaitForResponse<FetchAgentAction, UpdateAgentActionResponse>(new()
-            {
-                Identifier = identifier
-            });
-        }
+        // if (!string.IsNullOrEmpty(identifier) && string.IsNullOrEmpty(GetHeadquartersSystem(identifier)))
+        // {
+        //     await StoreHelper.DispatchAndWaitForResponse<FetchAgentAction, UpdateAgentActionResponse>(new()
+        //     {
+        //         Identifier = identifier
+        //     });
+        // }
     }
 
     private string? identifier

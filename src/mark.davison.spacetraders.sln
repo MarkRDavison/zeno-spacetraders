@@ -3,14 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.core", "mark.davison.spacetraders.core\mark.davison.spacetraders.core.csproj", "{80C18E0A-594A-4B17-8379-70CE5D35B620}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.api.old", "mark.davison.spacetraders.api\mark.davison.spacetraders.api.old.csproj", "{765EF547-7F75-4278-9972-3F351EBCE866}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.console", "mark.davison.spacetraders.console\mark.davison.spacetraders.console.csproj", "{7BB184B3-AAE7-4350-953B-164479E232C7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.avalonia.ui", "mark.davison.spacetraders.avalonia.ui\mark.davison.spacetraders.avalonia.ui.csproj", "{22C561B9-013C-400C-A966-DC1074E4798C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{265E5A7E-C2E9-4FDC-AAB3-FDC91CC5B861}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{2CF7CBED-BB49-455A-A6A2-BAEC44FB4335}"
@@ -72,28 +64,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\TODO.md = ..\TODO.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.client", "SHARED\mark.davison.spacetraders.shared.client\mark.davison.spacetraders.shared.client.csproj", "{C843BAEC-DC9C-4E41-99F4-F96653250455}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DESKTOP", "DESKTOP", "{BC90CFAD-B0B7-49B4-8177-9F0DF080FE07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{80C18E0A-594A-4B17-8379-70CE5D35B620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80C18E0A-594A-4B17-8379-70CE5D35B620}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80C18E0A-594A-4B17-8379-70CE5D35B620}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80C18E0A-594A-4B17-8379-70CE5D35B620}.Release|Any CPU.Build.0 = Release|Any CPU
-		{765EF547-7F75-4278-9972-3F351EBCE866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{765EF547-7F75-4278-9972-3F351EBCE866}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{765EF547-7F75-4278-9972-3F351EBCE866}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{765EF547-7F75-4278-9972-3F351EBCE866}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BB184B3-AAE7-4350-953B-164479E232C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BB184B3-AAE7-4350-953B-164479E232C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BB184B3-AAE7-4350-953B-164479E232C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BB184B3-AAE7-4350-953B-164479E232C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22C561B9-013C-400C-A966-DC1074E4798C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22C561B9-013C-400C-A966-DC1074E4798C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22C561B9-013C-400C-A966-DC1074E4798C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22C561B9-013C-400C-A966-DC1074E4798C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77AE9611-031B-4CD6-B746-B77D45B127F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77AE9611-031B-4CD6-B746-B77D45B127F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77AE9611-031B-4CD6-B746-B77D45B127F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -170,6 +150,10 @@ Global
 		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5524E02-673A-44E2-AB5C-70B86D20B890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C843BAEC-DC9C-4E41-99F4-F96653250455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C843BAEC-DC9C-4E41-99F4-F96653250455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C843BAEC-DC9C-4E41-99F4-F96653250455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C843BAEC-DC9C-4E41-99F4-F96653250455}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,6 +183,7 @@ Global
 		{A3851EA8-9638-49F2-A195-BC8F22A4B732} = {54EAD15D-28EE-41DA-857E-34899F0660E7}
 		{EA3EC8BE-FD43-4086-BE67-A16FFC47E0EE} = {265E5A7E-C2E9-4FDC-AAB3-FDC91CC5B861}
 		{B5524E02-673A-44E2-AB5C-70B86D20B890} = {DEB8DEB8-2139-4F9A-ABE3-F00AC875747E}
+		{C843BAEC-DC9C-4E41-99F4-F96653250455} = {DEB8DEB8-2139-4F9A-ABE3-F00AC875747E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6250955A-4E54-4D86-A97D-78443C388119}
