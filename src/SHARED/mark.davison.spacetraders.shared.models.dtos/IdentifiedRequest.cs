@@ -28,4 +28,5 @@ public abstract class PaginatedIdentifiedQueryRequest<TQuery, TResponse> : Ident
 {
     public int? Page { get; set; }
     public int? Limit { get; set; }
+    public bool All { get; set; }
 }

@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"			 
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+			 xmlns:mdcm="clr-namespace:mark.davison.common.client.desktop.components.Models;assembly=mark.davison.common.client.desktop"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.desktop.ui.AccountsPageView"
+			 x:DataType="vm:AccountsPageViewModel">
+	<UserControl.Resources>
+		<vm:MenuFlyoutItemSelectionMultiConverter x:Key="MenuFlyoutItemSelectionMultiConverter"  />
+	</UserControl.Resources>
+	<StackPanel Orientation="Vertical" Margin="20" Name="Panel">
+		<TextBlock Text="Accounts" FontSize="32" />
+		<DataGrid ItemsSource="{Binding Accounts}"
+				  IsReadOnly="True"
+				  GridLinesVisibility="Horizontal"
+				  BorderThickness="1"
+				  SelectedItem="{Binding SelectedItem}"
+				  Name="AccountGrid">
+			<DataGrid.Styles>
+				<!--Disables cell selection-->
+				<Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+					<Setter Property="IsVisible" Value="false" />
+				</Style>
+			</DataGrid.Styles>
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Identifier"  Binding="{Binding Identifier}"/>
+				<DataGridTextColumn Header="Version" Binding="{Binding Version}" />
+				<DataGridTextColumn Header="Email" Binding="{Binding Email}" />
+				<DataGridTemplateColumn>
+					<DataTemplate>
+						<Button Width="32" Height="32" CornerRadius="16">
+							<Button.Content>
+								<materialIcons:MaterialIcon Kind="MoreVert" />
+							</Button.Content>
+							<Button.Flyout>
+								<MenuFlyout ItemsSource="{Binding #Panel.((vm:AccountsPageViewModel)DataContext).FlyoutMenuItems}">
+									<MenuFlyout.ItemTemplate>
+										<DataTemplate x:DataType="mdcm:FlyoutMenuItem">
+											<MenuItem Name="menuitem" 
+													  Header="{Binding Name}"
+													  Command="{Binding #Panel.((vm:AccountsPageViewModel)DataContext).CommandMenuCommand}"
+													  CommandParameter="{Binding Value}">
+											</MenuItem>
+										</DataTemplate>
+									</MenuFlyout.ItemTemplate>
+								</MenuFlyout>
+							</Button.Flyout>
+						</Button>
+					</DataTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+		<ProgressBar IsVisible="{Binding Loading}" IsIndeterminate="true" Width="{Binding #AccountGrid.Width}" MaxWidth="{Binding #AccountGrid.MaxWidth}" />
+	</StackPanel>
+	
+</UserControl>

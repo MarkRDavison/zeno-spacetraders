@@ -2,14 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="mark.davison.spacetraders.desktop.ui.App"
              xmlns:local="using:mark.davison.spacetraders.desktop.ui"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+			 xmlns:mdcom="using:mark.davison.spacetraders.desktop.common"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             RequestedThemeVariant="Dark">
+	<Application.Resources>
+	</Application.Resources>
     <Application.DataTemplates>
-        <local:ViewLocator/>
+		<mdcom:ViewLocator/>
     </Application.DataTemplates>
   
     <Application.Styles>
         <FluentTheme />
+		<materialIcons:MaterialIconStyles />
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
 </Application>

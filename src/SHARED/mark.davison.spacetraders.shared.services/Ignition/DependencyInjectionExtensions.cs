@@ -4,13 +4,12 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddSharedServices(this IServiceCollection services)
     {
-        //services.AddScoped<IAuthenticationContext, AuthenticationContext>();
-        //services.AddScoped<ISpacetradersApiClient, SpaceTradersApiClient>(_ =>
-        //{
-        //    return new SpaceTradersApiClient(
-        //        _.GetRequiredService<IAuthenticationContext>(),
-        //        _.GetRequiredService<IHttpClientFactory>().CreateClient("SPACETRADERS"));
-        //});
+        services.AddScoped<ISpacetradersApiClient, SpacetradersApiClient>(_ =>
+        {
+            var client = _.GetRequiredService<IHttpClientFactory>().CreateClient("SPACETRADERS");
+            client.BaseAddress = new Uri("https://api.spacetraders.io/v2/"); // TODO: Config
+            return new SpacetradersApiClient(client);
+        });
 
         return services;
     }

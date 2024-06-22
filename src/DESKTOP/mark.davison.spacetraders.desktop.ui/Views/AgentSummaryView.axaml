@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+			 xmlns:c="using:mark.davison.spacetraders.desktop.ui.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.desktop.ui.AgentSummaryView"
+			 x:DataType="vm:AgentSummaryViewModel">
+	<StackPanel Orientation="Horizontal">
+		<StackPanel.Styles>
+			<Style Selector="TextBlock">
+				<Setter Property="Margin" Value="10,0,10,0" />
+			</Style>
+		</StackPanel.Styles>
+		<TextBlock Text="{Binding Identifier}" />
+		<TextBlock Text="{Binding Credits, Converter={c:LongToCreditsDisplayConverter}}" IsVisible="{Binding Credits, Converter={x:Static ObjectConverters.IsNotNull}}" />
+		<TextBlock Text="{Binding Headquarters}" IsVisible="{Binding Credits, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+		<TextBlock IsVisible="{Binding Credits, Converter={x:Static ObjectConverters.IsNotNull}}">
+			<Run Text="Ships: " />
+			<Run Text="{Binding ShipCount}" />
+		</TextBlock>
+	</StackPanel>
+</UserControl>

@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\mark.davison.spacetraders.shared.client\mark.davison.spacetraders.shared.client.csproj" />
+  </ItemGroup>
+
 </Project>

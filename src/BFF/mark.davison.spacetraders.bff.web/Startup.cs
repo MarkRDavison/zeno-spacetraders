@@ -14,7 +14,7 @@ public sealed class Startup(IConfiguration Configuration)
         services
             .AddCors()
             .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE)
-            .UseCookieOidcAuth(AppSettings.AUTH, AppSettings.CLAIMS, _ => { }, AppSettings.API_ORIGIN)
+            .UseCookieOidcAuth(AppSettings.AUTH, AppSettings.CLAIMS, AppSettings.API_ORIGIN)
             .AddHealthCheckServices()
             .AddAuthorization()
             .AddEndpointsApiExplorer()

@@ -37,6 +37,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        await Task.CompletedTask;
         // if (!string.IsNullOrEmpty(identifier) && string.IsNullOrEmpty(GetHeadquartersSystem(identifier)))
         // {
         //     await StoreHelper.DispatchAndWaitForResponse<FetchAgentAction, UpdateAgentActionResponse>(new()
