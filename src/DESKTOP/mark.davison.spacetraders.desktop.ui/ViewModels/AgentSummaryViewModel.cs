@@ -27,6 +27,7 @@ public partial class AgentSummaryViewModel : ObservableObject, IDisposable
             OnPropertyChanged(nameof(Identifier));
             OnPropertyChanged(nameof(Credits));
             OnPropertyChanged(nameof(Headquarters));
+            OnPropertyChanged(nameof(ShipCount));
         });
     }
 

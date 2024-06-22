@@ -16,7 +16,7 @@
 		<TextBlock Text="{Binding Identifier}" />
 		<TextBlock Text="{Binding Credits, Converter={c:LongToCreditsDisplayConverter}}" IsVisible="{Binding Credits, Converter={x:Static ObjectConverters.IsNotNull}}" />
 		<TextBlock Text="{Binding Headquarters}" IsVisible="{Binding Credits, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-		<TextBlock IsVisible="{Binding Credits, Converter={x:Static ObjectConverters.IsNotNull}}">
+		<TextBlock IsVisible="{Binding ShipCount, Converter={x:Static ObjectConverters.IsNotNull}}">
 			<Run Text="Ships: " />
 			<Run Text="{Binding ShipCount}" />
 		</TextBlock>
