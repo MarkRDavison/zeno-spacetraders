@@ -4,10 +4,12 @@ public partial class WaypointsPageViewModel : MainApplicationPageViewModel
 {
     public WaypointsPageViewModel(
         IApplicationNotificationService applicationNotificationService,
-        IAccountService accountService
+        IAccountService accountService,
+        ILogger<WaypointsPageViewModel> logger
     ) : base(
         applicationNotificationService,
-        accountService)
+        accountService,
+        logger)
     {
     }
 

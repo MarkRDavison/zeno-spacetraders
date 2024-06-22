@@ -24,13 +24,7 @@ internal sealed class AgentService : IdentifiedService, IAgentService
 
         if (response.SuccessWithValue)
         {
-            _accountService.SetActiveAccountAgent(new AgentModel
-            {
-                Symbol = response.Value.Symbol,
-                Headquarters = response.Value.Headquarters,
-                Credits = response.Value.Credits,
-                ShipCount = response.Value.ShipCount
-            });
+            _accountService.SetActiveAccountAgent(response.Value);
         }
     }
 }

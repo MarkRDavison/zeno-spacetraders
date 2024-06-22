@@ -12,7 +12,8 @@ public static class DependencyInjectionExtensions
             .AddSingleton<AgentSummaryViewModel>()
             .AddSingleton<IApplicationNotificationService, ApplicationNotificationService>()
             .AddSingleton<IAccountService, AccountService>()
-            .AddSingleton<IAgentService, AgentService>();
+            .AddSingleton<IAgentService, AgentService>()
+            .AddSingleton<IContractService, ContractService>();
 
         return services;
     }

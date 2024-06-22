@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.desktop.ui.ContractsPageView"
+			 x:DataType="vm:ContractsPageViewModel">
+	<StackPanel Orientation="Vertical" Margin="20" Name="Panel">
+		<TextBlock Text="Contracts" FontSize="32" />
+		<DataGrid ItemsSource="{Binding Contracts}"
+				  IsReadOnly="True"
+				  GridLinesVisibility="Horizontal"
+				  BorderThickness="1"
+				  SelectedItem="{Binding SelectedItem}"
+				  Name="ContractGrid">
+			<DataGrid.Styles>
+				<!--Disables cell selection-->
+				<Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+					<Setter Property="IsVisible" Value="false" />
+				</Style>
+			</DataGrid.Styles>
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Type"  Binding="{Binding Type}"/>
+			</DataGrid.Columns>
+		</DataGrid>
+		<ProgressBar IsVisible="{Binding Loading}" IsIndeterminate="true" Width="{Binding #ContractGrid.Width}" MaxWidth="{Binding #ContractGrid.MaxWidth}" />
+	</StackPanel>
+</UserControl>

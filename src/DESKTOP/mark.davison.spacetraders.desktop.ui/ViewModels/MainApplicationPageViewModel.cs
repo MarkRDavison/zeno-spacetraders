@@ -4,15 +4,18 @@ public abstract class MainApplicationPageViewModel : BasicApplicationPageViewMod
 {
     private readonly IApplicationNotificationService _applicationNotificationService;
     private readonly IAccountService _accountService;
+    private readonly ILogger _logger;
 
     protected MainApplicationPageViewModel(
         IApplicationNotificationService applicationNotificationService,
-        IAccountService accountService)
+        IAccountService accountService,
+        ILogger logger)
     {
         _applicationNotificationService = applicationNotificationService;
         _accountService = accountService;
 
         _applicationNotificationService.AccountChanged += AccountChanged;
+        _logger = logger;
     }
 
     private void AccountChanged(object? sender, AccountChangeArgs e)

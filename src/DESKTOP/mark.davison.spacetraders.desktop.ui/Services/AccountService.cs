@@ -10,7 +10,7 @@ internal sealed class AccountService : IAccountService
     }
 
     private AccountModel? _activeAccount;
-    private AgentModel? _agentModel;
+    private AgentDto? _agentModel;
 
     public bool HasActiveAccount => _activeAccount is not null;
 
@@ -27,8 +27,8 @@ internal sealed class AccountService : IAccountService
             _applicationNotificationService.ChangeAccount();
         }
     }
-    public AgentModel? GetActiveAccountAgent() => _agentModel;
-    public void SetActiveAccountAgent(AgentModel agent)
+    public AgentDto? GetActiveAccountAgent() => _agentModel;
+    public void SetActiveAccountAgent(AgentDto agent)
     {
         _agentModel = agent;
         _applicationNotificationService.ChangeAgent();

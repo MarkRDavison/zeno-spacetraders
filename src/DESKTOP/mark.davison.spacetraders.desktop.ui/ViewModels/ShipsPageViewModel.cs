@@ -4,10 +4,12 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
 {
     public ShipsPageViewModel(
         IApplicationNotificationService applicationNotificationService,
-        IAccountService accountService
+        IAccountService accountService,
+        ILogger<ShipsPageViewModel> logger
     ) : base(
         applicationNotificationService,
-        accountService)
+        accountService,
+        logger)
     {
     }
 

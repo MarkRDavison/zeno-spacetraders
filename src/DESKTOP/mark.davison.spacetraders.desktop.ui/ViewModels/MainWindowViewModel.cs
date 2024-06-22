@@ -24,6 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void OnPageChanged(object? sender, PageEventArgs e)
     {
+        var oldIndex = BasicApplicationViewModel.SelectedPageIndex;
         Dispatcher.UIThread.Invoke(() => BasicApplicationViewModel.SelectedPageIndex = e.Page switch
         {
             Page.Accounts => 0,
@@ -32,6 +33,15 @@ public partial class MainWindowViewModel : ViewModelBase
             Page.Waypoints => 3,
             _ => BasicApplicationViewModel.SelectedPageIndex
         });
+
+        // TODO: DO NOT LIKE, selecting a 'just' enabled page seems flaky
+        if (oldIndex != BasicApplicationViewModel.SelectedPageIndex)
+        {
+            if (BasicApplicationViewModel.SelectedPage is MainApplicationPageViewModel vm)
+            {
+                _ = vm.SelectAsync();
+            }
+        }
     }
 
     public BasicApplicationViewModel BasicApplicationViewModel { get; }
