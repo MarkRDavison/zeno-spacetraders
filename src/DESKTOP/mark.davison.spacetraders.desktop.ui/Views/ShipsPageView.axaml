@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.desktop.ui.ShipsPageView"
+			 x:DataType="vm:ShipsPageViewModel">
+	<StackPanel Orientation="Vertical" Margin="20" Name="Panel" HorizontalAlignment="Left">
+		<TextBlock Text="Ships" FontSize="32" />		
+		<DataGrid ItemsSource="{Binding ShipState.Value.Ships}"
+				  IsReadOnly="True"
+				  GridLinesVisibility="Horizontal"
+				  BorderThickness="1"
+				  SelectedItem="{Binding SelectedItem}"
+				  Name="ShipGrid"
+				  MaxWidth="640">
+			<DataGrid.Styles>
+				<!--Disables cell selection-->
+				<Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+					<Setter Property="IsVisible" Value="false" />
+				</Style>
+			</DataGrid.Styles>
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Symbol"  Binding="{Binding Symbol}"/>
+				<DataGridTextColumn Header="Role"  Binding="{Binding Role}"/>
+			</DataGrid.Columns>
+		</DataGrid>
+		<ProgressBar IsVisible="{Binding Loading}" IsIndeterminate="true" Width="{Binding #ShipGrid.Width}" MaxWidth="{Binding #ShipGrid.MaxWidth}" />
+	</StackPanel>
+</UserControl>

@@ -8,5 +8,6 @@ public static class ViewLocatorRegistration
         ViewLocator.Register<AgentSummaryViewModel, AgentSummaryView>();
         ViewLocator.Register<ContractsPageViewModel, ContractsPageView>();
         ViewLocator.Register<RegisterAgentDialogViewModel, RegisterAgentDialogView>();
+        ViewLocator.Register<ShipsPageViewModel, ShipsPageView>();
     }
 }

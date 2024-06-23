@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿using mark.davison.spacetraders.desktop.ui.Store;
+
+namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class AccountsPageViewModel : BasicApplicationPageViewModel
 {
@@ -7,13 +9,15 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     private readonly IAccountService _accountService;
     private readonly IAgentService _agentService;
     private readonly IDialogService _dialogService;
+    private readonly IStoreHelper _storeHelper;
 
     public AccountsPageViewModel(
         IClientHttpRepository clientHttpRepository,
         IApplicationNotificationService applicationNotificationService,
         IAccountService accountService,
         IAgentService agentService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        IStoreHelper storeHelper)
     {
         _clientHttpRepository = clientHttpRepository;
         _applicationNotificationService = applicationNotificationService;
@@ -31,6 +35,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
             Name = "Delete",
             Value = "DELETE"
         });
+        _storeHelper = storeHelper;
     }
 
     protected override async void OnSelected(bool firstTime)
@@ -53,6 +58,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
             if (value == "ACTIVATE")
             {
                 _accountService.SetActiveAccount(SelectedItem!);
+                _storeHelper.Dispatch(new ResetStateAction());
                 _applicationNotificationService.ChangePage(Page.Contracts);
                 _ = _agentService.UpdateMyAgentAsync();
             }
