@@ -9,7 +9,16 @@
              x:Class="mark.davison.spacetraders.desktop.ui.AccountsPageView"
 			 x:DataType="vm:AccountsPageViewModel">
 	<StackPanel Orientation="Vertical" Margin="20" Name="Panel">
-		<TextBlock Text="Accounts" FontSize="32" />
+		<StackPanel Orientation="Horizontal" Spacing="16">
+			<TextBlock Text="Accounts" FontSize="32" />
+			<SplitButton Content="Register" Command="{Binding RegisterNewAgentCommand}">
+				<SplitButton.Flyout>
+					<MenuFlyout Placement="Bottom">
+						<MenuItem Header="Existing" />
+					</MenuFlyout>
+				</SplitButton.Flyout>
+			</SplitButton>
+		</StackPanel>
 		<DataGrid ItemsSource="{Binding Accounts}"
 				  IsReadOnly="True"
 				  GridLinesVisibility="Horizontal"

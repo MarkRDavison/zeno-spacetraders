@@ -13,7 +13,8 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IApplicationNotificationService, ApplicationNotificationService>()
             .AddSingleton<IAccountService, AccountService>()
             .AddSingleton<IAgentService, AgentService>()
-            .AddSingleton<IContractService, ContractService>();
+            .AddSingleton<IContractService, ContractService>()
+            .AddTransient<IFormSubmission<RegisterAgentDialogViewModel>, RegisterAgentDialogFormSubmission>();
 
         return services;
     }

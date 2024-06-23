@@ -6,23 +6,31 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     private readonly IApplicationNotificationService _applicationNotificationService;
     private readonly IAccountService _accountService;
     private readonly IAgentService _agentService;
+    private readonly IDialogService _dialogService;
 
     public AccountsPageViewModel(
         IClientHttpRepository clientHttpRepository,
         IApplicationNotificationService applicationNotificationService,
         IAccountService accountService,
-        IAgentService agentService)
+        IAgentService agentService,
+        IDialogService dialogService)
     {
         _clientHttpRepository = clientHttpRepository;
         _applicationNotificationService = applicationNotificationService;
         _accountService = accountService;
+        _agentService = agentService;
+        _dialogService = dialogService;
 
         FlyoutMenuItems.Add(new FlyoutMenuItem
         {
             Name = "Activate",
             Value = "ACTIVATE"
         });
-        _agentService = agentService;
+        FlyoutMenuItems.Add(new FlyoutMenuItem
+        {
+            Name = "Delete",
+            Value = "DELETE"
+        });
     }
 
     protected override async void OnSelected(bool firstTime)
@@ -48,6 +56,23 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
                 _applicationNotificationService.ChangePage(Page.Contracts);
                 _ = _agentService.UpdateMyAgentAsync();
             }
+        }
+    }
+
+    [RelayCommand]
+    private async Task RegisterNewAgent(CancellationToken cancellationToken)
+    {
+        var response = await _dialogService.ShowDialogAsync<Response<AgentDto>, RegisterAgentDialogViewModel>(
+            new(),
+            new DialogSettings
+            {
+                Title = "Register new agent",
+                PrimaryText = "Register"
+            });
+
+        if (response is not null && response.Success)
+        {
+            await FetchAccounts(cancellationToken);
         }
     }
 
