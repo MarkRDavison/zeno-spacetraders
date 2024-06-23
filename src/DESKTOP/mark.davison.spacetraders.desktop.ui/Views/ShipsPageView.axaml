@@ -26,6 +26,6 @@
 				<DataGridTextColumn Header="Role"  Binding="{Binding Role}"/>
 			</DataGrid.Columns>
 		</DataGrid>
-		<ProgressBar IsVisible="{Binding Loading}" IsIndeterminate="true" Width="{Binding #ShipGrid.Width}" MaxWidth="{Binding #ShipGrid.MaxWidth}" />
+		<ProgressBar IsVisible="{Binding ShipState.Value.Loading}" IsIndeterminate="true" Width="{Binding #ShipGrid.Width}" MaxWidth="{Binding #ShipGrid.MaxWidth}" />
 	</StackPanel>
 </UserControl>

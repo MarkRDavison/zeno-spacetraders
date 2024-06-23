@@ -34,24 +34,14 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
 
     private async Task LoadAllShipsAsync()
     {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            Loading = true; // TODO: Move loading to state???
-        });
-
-        await _storeHelper.DispatchAndWaitForResponse<FetchShipsAction, UpdateShipsActionResponse>(new());
-
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            Loading = false; // TODO: Move loading to state???
-        });
+        await _storeHelper.DispatchAndWaitForResponse<
+            FetchShipsAction,
+            UpdateShipsActionResponse>(
+            new());
     }
 
     [ObservableProperty]
     private ShipDto? _selectedItem;
-
-    [ObservableProperty]
-    private bool _loading = true;
 
     public override string Name => "Ships";
 }

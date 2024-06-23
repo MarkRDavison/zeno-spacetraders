@@ -18,16 +18,16 @@ public class ShipReducers : StateReducer<ShipState>
 
     public static ShipState HandleFetchShipsAction(ShipState state, FetchShipsAction response)
     {
-        return state;
+        return new ShipState(true, []);
     }
 
     public static ShipState HandleUpdateShipsActionResponse(ShipState state, UpdateShipsActionResponse response)
     {
         if (response.SuccessWithValue)
         {
-            return new ShipState(response.Value.Select(_ => _.Ship).OfType<ShipDto>());
+            return new ShipState(false, response.Value.Select(_ => _.Ship).OfType<ShipDto>());
         }
 
-        return state;
+        return new ShipState(false, []);
     }
 }

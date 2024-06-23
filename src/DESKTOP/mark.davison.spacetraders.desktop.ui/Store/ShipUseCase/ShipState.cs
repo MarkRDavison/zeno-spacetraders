@@ -2,15 +2,18 @@
 
 public sealed class ShipState : IDesktopState
 {
-    public ShipState() : this([])
+    public ShipState() : this(false, [])
     {
 
     }
 
-    public ShipState(IEnumerable<ShipDto> ships)
+    public ShipState(bool loading, IEnumerable<ShipDto> ships)
     {
+        Loading = loading;
         Ships = new([.. ships]);
     }
+
+    public bool Loading { get; }
 
     public ReadOnlyCollection<ShipDto> Ships { get; }
 }
