@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Text.Json.Serialization;
-
-namespace Spacetraders.Api.Client;
+﻿namespace Spacetraders.Api.Client;
 
 public partial class SpacetradersApiClient
 {
