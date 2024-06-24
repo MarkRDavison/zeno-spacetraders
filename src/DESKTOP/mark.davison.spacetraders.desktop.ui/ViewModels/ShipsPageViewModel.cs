@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class ShipsPageViewModel : MainApplicationPageViewModel
 {
@@ -21,12 +19,19 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
     {
         _storeHelper = storeHelper;
         ShipState = shipState;
+
+        FlyoutMenuItems.Add(new FlyoutMenuItem
+        {
+            Name = "Open",
+            Value = "OPEN"
+        });
     }
 
     // TODO: Replace with async next bump
     protected override void OnSelected(bool firstTime)
     {
-        if (!ShipState.Value.Ships.Any())
+        if (!ShipState.Value.Ships.Any() &&
+            !ShipState.Value.Loading)
         {
             _ = LoadAllShipsAsync();
         }
@@ -37,11 +42,34 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
         await _storeHelper.DispatchAndWaitForResponse<
             FetchShipsAction,
             UpdateShipsActionResponse>(
-            new());
+            new()
+            {
+                Identifier = AccountIdentifier
+            });
     }
+
 
     [ObservableProperty]
     private ShipDto? _selectedItem;
+
+    [RelayCommand]
+    private void CommandMenu(string value)
+    {
+        if (SelectedItem is { } ship)
+        {
+            if (value == "OPEN")
+            {
+                OpenShip(ship);
+            }
+        }
+    }
+
+    private void OpenShip(ShipDto ship)
+    {
+
+    }
+
+    public ObservableCollection<FlyoutMenuItem> FlyoutMenuItems { get; } = [];
 
     public override string Name => "Ships";
 }

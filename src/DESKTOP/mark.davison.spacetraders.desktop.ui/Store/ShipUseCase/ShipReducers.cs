@@ -1,26 +1,20 @@
-﻿using System.Linq;
+﻿namespace mark.davison.spacetraders.desktop.ui.Store.ShipUseCase;
 
-namespace mark.davison.spacetraders.desktop.ui.Store.ShipUseCase;
-
-public class ShipReducers : StateReducer<ShipState>
+public static class ShipReducers
 {
-    public ShipReducers()
-    {
-        RegisterAction<FetchShipsAction>(HandleFetchShipsAction);
-        RegisterAction<ResetStateAction>(HandleResetStateAction);
-        RegisterResponse<UpdateShipsActionResponse>(HandleUpdateShipsActionResponse);
-    }
-
+    [DesktopReducer]
     public static ShipState HandleResetStateAction(ShipState state, ResetStateAction action)
     {
-        return new ShipState();
+        return new();
     }
 
+    [DesktopReducer]
     public static ShipState HandleFetchShipsAction(ShipState state, FetchShipsAction response)
     {
         return new ShipState(true, []);
     }
 
+    [DesktopReducer]
     public static ShipState HandleUpdateShipsActionResponse(ShipState state, UpdateShipsActionResponse response)
     {
         if (response.SuccessWithValue)

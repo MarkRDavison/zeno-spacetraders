@@ -1,41 +1,42 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿using mark.davison.spacetraders.desktop.ui.Store.ContractUseCase;
+
+namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class ContractsPageViewModel : MainApplicationPageViewModel
 {
-    private readonly IContractService _contractService;
+    private readonly IStoreHelper _storeHelper;
+
+    public IState<ContractState> ContractState { get; }
 
     public ContractsPageViewModel(
         IApplicationNotificationService applicationNotificationService,
         IAccountService accountService,
-        IContractService contractService,
+        IStoreHelper storeHelper,
+        IState<ContractState> contractState,
         ILogger<ContractsPageViewModel> logger
     ) : base(
         applicationNotificationService,
         accountService,
         logger)
     {
-        _contractService = contractService;
+        _storeHelper = storeHelper;
+        ContractState = contractState;
     }
 
-    protected override async void OnSelected(bool firstTime)
+    protected override void OnSelected(bool firstTime)
     {
-        if (firstTime)
+        if (!ContractState.Value.Contracts.Any() &&
+            !ContractState.Value.Loading)
         {
-            await FetchContracts();
+            _ = FetchContracts();
         }
     }
 
     public async Task FetchContracts(CancellationToken cancellationToken = default)
     {
-        var contracts = await _contractService.FetchContracts(cancellationToken);
-        Dispatcher.UIThread.Invoke(() =>
+        await _storeHelper.DispatchAndWaitForResponse<FetchContractsAction, UpdateContractsActionResponse>(new FetchContractsAction
         {
-            Contracts.Clear();
-            foreach (var c in contracts)
-            {
-                Contracts.Add(c);
-            }
-            Loading = false;
+            Identifier = AccountIdentifier
         });
     }
 
@@ -44,7 +45,6 @@ public partial class ContractsPageViewModel : MainApplicationPageViewModel
 
     [ObservableProperty]
     private bool _loading = true;
-    public ObservableCollection<ContractDto> Contracts { get; set; } = [];
 
     public override string Name => "Contracts";
 }

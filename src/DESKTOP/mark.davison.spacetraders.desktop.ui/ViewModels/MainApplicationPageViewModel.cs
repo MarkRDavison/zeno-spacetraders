@@ -29,4 +29,6 @@ public abstract class MainApplicationPageViewModel : BasicApplicationPageViewMod
     {
         _applicationNotificationService.AccountChanged -= AccountChanged;
     }
+
+    protected string AccountIdentifier => _accountService.ActiveAccountIdentifier;
 }

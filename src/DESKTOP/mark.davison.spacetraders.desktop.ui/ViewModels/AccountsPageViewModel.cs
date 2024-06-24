@@ -1,6 +1,4 @@
-﻿using mark.davison.spacetraders.desktop.ui.Store;
-
-namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class AccountsPageViewModel : BasicApplicationPageViewModel
 {
@@ -53,7 +51,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     private void CommandMenu(string value)
     {
         var accountIdentifier = SelectedItem?.Identifier;
-        if (!string.IsNullOrEmpty(accountIdentifier))
+        if (!string.IsNullOrEmpty(accountIdentifier) && SelectedItem?.Id is not null)
         {
             if (value == "ACTIVATE")
             {
@@ -62,6 +60,36 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
                 _applicationNotificationService.ChangePage(Page.Contracts);
                 _ = _agentService.UpdateMyAgentAsync();
             }
+            else if (value == "DELETE")
+            {
+                _ = DeleteAccountAsync(SelectedItem.Id);
+            }
+        }
+    }
+
+    private async Task DeleteAccountAsync(Guid id)
+    {
+        var response = await _clientHttpRepository.Post<DeleteAgentCommandResponse, DeleteAgentCommandRequest>(new()
+        {
+            AccountId = id
+        }, CancellationToken.None);
+
+        if (response.Success)
+        {
+            if (_accountService.HasActiveAccount && _accountService.GetActiveAccount().Id == id)
+            {
+                _storeHelper.Dispatch(new ResetStateAction());
+                _accountService.UnselectActiveAccount();
+            }
+            Dispatcher.UIThread.Invoke(() =>
+            {
+                SelectedItem = null;
+                Accounts.Remove(Accounts.First(_ => _.Id == id));
+            });
+        }
+        else
+        {
+            // TODO: Snackbar
         }
     }
 
@@ -86,7 +114,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     {
         var response = await _clientHttpRepository.Get<FetchAccountsQueryResponse, FetchAccountsQueryRequest>(cancellationToken);
 
-        await Dispatcher.UIThread.InvokeAsync(() =>
+        Dispatcher.UIThread.Invoke(() =>
         {
             if (response.SuccessWithValue)
             {

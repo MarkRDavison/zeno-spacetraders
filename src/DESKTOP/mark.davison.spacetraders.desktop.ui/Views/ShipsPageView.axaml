@@ -3,16 +3,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+			 xmlns:mdcm="clr-namespace:mark.davison.common.client.desktop.components.Models;assembly=mark.davison.common.client.desktop"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mark.davison.spacetraders.desktop.ui.ShipsPageView"
 			 x:DataType="vm:ShipsPageViewModel">
 	<StackPanel Orientation="Vertical" Margin="20" Name="Panel" HorizontalAlignment="Left">
-		<TextBlock Text="Ships" FontSize="32" />		
+		<StackPanel Orientation="Horizontal" Margin="20">
+			<TextBlock Text="Ships" FontSize="32" />
+		</StackPanel>
 		<DataGrid ItemsSource="{Binding ShipState.Value.Ships}"
 				  IsReadOnly="True"
 				  GridLinesVisibility="Horizontal"
 				  BorderThickness="1"
-				  SelectedItem="{Binding SelectedItem}"
+				  SelectedItem="{Binding SelectedItem}"				  
 				  Name="ShipGrid"
 				  MaxWidth="640">
 			<DataGrid.Styles>
@@ -24,6 +28,28 @@
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Symbol"  Binding="{Binding Symbol}"/>
 				<DataGridTextColumn Header="Role"  Binding="{Binding Role}"/>
+				<DataGridTemplateColumn>
+					<DataTemplate>
+						<Button Width="32" Height="32" CornerRadius="16">
+							<Button.Content>
+								<materialIcons:MaterialIcon Kind="MoreVert" />
+							</Button.Content>
+							<Button.Flyout>
+								<MenuFlyout ItemsSource="{Binding #Panel.((vm:ShipsPageViewModel)DataContext).FlyoutMenuItems}">
+									<MenuFlyout.ItemTemplate>
+										<DataTemplate x:DataType="mdcm:FlyoutMenuItem">
+											<MenuItem Name="menuitem"
+													  Header="{Binding Name}"
+													  Command="{Binding #Panel.((vm:ShipsPageViewModel)DataContext).CommandMenuCommand}"
+													  CommandParameter="{Binding Value}">
+											</MenuItem>
+										</DataTemplate>
+									</MenuFlyout.ItemTemplate>
+								</MenuFlyout>
+							</Button.Flyout>
+						</Button>
+					</DataTemplate>
+				</DataGridTemplateColumn>
 			</DataGrid.Columns>
 		</DataGrid>
 		<ProgressBar IsVisible="{Binding ShipState.Value.Loading}" IsIndeterminate="true" Width="{Binding #ShipGrid.Width}" MaxWidth="{Binding #ShipGrid.MaxWidth}" />

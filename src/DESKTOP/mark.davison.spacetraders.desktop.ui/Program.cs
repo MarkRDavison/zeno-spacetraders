@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.spacetraders.desktop.ui;
 
+[UseDesktopState(Types = [typeof(Program)])]
 internal sealed class Program
 {
     [STAThread]

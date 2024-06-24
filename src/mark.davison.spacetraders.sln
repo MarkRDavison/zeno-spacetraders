@@ -72,7 +72,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.d
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.desktop.common", "DESKTOP\mark.davison.spacetraders.desktop.common\mark.davison.spacetraders.desktop.common.csproj", "{7FB5E13B-4C1D-41D4-8F0C-14BC8E392D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.spacetraders.shared.client.tests", "SHARED\Test\mark.davison.spacetraders.shared.client.tests\mark.davison.spacetraders.shared.client.tests.csproj", "{E9F34E7B-8A8E-4B21-A73E-9EF3F4258752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.spacetraders.shared.client.tests", "SHARED\Test\mark.davison.spacetraders.shared.client.tests\mark.davison.spacetraders.shared.client.tests.csproj", "{E9F34E7B-8A8E-4B21-A73E-9EF3F4258752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.common.client.desktop.source.generators", "DESKTOP\mark.davison.common.client.desktop.source.generators\mark.davison.common.client.desktop.source.generators.csproj", "{920EF877-2D07-4B20-B9E5-750BE55C4AA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -172,6 +174,10 @@ Global
 		{E9F34E7B-8A8E-4B21-A73E-9EF3F4258752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9F34E7B-8A8E-4B21-A73E-9EF3F4258752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9F34E7B-8A8E-4B21-A73E-9EF3F4258752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{920EF877-2D07-4B20-B9E5-750BE55C4AA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{920EF877-2D07-4B20-B9E5-750BE55C4AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{920EF877-2D07-4B20-B9E5-750BE55C4AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{920EF877-2D07-4B20-B9E5-750BE55C4AA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -205,6 +211,7 @@ Global
 		{90637E22-0BFD-494D-9416-56A961FD899D} = {BC90CFAD-B0B7-49B4-8177-9F0DF080FE07}
 		{7FB5E13B-4C1D-41D4-8F0C-14BC8E392D76} = {BC90CFAD-B0B7-49B4-8177-9F0DF080FE07}
 		{E9F34E7B-8A8E-4B21-A73E-9EF3F4258752} = {54EAD15D-28EE-41DA-857E-34899F0660E7}
+		{920EF877-2D07-4B20-B9E5-750BE55C4AA6} = {BC90CFAD-B0B7-49B4-8177-9F0DF080FE07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6250955A-4E54-4D86-A97D-78443C388119}

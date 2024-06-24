@@ -8,7 +8,7 @@
 			 x:DataType="vm:ContractsPageViewModel">
 	<StackPanel Orientation="Vertical" Margin="20" Name="Panel">
 		<TextBlock Text="Contracts" FontSize="32" />
-		<DataGrid ItemsSource="{Binding Contracts}"
+		<DataGrid ItemsSource="{Binding ContractState.Value.Contracts}"
 				  IsReadOnly="True"
 				  GridLinesVisibility="Horizontal"
 				  BorderThickness="1"
@@ -24,6 +24,6 @@
 				<DataGridTextColumn Header="Type"  Binding="{Binding Type}"/>
 			</DataGrid.Columns>
 		</DataGrid>
-		<ProgressBar IsVisible="{Binding Loading}" IsIndeterminate="true" Width="{Binding #ContractGrid.Width}" MaxWidth="{Binding #ContractGrid.MaxWidth}" />
+		<ProgressBar IsVisible="{Binding ContractState.Value.Loading}" IsIndeterminate="true" Width="{Binding #ContractGrid.Width}" MaxWidth="{Binding #ContractGrid.MaxWidth}" />
 	</StackPanel>
 </UserControl>

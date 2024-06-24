@@ -4,8 +4,6 @@ public class DesktopStateDispatcher : IDesktopStateDispatcher
 {
     private readonly IDesktopActionSubscriber _actionSubscriber;
     private readonly IServiceProvider _services;
-    private readonly List<StateReducer> _stateReducers = [];
-    private readonly List<StateEffects> _stateEffects = [];
     private bool _initialized;
 
     public DesktopStateDispatcher(
@@ -18,28 +16,8 @@ public class DesktopStateDispatcher : IDesktopStateDispatcher
 
     public async void Dispatch(object payload)
     {
-        if (!_initialized)
-        {
-            _stateReducers.AddRange(_services.GetRequiredService<IEnumerable<StateReducer>>());
-            _stateEffects.AddRange(_services.GetRequiredService<IEnumerable<StateEffects>>());
-            _initialized = true;
-        }
-
-        var type = payload.GetType();
-        foreach (var stateReducer in _stateReducers)
-        {
-            if (stateReducer.CanHandle(type))
-            {
-                stateReducer.Handle(payload);
-            }
-        }
+        StateStore.ApplyReducers(_services, payload);
         _actionSubscriber.Notify(payload);
-        foreach (var stateEffects in _stateEffects)
-        {
-            if (stateEffects.CanHandle(type))
-            {
-                await stateEffects.Handle(payload);
-            }
-        }
+        await StateStore.DispatchEffects(_services, payload);
     }
 }

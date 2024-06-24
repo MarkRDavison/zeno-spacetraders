@@ -19,6 +19,8 @@ internal sealed class AccountService : IAccountService
         return _activeAccount ?? throw new InvalidOperationException("No active account");
     }
 
+    public string ActiveAccountIdentifier => GetActiveAccount().Identifier;
+
     public void SetActiveAccount(AccountModel account)
     {
         if (_activeAccount?.Id != account.Id)
@@ -26,6 +28,11 @@ internal sealed class AccountService : IAccountService
             _activeAccount = account;
             _applicationNotificationService.ChangeAccount();
         }
+    }
+    public void UnselectActiveAccount()
+    {
+        _activeAccount = null;
+        _applicationNotificationService.ChangeAccount();
     }
     public AgentDto? GetActiveAccountAgent() => _agentModel;
     public void SetActiveAccountAgent(AgentDto agent)

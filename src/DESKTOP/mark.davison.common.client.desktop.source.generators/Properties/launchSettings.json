@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Desktop UI": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\mark.davison.spacetraders.desktop.ui\\mark.davison.spacetraders.desktop.ui.csproj"
+    }
+  }
+}

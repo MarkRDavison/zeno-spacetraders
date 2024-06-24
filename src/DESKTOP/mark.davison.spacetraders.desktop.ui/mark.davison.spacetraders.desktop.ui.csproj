@@ -19,10 +19,14 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.11" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.11" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SHARED\mark.davison.spacetraders.shared.models.dtos\mark.davison.spacetraders.shared.models.dtos.csproj" />
+	  <!-- Don't need the OutputItemType when referencing as a nuget package -->
+    <ProjectReference Include="..\mark.davison.common.client.desktop.source.generators\mark.davison.common.client.desktop.source.generators.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\mark.davison.spacetraders.desktop.common\mark.davison.spacetraders.desktop.common.csproj" />
   </ItemGroup>
 </Project>

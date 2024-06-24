@@ -13,15 +13,13 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IApplicationNotificationService, ApplicationNotificationService>()
             .AddSingleton<IAccountService, AccountService>()
             .AddSingleton<IAgentService, AgentService>()
-            .AddSingleton<IContractService, ContractService>()
-            .AddTransient<IFormSubmission<RegisterAgentDialogViewModel>, RegisterAgentDialogFormSubmission>()
-            .AddSingleton(typeof(IState<>), typeof(StateImplementation<>))
+            .AddTransient<IFormSubmission<RegisterAgentDialogViewModel>, RegisterAgentDialogFormSubmission>();
+
+        services
             .AddSingleton<IStoreHelper, DesktopStoreHelper>()
             .AddSingleton<IDesktopStateDispatcher, DesktopStateDispatcher>()
             .AddSingleton<IDesktopActionSubscriber, DesktopActionSubscriber>()
-            .AddSingleton<StateReducer<ShipState>, ShipReducers>()
-            .AddSingleton<StateReducer, ShipReducers>()
-            .AddSingleton<StateEffects, ShipEffects>();
+            .AddDesktopState();
 
         return services;
     }
