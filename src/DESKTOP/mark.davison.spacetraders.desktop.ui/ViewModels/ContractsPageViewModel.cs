@@ -1,4 +1,5 @@
-﻿using mark.davison.spacetraders.desktop.ui.Store.ContractUseCase;
+﻿using mark.davison.spacetraders.desktop.ui.Constants;
+using mark.davison.spacetraders.desktop.ui.Store.ContractUseCase;
 
 namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
@@ -47,4 +48,5 @@ public partial class ContractsPageViewModel : MainApplicationPageViewModel
     private bool _loading = true;
 
     public override string Name => "Contracts";
+    public override string Id => PageConstants.ContractsPageId;
 }

@@ -4,6 +4,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
 {
     private readonly IClientHttpRepository _clientHttpRepository;
     private readonly IApplicationNotificationService _applicationNotificationService;
+    private readonly ICommonApplicationNotificationService _commonApplicationNotificationService;
     private readonly IAccountService _accountService;
     private readonly IAgentService _agentService;
     private readonly IDialogService _dialogService;
@@ -12,6 +13,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     public AccountsPageViewModel(
         IClientHttpRepository clientHttpRepository,
         IApplicationNotificationService applicationNotificationService,
+        ICommonApplicationNotificationService commonApplicationNotificationService,
         IAccountService accountService,
         IAgentService agentService,
         IDialogService dialogService,
@@ -19,6 +21,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     {
         _clientHttpRepository = clientHttpRepository;
         _applicationNotificationService = applicationNotificationService;
+        _commonApplicationNotificationService = commonApplicationNotificationService;
         _accountService = accountService;
         _agentService = agentService;
         _dialogService = dialogService;
@@ -36,7 +39,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
         _storeHelper = storeHelper;
     }
 
-    protected override async void OnSelected(bool firstTime)
+    protected override async Task OnSelectedAsync(bool firstTime)
     {
         if (firstTime)
         {
@@ -57,7 +60,8 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
             {
                 _accountService.SetActiveAccount(SelectedItem!);
                 _storeHelper.Dispatch(new ResetStateAction());
-                _applicationNotificationService.ChangePage(Page.Contracts);
+                _commonApplicationNotificationService.NotifyPageEnabledStateChanged();
+                _commonApplicationNotificationService.ChangePage(PageGroupConstants.ContractGroupId, PageConstants.ContractsPageId);
                 _ = _agentService.UpdateMyAgentAsync();
             }
             else if (value == "DELETE")
@@ -145,4 +149,5 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
 
     public override string Name => "Accounts";
     public override bool Disabled => false;
+    public override string Id => PageConstants.AccountsPageId;
 }

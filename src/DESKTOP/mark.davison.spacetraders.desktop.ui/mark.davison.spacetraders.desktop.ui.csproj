@@ -29,4 +29,8 @@
     <ProjectReference Include="..\mark.davison.common.client.desktop.source.generators\mark.davison.common.client.desktop.source.generators.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\mark.davison.spacetraders.desktop.common\mark.davison.spacetraders.desktop.common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
 </Project>

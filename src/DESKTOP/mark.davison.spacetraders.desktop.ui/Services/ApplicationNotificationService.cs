@@ -2,13 +2,6 @@
 
 internal sealed class ApplicationNotificationService : IApplicationNotificationService
 {
-    public event EventHandler<PageEventArgs> PageChanged = default!;
-
-    public void ChangePage(Page page)
-    {
-        PageChanged?.Invoke(this, new PageEventArgs(page));
-    }
-
     public event EventHandler<AccountChangeArgs> AccountChanged = default!;
 
     public void ChangeAccount()

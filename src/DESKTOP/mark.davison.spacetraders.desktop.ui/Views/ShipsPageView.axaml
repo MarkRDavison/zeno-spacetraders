@@ -9,7 +9,7 @@
              x:Class="mark.davison.spacetraders.desktop.ui.ShipsPageView"
 			 x:DataType="vm:ShipsPageViewModel">
 	<StackPanel Orientation="Vertical" Margin="20" Name="Panel" HorizontalAlignment="Left">
-		<StackPanel Orientation="Horizontal" Margin="20">
+		<StackPanel Orientation="Horizontal" Spacing="20">
 			<TextBlock Text="Ships" FontSize="32" />
 		</StackPanel>
 		<DataGrid ItemsSource="{Binding ShipState.Value.Ships}"

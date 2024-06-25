@@ -2,10 +2,10 @@
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private readonly IApplicationNotificationService _applicationNotificationService;
+    private readonly ICommonApplicationNotificationService _commonApplicationNotificationService;
     public MainWindowViewModel(IServiceProvider services)
     {
-        _applicationNotificationService = services.GetRequiredService<IApplicationNotificationService>();
+        _commonApplicationNotificationService = services.GetRequiredService<ICommonApplicationNotificationService>();
 
         BasicApplicationViewModel = new BasicApplicationViewModel(
             "Spacetraders",
@@ -14,34 +14,25 @@ public partial class MainWindowViewModel : ViewModelBase
             AppBarChildContentViewModel = services.GetRequiredService<AgentSummaryViewModel>()
         };
 
-        BasicApplicationViewModel.Pages.Add(services.GetRequiredService<AccountsPageViewModel>());
-        BasicApplicationViewModel.Pages.Add(services.GetRequiredService<ContractsPageViewModel>());
-        BasicApplicationViewModel.Pages.Add(services.GetRequiredService<ShipsPageViewModel>());
-        BasicApplicationViewModel.Pages.Add(services.GetRequiredService<WaypointsPageViewModel>());
+        BasicApplicationViewModel.PageGroups.Add(new(
+            "Accounts",
+            [services.GetRequiredService<AccountsPageViewModel>()],
+            PageGroupConstants.AccountGroupId));
 
-        _applicationNotificationService.PageChanged += OnPageChanged;
-    }
+        BasicApplicationViewModel.PageGroups.Add(new(
+            "Contracts",
+            [services.GetRequiredService<ContractsPageViewModel>()],
+            PageGroupConstants.ContractGroupId));
 
-    private void OnPageChanged(object? sender, PageEventArgs e)
-    {
-        var oldIndex = BasicApplicationViewModel.SelectedPageIndex;
-        Dispatcher.UIThread.Invoke(() => BasicApplicationViewModel.SelectedPageIndex = e.Page switch
-        {
-            Page.Accounts => 0,
-            Page.Contracts => 1,
-            Page.Ships => 2,
-            Page.Waypoints => 3,
-            _ => BasicApplicationViewModel.SelectedPageIndex
-        });
+        BasicApplicationViewModel.PageGroups.Add(new(
+            "Ships",
+            [services.GetRequiredService<ShipsPageViewModel>()],
+            PageGroupConstants.ShipGroupId));
 
-        // TODO: DO NOT LIKE, selecting a 'just' enabled page seems flaky
-        if (oldIndex != BasicApplicationViewModel.SelectedPageIndex)
-        {
-            if (BasicApplicationViewModel.SelectedPage is MainApplicationPageViewModel vm)
-            {
-                _ = vm.SelectAsync();
-            }
-        }
+        BasicApplicationViewModel.PageGroups.Add(new(
+            "Waypoints",
+            [services.GetRequiredService<WaypointsPageViewModel>()],
+            PageGroupConstants.WaypointGroupId));
     }
 
     public BasicApplicationViewModel BasicApplicationViewModel { get; }

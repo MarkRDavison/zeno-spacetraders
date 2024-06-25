@@ -4,7 +4,6 @@ public class DesktopStateDispatcher : IDesktopStateDispatcher
 {
     private readonly IDesktopActionSubscriber _actionSubscriber;
     private readonly IServiceProvider _services;
-    private bool _initialized;
 
     public DesktopStateDispatcher(
         IDesktopActionSubscriber actionSubscriber,

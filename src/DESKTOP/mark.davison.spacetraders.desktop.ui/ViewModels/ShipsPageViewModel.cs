@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿using mark.davison.spacetraders.desktop.ui.Constants;
+
+namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class ShipsPageViewModel : MainApplicationPageViewModel
 {
@@ -72,4 +74,5 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
     public ObservableCollection<FlyoutMenuItem> FlyoutMenuItems { get; } = [];
 
     public override string Name => "Ships";
+    public override string Id => PageConstants.ShipsPageId;
 }

@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿using mark.davison.spacetraders.desktop.ui.Constants;
+
+namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class WaypointsPageViewModel : MainApplicationPageViewModel
 {
@@ -14,4 +16,5 @@ public partial class WaypointsPageViewModel : MainApplicationPageViewModel
     }
 
     public override string Name => "Waypoints";
+    public override string Id => PageConstants.WaypointsPageId;
 }
