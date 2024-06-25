@@ -1,6 +1,4 @@
-﻿using mark.davison.spacetraders.desktop.ui.Constants;
-
-namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class ShipsPageViewModel : MainApplicationPageViewModel
 {
@@ -68,7 +66,7 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
 
     private void OpenShip(ShipDto ship)
     {
-
+        _applicationNotificationService.OpenShip(ship.Symbol);
     }
 
     public ObservableCollection<FlyoutMenuItem> FlyoutMenuItems { get; } = [];

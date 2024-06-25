@@ -6,7 +6,8 @@ public static class ShipAdapters
     {
         return new ShipResponse
         {
-            Ship = ship.Adapt()
+            Ship = ship.Adapt(),
+            ShipNav = ship.Nav.Adapt(ship.Symbol)
         };
     }
 
@@ -16,6 +17,18 @@ public static class ShipAdapters
         {
             Symbol = ship.Symbol,
             Role = ship.Registration.Role.ToString()
+        };
+    }
+
+    public static ShipNavDto Adapt(this ShipNav shipNav, string shipSymbol)
+    {
+        return new ShipNavDto
+        {
+            ShipSymbol = shipSymbol,
+            SystemSymbol = shipNav.SystemSymbol,
+            WaypointSymbol = shipNav.WaypointSymbol,
+            FlightMode = shipNav.FlightMode.ToString(),
+            Status = shipNav.Status.ToString()
         };
     }
 }

@@ -10,6 +10,7 @@ public static class DependencyInjectionExtensions
             .AddSingleton<ShipsPageViewModel>()
             .AddSingleton<WaypointsPageViewModel>()
             .AddSingleton<AgentSummaryViewModel>()
+            .AddTransient<ManageShipViewModel>()
             .AddSingleton<IApplicationNotificationService, ApplicationNotificationService>()
             .AddSingleton<IAccountService, AccountService>()
             .AddSingleton<IAgentService, AgentService>()

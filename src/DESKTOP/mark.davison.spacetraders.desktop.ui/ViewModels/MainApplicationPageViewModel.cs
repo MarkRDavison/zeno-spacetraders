@@ -2,7 +2,7 @@
 
 public abstract class MainApplicationPageViewModel : BasicApplicationPageViewModel, IDisposable
 {
-    private readonly IApplicationNotificationService _applicationNotificationService;
+    protected readonly IApplicationNotificationService _applicationNotificationService;
     private readonly IAccountService _accountService;
     private readonly ILogger _logger;
 

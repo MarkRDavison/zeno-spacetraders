@@ -5,6 +5,7 @@ global using mark.davison.spacetraders.api.persistence;
 global using mark.davison.spacetraders.shared.client.Adapters;
 global using mark.davison.spacetraders.shared.models.dtos;
 global using mark.davison.spacetraders.shared.models.dtos.Commands.DeleteAgent;
+global using mark.davison.spacetraders.shared.models.dtos.Commands.ModifyShipState;
 global using mark.davison.spacetraders.shared.models.dtos.Commands.RegisterAgent;
 global using mark.davison.spacetraders.shared.models.dtos.Shared;
 global using mark.davison.spacetraders.shared.models.Entities;

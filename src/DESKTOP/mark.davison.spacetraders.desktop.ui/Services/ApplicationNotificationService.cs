@@ -15,4 +15,10 @@ internal sealed class ApplicationNotificationService : IApplicationNotificationS
     {
         AgentChanged?.Invoke(this, new AgentChangeArgs());
     }
+
+    public event EventHandler<RequestOpenShipArgs> OpenShipRequested = default!;
+    public void OpenShip(string shipSymbol)
+    {
+        OpenShipRequested?.Invoke(this, new RequestOpenShipArgs(shipSymbol));
+    }
 }

@@ -9,6 +9,7 @@ public static class ValidationMessages
     public const string INSUFFICIENT_CREDITS = nameof(INSUFFICIENT_CREDITS);
     public const string DUPLICATE_ENTITY = nameof(DUPLICATE_ENTITY);
     public const string NO_ITEMS = nameof(NO_ITEMS);
+    public const string BAD_REQUEST = nameof(BAD_REQUEST);
 
     public static string FormatMessageParameters(string message, params string[] parameters)
     {

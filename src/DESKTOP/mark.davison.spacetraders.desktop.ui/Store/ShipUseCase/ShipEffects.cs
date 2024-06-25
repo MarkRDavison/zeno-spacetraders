@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.Store.ShipUseCase;
+﻿using mark.davison.spacetraders.shared.models.dtos.Commands.ModifyShipState;
+
+namespace mark.davison.spacetraders.desktop.ui.Store.ShipUseCase;
 
 [DesktopEffect]
 public sealed class ShipEffects
@@ -28,6 +30,27 @@ public sealed class ShipEffects
             Errors = queryResponse.Errors,
             Warnings = queryResponse.Warnings,
             Value = queryResponse.Value
+        });
+    }
+
+    public async Task HandleModifyShipStateActionAsync(ModifyShipStateAction action, IDesktopStateDispatcher dispatcher)
+    {
+        var commandRequest = new ModifyShipStateCommandRequest
+        {
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol,
+            SetDocked = action.SetDocked,
+            SetOrbiting = action.SetOrbiting
+        };
+
+        var commandResponse = await _clientHttpRepository.Post<ModifyShipStateCommandResponse, ModifyShipStateCommandRequest>(commandRequest, CancellationToken.None);
+
+        dispatcher.Dispatch(new UpdateShipsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = commandResponse.Errors,
+            Warnings = commandResponse.Warnings,
+            Value = commandResponse.Value is null ? [] : [commandResponse.Value]
         });
     }
 }

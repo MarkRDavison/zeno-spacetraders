@@ -24,6 +24,8 @@ public sealed class RegisterAgentCommandProcessor : ICommandProcessor<RegisterAg
                 Email = request.Email ?? string.Empty
             }, cancellationToken);
 
+            var versionResponse = await _apiClient.GetStatusAsync(cancellationToken);
+
             var account = new Account
             {
                 Id = Guid.NewGuid(),
@@ -31,7 +33,7 @@ public sealed class RegisterAgentCommandProcessor : ICommandProcessor<RegisterAg
                 UserId = currentUserContext.CurrentUser.Id,
                 Token = apiResponse.Data.Token,
                 Identifier = apiResponse.Data.Agent.Symbol,
-                Version = string.Empty // TODO from Response(0)
+                Version = versionResponse.Version
             };
 
             await _dbContext.AddAsync(account, cancellationToken);

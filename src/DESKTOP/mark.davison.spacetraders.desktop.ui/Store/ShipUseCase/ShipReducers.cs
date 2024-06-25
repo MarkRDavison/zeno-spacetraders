@@ -11,7 +11,7 @@ public static class ShipReducers
     [DesktopReducer]
     public static ShipState HandleFetchShipsAction(ShipState state, FetchShipsAction response)
     {
-        return new ShipState(true, []);
+        return new ShipState(true, [], []);
     }
 
     [DesktopReducer]
@@ -19,9 +19,21 @@ public static class ShipReducers
     {
         if (response.SuccessWithValue)
         {
-            return new ShipState(false, response.Value.Select(_ => _.Ship).OfType<ShipDto>());
+            var newShipSymbols = response.Value.Select(_ => _.Ship).OfType<ShipDto>().Select(_ => _.Symbol).ToHashSet();
+            var newShipNavSymbols = response.Value.Select(_ => _.ShipNav).OfType<ShipNavDto>().Select(_ => _.ShipSymbol).ToHashSet();
+
+            return new ShipState(
+                false,
+                [
+                    ..state.Ships.Where(_ => !newShipSymbols.Contains(_.Symbol)),
+                    ..response.Value.Select(_ => _.Ship).OfType<ShipDto>()
+                ],
+                [
+                    ..state.ShipNavs.Where(_ => !newShipNavSymbols.Contains(_.ShipSymbol)),
+                    ..response.Value.Select(_ => _.ShipNav).OfType<ShipNavDto>()
+                ]);
         }
 
-        return new ShipState(false, []);
+        return new ShipState(false, [], []);
     }
 }

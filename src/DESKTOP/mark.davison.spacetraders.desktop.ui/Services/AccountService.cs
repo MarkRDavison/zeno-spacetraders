@@ -25,6 +25,7 @@ internal sealed class AccountService : IAccountService
     {
         if (_activeAccount?.Id != account.Id)
         {
+            _agentModel = null;
             _activeAccount = account;
             _applicationNotificationService.ChangeAccount();
         }

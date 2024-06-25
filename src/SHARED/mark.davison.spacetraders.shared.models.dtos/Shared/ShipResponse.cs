@@ -3,4 +3,5 @@
 public sealed class ShipResponse
 {
     public ShipDto? Ship { get; set; }
+    public ShipNavDto? ShipNav { get; set; }
 }
