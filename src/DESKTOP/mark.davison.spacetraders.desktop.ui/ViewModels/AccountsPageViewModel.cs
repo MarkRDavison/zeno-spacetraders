@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.ViewModels;
+﻿using Humanizer;
+
+namespace mark.davison.spacetraders.desktop.ui.ViewModels;
 
 public partial class AccountsPageViewModel : BasicApplicationPageViewModel
 {
@@ -43,6 +45,7 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     {
         if (firstTime)
         {
+            await FetchStatus();
             await FetchAccounts();
         }
     }
@@ -114,6 +117,15 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
         }
     }
 
+    public async Task FetchStatus(CancellationToken cancellationToken = default)
+    {
+        var response = await _clientHttpRepository.Get<FetchServerStatusQueryResponse, FetchServerStatusQueryRequest>(cancellationToken);
+
+        _accountService.SetServerStatus(response.Value);
+        OnPropertyChanged(nameof(ServerStatus));
+        OnPropertyChanged(nameof(ServerNextReset));
+        OnPropertyChanged(nameof(ServerResetDate));
+    }
     public async Task FetchAccounts(CancellationToken cancellationToken = default)
     {
         var response = await _clientHttpRepository.Get<FetchAccountsQueryResponse, FetchAccountsQueryRequest>(cancellationToken);
@@ -150,4 +162,10 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
     public override string Name => "Accounts";
     public override bool Disabled => false;
     public override string Id => PageConstants.AccountsPageId;
+
+    public ServerStatusDto? ServerStatus => _accountService.GetServerStatus();
+
+    public string? ServerResetDate => ServerStatus?.Reset.Humanize();
+
+    public string? ServerNextReset => ServerStatus?.NextReset.Humanize();
 }

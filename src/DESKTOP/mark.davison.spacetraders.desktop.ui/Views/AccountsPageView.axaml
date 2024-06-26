@@ -5,6 +5,7 @@
              xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"			 
 			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 xmlns:mdcm="clr-namespace:mark.davison.common.client.desktop.components.Models;assembly=mark.davison.common.client.desktop"
+			 xmlns:c="using:mark.davison.spacetraders.desktop.ui.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mark.davison.spacetraders.desktop.ui.AccountsPageView"
 			 x:DataType="vm:AccountsPageViewModel">
@@ -60,6 +61,40 @@
 			</DataGrid.Columns>
 		</DataGrid>
 		<ProgressBar IsVisible="{Binding Loading}" IsIndeterminate="true" Width="{Binding #AccountGrid.Width}" MaxWidth="{Binding #AccountGrid.MaxWidth}" />
+		<Border IsVisible="{Binding ServerStatus, Converter={x:Static ObjectConverters.IsNotNull}}"
+				BorderThickness="1" 
+				BorderBrush="DarkGray"
+				HorizontalAlignment="Left"
+				Margin="0 8 8 8">
+			<Grid>
+				<Grid.Styles>
+					<Style Selector="TextBlock">
+						<Setter Property="Margin" Value="8" />
+					</Style>
+				</Grid.Styles>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<TextBlock Grid.Column="0" Grid.Row="0" Text="Status" />
+				<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ServerStatus.Status}" />
+				<TextBlock Grid.Column="0" Grid.Row="1" Text="Version" />
+				<TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ServerStatus.Version}" />
+				<TextBlock Grid.Column="0" Grid.Row="2" Text="Reset On" />
+				<TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding ServerResetDate}" />
+				<TextBlock Grid.Column="0" Grid.Row="3" Text="Reset Frequency" />
+				<TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ServerStatus.ResetFrequency, Converter={c:ServerResetFrequencyConverter}}" />
+				<TextBlock Grid.Column="0" Grid.Row="4" Text="Next Reset" />
+				<TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding ServerNextReset}" />
+			</Grid>
+		</Border>
 	</StackPanel>
 	
 </UserControl>

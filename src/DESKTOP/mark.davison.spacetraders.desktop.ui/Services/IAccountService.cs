@@ -9,4 +9,6 @@ public interface IAccountService
     void UnselectActiveAccount();
     AgentDto? GetActiveAccountAgent();
     void SetActiveAccountAgent(AgentDto agent);
+    ServerStatusDto? GetServerStatus();
+    void SetServerStatus(ServerStatusDto? serverStatus);
 }

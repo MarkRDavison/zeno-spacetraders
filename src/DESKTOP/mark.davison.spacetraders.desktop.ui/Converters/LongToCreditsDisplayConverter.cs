@@ -18,10 +18,5 @@ public sealed class LongToCreditsDisplayConverter : MarkupExtension, IValueConve
         throw new NotImplementedException();
     }
 
-    public override object ProvideValue(IServiceProvider serviceProvider)
-    {
-        _converter ??= new LongToCreditsDisplayConverter();
-
-        return _converter;
-    }
+    public override object ProvideValue(IServiceProvider serviceProvider) => _converter ??= new LongToCreditsDisplayConverter();
 }

@@ -7,6 +7,7 @@ global using mark.davison.spacetraders.shared.models.dtos;
 global using mark.davison.spacetraders.shared.models.dtos.Queries.FetchAccounts;
 global using mark.davison.spacetraders.shared.models.dtos.Queries.FetchAgent;
 global using mark.davison.spacetraders.shared.models.dtos.Queries.FetchContracts;
+global using mark.davison.spacetraders.shared.models.dtos.Queries.FetchServerStatus;
 global using mark.davison.spacetraders.shared.models.dtos.Queries.FetchShips;
 global using mark.davison.spacetraders.shared.models.dtos.Queries.FetchSystemWaypoints;
 global using mark.davison.spacetraders.shared.models.dtos.Shared;

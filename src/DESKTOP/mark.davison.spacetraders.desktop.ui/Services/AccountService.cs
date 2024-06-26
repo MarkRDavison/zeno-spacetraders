@@ -11,6 +11,7 @@ internal sealed class AccountService : IAccountService
 
     private AccountModel? _activeAccount;
     private AgentDto? _agentModel;
+    private ServerStatusDto? _serverStatus;
 
     public bool HasActiveAccount => _activeAccount is not null;
 
@@ -40,5 +41,10 @@ internal sealed class AccountService : IAccountService
     {
         _agentModel = agent;
         _applicationNotificationService.ChangeAgent();
+    }
+    public ServerStatusDto? GetServerStatus() => _serverStatus;
+    public void SetServerStatus(ServerStatusDto? serverStatus)
+    {
+        _serverStatus = serverStatus;
     }
 }
