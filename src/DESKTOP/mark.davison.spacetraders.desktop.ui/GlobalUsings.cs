@@ -26,6 +26,7 @@ global using mark.davison.spacetraders.desktop.ui.Models;
 global using mark.davison.spacetraders.desktop.ui.Services;
 global using mark.davison.spacetraders.desktop.ui.State;
 global using mark.davison.spacetraders.desktop.ui.Store;
+global using mark.davison.spacetraders.desktop.ui.Store.ContractUseCase;
 global using mark.davison.spacetraders.desktop.ui.Store.ShipUseCase;
 global using mark.davison.spacetraders.desktop.ui.ViewModels;
 global using mark.davison.spacetraders.desktop.ui.Views;

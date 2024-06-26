@@ -2,30 +2,51 @@
 
 public partial class ManageShipViewModel : MainApplicationPageViewModel, IDisposable
 {
-    private readonly IStoreHelper _storeHelper;
+    private readonly ISpacetradersStoreHelper _storeHelper;
 
     public ManageShipViewModel(
         IApplicationNotificationService applicationNotificationService,
         IAccountService accountService,
         ILogger<ManageShipViewModel> logger,
-        IStoreHelper storeHelper,
-        IState<ShipState> shipState) : base(
+        ISpacetradersStoreHelper storeHelper,
+        IState<ShipState> shipState,
+        IState<ContractState> contractState
+    ) : base(
         applicationNotificationService,
         accountService,
         logger)
     {
-        ShipState = shipState;
-        ShipState.PropertyChanged += ShipState_PropertyChanged;
         _storeHelper = storeHelper;
+        ShipState = shipState;
+        ContractState = contractState;
+
+        Setup();
     }
 
     public IState<ShipState> ShipState { get; }
+    public IState<ContractState> ContractState { get; }
+    public ObservableCollection<FlyoutMenuItem> MainCommandMenuItems { get; } = [];
+
     public override string Name => ShipSymbol;
     public override bool Disabled => false;
     public string ShipSymbol { get; private set; } = string.Empty;
 
     public ShipDto Ship => ShipState.Value.Ships.First(_ => _.Symbol == ShipSymbol);
     public ShipNavDto ShipNav => ShipState.Value.ShipNavs.First(_ => _.ShipSymbol == ShipSymbol);
+
+    protected override async Task OnSelectedAsync(bool firstTime)
+    {
+        await _storeHelper.EnsureContractsLoadedAsync(ContractState);
+
+        if (firstTime && ContractState.Value.Loaded && !ContractState.Value.Contracts.Any())
+        {
+            MainCommandMenuItems.Add(new FlyoutMenuItem
+            {
+                Name = "Negotiate contract",
+                Value = "NEGOTIATE"
+            });
+        }
+    }
 
     public void SetShipSymbol(string shipSymbol)
     {
@@ -37,10 +58,37 @@ public partial class ManageShipViewModel : MainApplicationPageViewModel, IDispos
         OnPropertyChanged(string.Empty);
     }
 
+    [RelayCommand]
+    private async Task MainCommandMenu(string value)
+    {
+        if (value == "NEGOTIATE")
+        {
+            if (ShipNav.Status != "DOCKED")
+            {
+                // TODO: DIALOG
+                return;
+            }
+            if (await _storeHelper.DispatchAndWaitForResponse<NegotiateContractAction, UpdateContractsActionResponse>(new NegotiateContractAction
+            {
+                Identifier = AccountIdentifier,
+                ShipSymbol = ShipSymbol
+            }) is { SuccessWithValue: true })
+            {
+                MainCommandMenuItems.Remove(MainCommandMenuItems.First(_ => _.Value == value));
+            }
+        }
+    }
+
     #region Orbit / Dock Ship
 
-    public bool ChangeShipStatusVisible => ShipNav.Status == "IN_ORBIT" || ShipNav.Status == "DOCKED";
-    public string ChangeShipStatusText => ShipNav.Status == "IN_ORBIT" ? "Dock" : "Orbit";
+    public bool ChangeShipStatusVisible =>
+        ShipNav.Status == "IN_ORBIT" ||
+        ShipNav.Status == "DOCKED";
+
+    public string ChangeShipStatusText =>
+        ShipNav.Status == "IN_ORBIT"
+            ? "Dock"
+            : "Orbit";
 
     [RelayCommand(CanExecute = nameof(ChangeShipStatusVisible))]
     private async Task ChangeShipStatus()
@@ -72,9 +120,19 @@ public partial class ManageShipViewModel : MainApplicationPageViewModel, IDispos
 
     #endregion
 
+    private void Setup()
+    {
+        ShipState.PropertyChanged += ShipState_PropertyChanged;
+    }
+
+    private void Teardown()
+    {
+        ShipState.PropertyChanged -= ShipState_PropertyChanged;
+    }
+
     public void Dispose()
     {
         base.Dispose();
-        ShipState.PropertyChanged -= ShipState_PropertyChanged;
+        Teardown();
     }
 }

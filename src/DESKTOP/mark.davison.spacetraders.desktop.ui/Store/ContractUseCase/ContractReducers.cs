@@ -11,7 +11,7 @@ public static class ContractReducers
     [DesktopReducer]
     public static ContractState HandleFetchContractsAction(ContractState state, FetchContractsAction response)
     {
-        return new ContractState(true, []);
+        return new ContractState(true, false, []);
     }
 
     [DesktopReducer]
@@ -19,9 +19,9 @@ public static class ContractReducers
     {
         if (response.SuccessWithValue)
         {
-            return new ContractState(false, response.Value);
+            return new ContractState(false, true, response.Value);
         }
 
-        return new ContractState(false, []);
+        return new ContractState(false, false, []);
     }
 }

@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+			 xmlns:mdcm="clr-namespace:mark.davison.common.client.desktop.components.Models;assembly=mark.davison.common.client.desktop"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mark.davison.spacetraders.desktop.ui.ManageShipView"
 			 x:DataType="vm:ManageShipViewModel">
@@ -17,6 +19,27 @@
 			<TextBlock Text="{Binding Ship.Role}" FontSize="16" />
 			<TextBlock Text="{Binding ShipNav.WaypointSymbol}" FontSize="16" />
 			<TextBlock Text="{Binding ShipNav.Status}" FontSize="16" />
+
+			<Button Width="32" Height="32" CornerRadius="16">
+				<!--TODO: Disable if no items and make a common component-->
+				<Button.Content>
+					<materialIcons:MaterialIcon Kind="MoreVert" />
+				</Button.Content>
+				<Button.Flyout>
+					<MenuFlyout ItemsSource="{Binding #Panel.((vm:ManageShipViewModel)DataContext).MainCommandMenuItems}">
+						<MenuFlyout.ItemTemplate>
+							<DataTemplate x:DataType="mdcm:FlyoutMenuItem">
+								<MenuItem Name="menuitem"
+										  Header="{Binding Name}"
+										  Command="{Binding #Panel.((vm:ManageShipViewModel)DataContext).MainCommandMenuCommand}"
+										  CommandParameter="{Binding Value}">
+								</MenuItem>
+							</DataTemplate>
+						</MenuFlyout.ItemTemplate>
+					</MenuFlyout>
+				</Button.Flyout>
+			</Button>
+			
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" Spacing="20" Margin="0 20 0 0">
 			<Button Content="{Binding ChangeShipStatusText}" 

@@ -2,7 +2,7 @@
 
 public static class ContractAdapters
 {
-    public static ContractDto Adapt(Contract contract)
+    public static ContractDto Adapt(this Contract contract)
     {
         return new ContractDto
         {

@@ -61,6 +61,12 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
         {
             if (value == "ACTIVATE")
             {
+                if (SelectedItem.Version != ServerStatus?.Version)
+                {
+                    // TODO: Dialog
+                    throw new InvalidOperationException("Version does not match");
+                }
+
                 _accountService.SetActiveAccount(SelectedItem!);
                 _storeHelper.Dispatch(new ResetStateAction());
                 _commonApplicationNotificationService.NotifyPageEnabledStateChanged();

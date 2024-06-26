@@ -1,4 +1,6 @@
-﻿namespace mark.davison.spacetraders.desktop.ui.Store.ContractUseCase;
+﻿using mark.davison.spacetraders.shared.models.dtos.Commands.NegotiateContract;
+
+namespace mark.davison.spacetraders.desktop.ui.Store.ContractUseCase;
 
 [DesktopEffect]
 public sealed class ContractEffects
@@ -28,6 +30,25 @@ public sealed class ContractEffects
             Errors = queryResponse.Errors,
             Warnings = queryResponse.Warnings,
             Value = queryResponse.Value
+        });
+    }
+
+    public async Task HandleNegotiateContractActionAsync(NegotiateContractAction action, IDesktopStateDispatcher dispatcher)
+    {
+        var request = new NegotiateContractCommandRequest
+        {
+            Identifier = action.Identifier,
+            ShipSymbol = action.ShipSymbol
+        };
+
+        var response = await _clientHttpRepository.Post<NegotiateContractCommandResponse, NegotiateContractCommandRequest>(request, CancellationToken.None);
+
+        dispatcher.Dispatch(new UpdateContractsActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = response.Errors,
+            Warnings = response.Warnings,
+            Value = response.Value is null ? [] : [response.Value]
         });
     }
 }

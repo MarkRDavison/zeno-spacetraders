@@ -17,7 +17,8 @@ public static class DependencyInjectionExtensions
             .AddTransient<IFormSubmission<RegisterAgentDialogViewModel>, RegisterAgentDialogFormSubmission>();
 
         services
-            .AddSingleton<IStoreHelper, DesktopStoreHelper>()
+            .AddSingleton<ISpacetradersStoreHelper, SpacetradersStoreHelper>()
+            .AddSingleton<IStoreHelper>(_ => _.GetRequiredService<ISpacetradersStoreHelper>())
             .AddSingleton<IDesktopStateDispatcher, DesktopStateDispatcher>()
             .AddSingleton<IDesktopActionSubscriber, DesktopActionSubscriber>()
             .AddDesktopState();
