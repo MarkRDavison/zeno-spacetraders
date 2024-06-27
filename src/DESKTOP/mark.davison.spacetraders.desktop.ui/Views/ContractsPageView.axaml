@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+			 xmlns:mdcm="clr-namespace:mark.davison.common.client.desktop.components.Models;assembly=mark.davison.common.client.desktop"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="mark.davison.spacetraders.desktop.ui.ContractsPageView"
 			 x:DataType="vm:ContractsPageViewModel">
@@ -10,6 +12,7 @@
 		<TextBlock Text="Contracts" FontSize="32" />
 		<DataGrid ItemsSource="{Binding ContractState.Value.Contracts}"
 				  IsReadOnly="True"
+				  DoubleTapped="DataGrid_DoubleTapped"
 				  GridLinesVisibility="Horizontal"
 				  BorderThickness="1"
 				  SelectedItem="{Binding SelectedItem}"
@@ -22,6 +25,28 @@
 			</DataGrid.Styles>
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Type"  Binding="{Binding Type}"/>
+				<DataGridTemplateColumn>
+					<DataTemplate>
+						<Button Width="32" Height="32" CornerRadius="16">
+							<Button.Content>
+								<materialIcons:MaterialIcon Kind="MoreVert" />
+							</Button.Content>
+							<Button.Flyout>
+								<MenuFlyout ItemsSource="{Binding #Panel.((vm:ContractsPageViewModel)DataContext).FlyoutMenuItems}">
+									<MenuFlyout.ItemTemplate>
+										<DataTemplate x:DataType="mdcm:FlyoutMenuItem">
+											<MenuItem Name="menuitem"
+													  Header="{Binding Name}"
+													  Command="{Binding #Panel.((vm:ContractsPageViewModel)DataContext).CommandMenuCommand}"
+													  CommandParameter="{Binding Value}">
+											</MenuItem>
+										</DataTemplate>
+									</MenuFlyout.ItemTemplate>
+								</MenuFlyout>
+							</Button.Flyout>
+						</Button>
+					</DataTemplate>
+				</DataGridTemplateColumn>
 			</DataGrid.Columns>
 		</DataGrid>
 		<ProgressBar IsVisible="{Binding ContractState.Value.Loading}" IsIndeterminate="true" Width="{Binding #ContractGrid.Width}" MaxWidth="{Binding #ContractGrid.MaxWidth}" />

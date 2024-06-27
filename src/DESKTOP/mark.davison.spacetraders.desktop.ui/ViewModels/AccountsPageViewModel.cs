@@ -19,7 +19,9 @@ public partial class AccountsPageViewModel : BasicApplicationPageViewModel
         IAccountService accountService,
         IAgentService agentService,
         IDialogService dialogService,
-        IStoreHelper storeHelper)
+        IStoreHelper storeHelper
+    ) : base(
+        commonApplicationNotificationService)
     {
         _clientHttpRepository = clientHttpRepository;
         _applicationNotificationService = applicationNotificationService;

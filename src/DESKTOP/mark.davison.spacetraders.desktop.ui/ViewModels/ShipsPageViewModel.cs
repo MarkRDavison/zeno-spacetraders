@@ -8,12 +8,14 @@ public partial class ShipsPageViewModel : MainApplicationPageViewModel
 
     public ShipsPageViewModel(
         IApplicationNotificationService applicationNotificationService,
+        ICommonApplicationNotificationService commonApplicationNotificationService,
         IAccountService accountService,
         ILogger<ShipsPageViewModel> logger,
         IStoreHelper storeHelper,
         IState<ShipState> shipState
     ) : base(
         applicationNotificationService,
+        commonApplicationNotificationService,
         accountService,
         logger)
     {

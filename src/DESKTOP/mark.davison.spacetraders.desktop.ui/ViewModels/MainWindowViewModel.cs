@@ -45,25 +45,43 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     {
         _applicationNotificationService.AccountChanged += AccountChanged;
         _applicationNotificationService.OpenShipRequested += OpenShip;
+        _applicationNotificationService.OpenContractRequested += OpenContract;
     }
 
     private void Teardown()
     {
+        _applicationNotificationService.OpenContractRequested -= OpenContract;
         _applicationNotificationService.OpenShipRequested -= OpenShip;
         _applicationNotificationService.AccountChanged -= AccountChanged;
     }
 
+    private void OpenContract(object? sender, RequestOpenContractArgs e)
+    {
+        var pageGroup = BasicApplicationViewModel.PageGroups.First(_ => _.Id == PageGroupConstants.ContractGroupId);
+
+        var existing = pageGroup.SubPages.FirstOrDefault(_ => _ is ManageContractViewModel mcvm && mcvm.ContractId == e.ContractId);
+
+        if (existing is null)
+        {
+            var newPage = _services.GetRequiredService<ManageContractViewModel>();
+            newPage.SetContractId(e.ContractId);
+            pageGroup.SubPages.Add(newPage);
+
+            _commonApplicationNotificationService.ChangePage(PageGroupConstants.ContractGroupId, e.ContractId);
+        }
+    }
+
     private void OpenShip(object? sender, RequestOpenShipArgs e)
     {
-        var shipPageGroup = BasicApplicationViewModel.PageGroups.First(_ => _.Id == PageGroupConstants.ShipGroupId);
+        var pageGroup = BasicApplicationViewModel.PageGroups.First(_ => _.Id == PageGroupConstants.ShipGroupId);
 
-        var existing = shipPageGroup.SubPages.FirstOrDefault(_ => _ is ManageShipViewModel msvm && msvm.ShipSymbol == e.ShipSymbol);
+        var existing = pageGroup.SubPages.FirstOrDefault(_ => _ is ManageShipViewModel msvm && msvm.ShipSymbol == e.ShipSymbol);
 
         if (existing is null)
         {
             var newPage = _services.GetRequiredService<ManageShipViewModel>();
             newPage.SetShipSymbol(e.ShipSymbol);
-            shipPageGroup.SubPages.Add(newPage);
+            pageGroup.SubPages.Add(newPage);
         }
 
         _commonApplicationNotificationService.ChangePage(PageGroupConstants.ShipGroupId, e.ShipSymbol);

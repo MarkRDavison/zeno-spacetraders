@@ -6,4 +6,13 @@ public partial class ShipsPageView : UserControl
     {
         InitializeComponent();
     }
+
+    private void DataGrid_DoubleTapped(object? sender, Avalonia.Input.TappedEventArgs e)
+    {
+        if (DataContext is ShipsPageViewModel vm &&
+            vm.CommandMenuCommand.CanExecute("OPEN"))
+        {
+            vm.CommandMenuCommand.Execute("OPEN");
+        }
+    }
 }

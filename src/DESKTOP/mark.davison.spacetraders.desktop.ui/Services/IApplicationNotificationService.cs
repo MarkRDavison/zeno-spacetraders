@@ -20,6 +20,16 @@ public class RequestOpenShipArgs : EventArgs
     public string ShipSymbol { get; }
 }
 
+public class RequestOpenContractArgs : EventArgs
+{
+    public RequestOpenContractArgs(string contractId)
+    {
+        ContractId = contractId;
+    }
+
+    public string ContractId { get; }
+}
+
 public interface IApplicationNotificationService
 {
 
@@ -31,5 +41,8 @@ public interface IApplicationNotificationService
 
     event EventHandler<RequestOpenShipArgs> OpenShipRequested;
     void OpenShip(string shipSymbol);
+
+    event EventHandler<RequestOpenContractArgs> OpenContractRequested;
+    void OpenContract(string contractId);
 
 }

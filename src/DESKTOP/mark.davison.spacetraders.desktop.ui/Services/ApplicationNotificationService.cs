@@ -21,4 +21,10 @@ internal sealed class ApplicationNotificationService : IApplicationNotificationS
     {
         OpenShipRequested?.Invoke(this, new RequestOpenShipArgs(shipSymbol));
     }
+
+    public event EventHandler<RequestOpenContractArgs> OpenContractRequested = default!;
+    public void OpenContract(string contractId)
+    {
+        OpenContractRequested?.Invoke(this, new RequestOpenContractArgs(contractId));
+    }
 }

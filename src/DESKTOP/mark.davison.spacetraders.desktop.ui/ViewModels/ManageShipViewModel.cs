@@ -6,6 +6,7 @@ public partial class ManageShipViewModel : MainApplicationPageViewModel, IDispos
 
     public ManageShipViewModel(
         IApplicationNotificationService applicationNotificationService,
+        ICommonApplicationNotificationService commonApplicationNotificationService,
         IAccountService accountService,
         ILogger<ManageShipViewModel> logger,
         ISpacetradersStoreHelper storeHelper,
@@ -13,6 +14,7 @@ public partial class ManageShipViewModel : MainApplicationPageViewModel, IDispos
         IState<ContractState> contractState
     ) : base(
         applicationNotificationService,
+        commonApplicationNotificationService,
         accountService,
         logger)
     {
@@ -28,6 +30,7 @@ public partial class ManageShipViewModel : MainApplicationPageViewModel, IDispos
     public ObservableCollection<FlyoutMenuItem> MainCommandMenuItems { get; } = [];
 
     public override string Name => ShipSymbol;
+    public override bool IsClosable => true;
     public override bool Disabled => false;
     public string ShipSymbol { get; private set; } = string.Empty;
 

@@ -13,6 +13,7 @@
 			<TextBlock Text="Ships" FontSize="32" />
 		</StackPanel>
 		<DataGrid ItemsSource="{Binding ShipState.Value.Ships}"
+				  DoubleTapped="DataGrid_DoubleTapped"
 				  IsReadOnly="True"
 				  GridLinesVisibility="Horizontal"
 				  BorderThickness="1"

@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:mark.davison.spacetraders.desktop.ui.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="mark.davison.spacetraders.desktop.ui.ManageContractPageView"
+			 x:DataType="vm:ManageContractViewModel">
+	<StackPanel Orientation="Vertical" Margin="20" Name="Panel">
+		<StackPanel Orientation="Horizontal" Spacing="20">
+			<StackPanel.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="VerticalAlignment" Value="Center" />
+				</Style>
+			</StackPanel.Styles>
+			<TextBlock Text="{Binding Name}" FontSize="32" />
+			<Button IsVisible="{Binding Contract.Accepted, Converter={x:Static BoolConverters.Not}}"
+					Command="{Binding AcceptCommand}"
+					Content="Accept"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal" Spacing="20">
+			<StackPanel.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="VerticalAlignment" Value="Center" />
+				</Style>
+			</StackPanel.Styles>
+			<TextBlock Text="{Binding ExpireText}" />
+		</StackPanel>
+	</StackPanel>
+</UserControl>
